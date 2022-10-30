@@ -1,3 +1,5 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hi_society_device/theme/placeholder.dart';
 import 'package:hi_society_device/views/residents/building_residents.dart';
@@ -10,6 +12,7 @@ import '../component/menu_grid_tile.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../component/snackbar.dart';
+import 'dart:io' show Platform;
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -19,8 +22,9 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  //Variables
-  String? accessToken, buildingName, buildingAddress, buildingImg;
+//Variables
+  String accessToken = "";
+  String? buildingName, buildingAddress, buildingImg;
   dynamic apiResult;
 
 // APIs
@@ -45,14 +49,32 @@ class _HomeState extends State<Home> {
     }
   }
 
+  Future<void> sendFcmToken({required String accessToken}) async {
+    var fcmToken = await FirebaseMessaging.instance.getToken();
+    String platform = (Platform.isAndroid) ? "android" : "ios";
+    if (kDebugMode) print('$platform Token: $fcmToken');
+    try {
+      var response = await http.post(Uri.parse("$baseUrl/push/token/update"), headers: authHeader(accessToken), body: jsonEncode({"token": fcmToken, "device": platform}));
+      Map result = jsonDecode(response.body);
+      if (result["statusCode"] == 200 || result["statusCode"] == 201) {
+        showSnackBar(context: context, label: result["message"]);
+      } else {
+        showSnackBar(context: context, label: result["message"][0].toString().length == 1 ? result["message"].toString() : result["message"][0].toString());
+      }
+    } on Exception catch (e) {
+      showSnackBar(context: context, label: e.toString());
+    }
+  }
+
 //Functions
   defaultInit() async {
     final pref = await SharedPreferences.getInstance();
-    setState(() => accessToken = pref.getString("accessToken"));
+    setState(() => accessToken = pref.getString("accessToken") ?? "");
     setState(() => buildingName = pref.getString("buildingName"));
     setState(() => buildingAddress = pref.getString("buildingAddress"));
     setState(() => buildingImg = pref.getString("buildingImg"));
-    await readBuildingInfo(accessToken: accessToken!);
+    await readBuildingInfo(accessToken: accessToken);
+    await sendFcmToken(accessToken: accessToken);
   }
 
 //Initiate

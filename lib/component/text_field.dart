@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import '../theme/border_radius.dart';
 import '../theme/colors.dart';
 import '../theme/padding_margin.dart';
-import '../theme/text_style.dart';
 
 Container primaryTextField(
     {required BuildContext context,
@@ -35,7 +34,6 @@ Container primaryTextField(
             focusNode: focusNode,
             keyboardAppearance: Brightness.dark,
             onFieldSubmitted: onFieldSubmitted,
-
             keyboardType: keyboardType,
             textCapitalization: textCapitalization,
             obscureText: (isPassword) ? !showPassword : false,

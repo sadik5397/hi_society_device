@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 
 //Variables
   String accessToken = "";
+  dynamic apiResult;
 
 //APIs
   Future<void> __({required String accessToken}) async {
@@ -12,6 +13,7 @@ import 'package:http/http.dart' as http;
       Map result = jsonDecode(response.body);
       if (result["statusCode"] == 200 || result["statusCode"] == 201) {
         showSnackBar(context: context, label: result["message"]);
+        setState(() => apiResult = result["data"]);
         //todo: if success
       }else{
         showSnackBar(context: context, label: result["message"][0].toString().length==1 ? result["message"].toString() : result["message"][0].toString());
@@ -25,7 +27,7 @@ import 'package:http/http.dart' as http;
 //Functions
   defaultInit() async {
     final pref = await SharedPreferences.getInstance();
-    setState(() => accessToken = pref.getString("accessToken")!);
+    setState(() => accessToken = pref.getString("accessToken").toString());
   }
 
 //Initiate

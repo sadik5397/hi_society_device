@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import '../theme/border_radius.dart';
 import '../theme/colors.dart';
-import '../theme/padding_margin.dart';
-import '../theme/text_style.dart';
 
 ElevatedButton primaryButton({required BuildContext context, required String title, required VoidCallback onTap, bool primary = true}) {
   return ElevatedButton(

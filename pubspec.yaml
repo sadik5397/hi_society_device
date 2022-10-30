@@ -47,6 +47,10 @@ dependencies:
   intl: ^0.17.0
   shared_preferences:
   qr_flutter:
+  image_picker:
+  firebase_messaging: ^14.0.3
+  firebase_core: ^2.1.1
+  flutter_image_compress: ^1.1.3
 
 dev_dependencies:
   flutter_test:

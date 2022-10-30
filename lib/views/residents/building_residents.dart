@@ -1,11 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:hi_society_device/component/app_bar.dart';
-import 'package:hi_society_device/component/basicListTile.dart';
+import 'package:hi_society_device/component/basic_list_tile.dart';
 import 'package:hi_society_device/component/page_navigation.dart';
 import 'package:hi_society_device/theme/colors.dart';
 import 'package:hi_society_device/theme/padding_margin.dart';
-import 'package:hi_society_device/theme/placeholder.dart';
 import 'package:hi_society_device/views/residents/assign_flat_resident.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;

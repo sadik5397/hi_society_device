@@ -9,7 +9,6 @@ import '../../component/snackbar.dart';
 import '../../component/text_field.dart';
 import '../../theme/colors.dart';
 import '../../theme/padding_margin.dart';
-import '../../theme/text_style.dart';
 import '../home.dart';
 
 class SignIn extends StatefulWidget {
@@ -61,7 +60,6 @@ class _SignInState extends State<SignIn> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
     return WillPopScope(
         onWillPop: () async => false,
         child: Scaffold(
