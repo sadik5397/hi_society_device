@@ -1,0 +1,22 @@
+import 'package:flutter/material.dart';
+import 'colors.dart';
+
+TextStyle bigOTP = const TextStyle(height: .9, color: Colors.white, fontSize: 140, fontWeight: FontWeight.w900);
+TextStyle bold22White = const TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold);
+TextStyle semiBold14White = const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600);
+TextStyle semiBold16White = const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600);
+TextStyle semiBold16Black = TextStyle(color: primaryBlack, fontSize: 16, fontWeight: FontWeight.w500);
+TextStyle normal12Black = TextStyle(color: primaryBlack, fontSize: 12, fontWeight: FontWeight.normal);
+TextStyle bold12Blue = TextStyle(color: primaryColor, fontSize: 12, fontWeight: FontWeight.bold);
+TextStyle semiBold14Blue = TextStyle(color: primaryColor, fontSize: 14, fontWeight: FontWeight.w600);
+TextStyle normal14black50 = TextStyle(color: primaryBlack.withOpacity(.5) ,fontSize: 14, fontWeight: FontWeight.normal);
+TextStyle normal12Black50 = TextStyle(color: primaryBlack.withOpacity(.5), fontSize: 12, fontWeight: FontWeight.normal);
+TextStyle semiBold12Black = TextStyle(color: primaryBlack, fontSize: 12, fontWeight: FontWeight.w600);
+TextStyle semiBold20Black = TextStyle(color: primaryBlack, fontSize: 20, fontWeight: FontWeight.w600);
+TextStyle semiBold12white = const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600);
+TextStyle textFieldHint = TextStyle(color: primaryBlack.withOpacity(.5), fontSize: 14, fontWeight: FontWeight.normal);
+TextStyle textFieldLabel = TextStyle(color: primaryBlack, fontSize: 16, fontWeight: FontWeight.w500);
+TextStyle textFieldLabelFloating = TextStyle(color: primaryColor, fontWeight: FontWeight.w700);
+TextStyle textFieldValue = TextStyle(color: primaryBlack, fontSize: 16, fontWeight: FontWeight.w700);
+TextStyle normal14Black = TextStyle(color: primaryBlack, fontSize: 14, fontWeight: FontWeight.normal);
+TextStyle bold14Blue = TextStyle(color: primaryColor, fontSize: 14, fontWeight: FontWeight.bold);

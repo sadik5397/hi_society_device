@@ -1,0 +1,36 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+//Variables
+  String accessToken = "";
+
+//APIs
+  Future<void> __({required String accessToken}) async {
+    try {
+      var response = await http.get(Uri.parse("$baseUrl__"), headers: authHeader(accessToken));
+      var response = await http.post(Uri.parse("$baseUrl__"), headers: authHeader(accessToken),body: jsonEncode({"email": email});
+      Map result = jsonDecode(response.body);
+      if (result["statusCode"] == 200 || result["statusCode"] == 201) {
+        showSnackBar(context: context, label: result["message"]);
+        //todo: if success
+      }else{
+        showSnackBar(context: context, label: result["message"][0].toString().length==1 ? result["message"].toString() : result["message"][0].toString());
+        //todo: if error
+      }
+    } on Exception catch (e) {
+      showSnackBar(context: context, label: e.toString());
+    }
+  }
+
+//Functions
+  defaultInit() async {
+    final pref = await SharedPreferences.getInstance();
+    setState(() => accessToken = pref.getString("accessToken")!);
+  }
+
+//Initiate
+@override
+ void initState() {
+   super.initState();
+   defaultInit();
+ }
