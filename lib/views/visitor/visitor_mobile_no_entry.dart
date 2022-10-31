@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hi_society_device/component/page_navigation.dart';
 import 'package:hi_society_device/component/text_field.dart';
 import 'package:hi_society_device/theme/padding_margin.dart';
+import 'package:hi_society_device/views/visitor/ask_permission_to_enter.dart';
 import 'package:hi_society_device/views/visitor/new_visitor_info.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../api/api.dart';
@@ -10,7 +11,7 @@ import '../../component/header_building_image.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-import '../../component/snackbar.dart';
+import '../../component/snack_bar.dart';
 import '../home.dart';
 
 class VisitorMobileNoEntry extends StatefulWidget {
@@ -28,12 +29,11 @@ class _VisitorMobileNoEntryState extends State<VisitorMobileNoEntry> {
   TextEditingController mobileNumberController = TextEditingController();
 
   //APIs
-  Future<void> sendVisitorsPhoneNumber({required String accessToken, required String mobileNumber, required VoidCallback existingVisitor, required VoidCallback failRoute}) async {
+  Future<void> sendVisitorsPhoneNumber(
+      {required String accessToken, required String mobileNumber, required VoidCallback existingVisitor, required VoidCallback newVisitor}) async {
     try {
       var response = await http.post(Uri.parse("$baseUrl/visitor/guard/info?phone=$mobileNumber"), headers: authHeader(accessToken));
       Map result = jsonDecode(response.body);
-      print(mobileNumber);
-      print(result);
       if (result["statusCode"] == 200 || result["statusCode"] == 201) {
         FocusManager.instance.primaryFocus?.unfocus();
         showSnackBar(context: context, label: result["message"]);
@@ -41,23 +41,7 @@ class _VisitorMobileNoEntryState extends State<VisitorMobileNoEntry> {
         existingVisitor.call();
       } else {
         showSnackBar(context: context, label: result["message"][0].toString().length == 1 ? result["message"].toString() : result["message"][0].toString());
-        failRoute.call();
-      }
-    } on Exception catch (e) {
-      showSnackBar(context: context, label: e.toString());
-    }
-  }
-
-  Future<void> askForPermissionToEnter({required String accessToken, required String phone, required int flatId}) async {
-    try {
-      var response = await http.post(Uri.parse("$baseUrl/visitor/guard/access?fid=$flatId&phone=$phone"), headers: authHeader(accessToken));
-      Map result = jsonDecode(response.body);
-      print(result);
-      if (result["statusCode"] == 200 || result["statusCode"] == 201) {
-        showSnackBar(context: context, label: result["message"]);
-        print(result);
-      } else {
-        showSnackBar(context: context, label: result["message"][0].toString().length == 1 ? result["message"].toString() : result["message"][0].toString());
+        newVisitor.call();
       }
     } on Exception catch (e) {
       showSnackBar(context: context, label: e.toString());
@@ -100,8 +84,9 @@ class _VisitorMobileNoEntryState extends State<VisitorMobileNoEntry> {
                               await sendVisitorsPhoneNumber(
                                 accessToken: accessToken,
                                 mobileNumber: mobileNumberController.text,
-                                existingVisitor: () async => await askForPermissionToEnter(accessToken: accessToken, phone: mobileNumberController.text, flatId: 45), //todo:
-                                failRoute: () => route(context, NewVisitorInformation(mobileNumber: mobileNumberController.text)),
+                                existingVisitor: () =>
+                                    route(context, AskPermissionToEnter(flatID: 44, mobileNumber: mobileNumberController.text, visitorData: apiResult)), //todo:
+                                newVisitor: () => route(context, NewVisitorInformation(mobileNumber: mobileNumberController.text)),
                               );
                             })),
                   )))

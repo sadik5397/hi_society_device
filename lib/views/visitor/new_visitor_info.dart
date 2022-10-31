@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'dart:io';
 import 'package:hi_society_device/component/button.dart';
 import 'package:hi_society_device/component/dropdown_button.dart';
@@ -10,7 +11,7 @@ import '../../component/app_bar.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
-import '../../component/snackbar.dart';
+import '../../component/snack_bar.dart';
 import '../../theme/border_radius.dart';
 import '../../theme/colors.dart';
 
@@ -61,10 +62,18 @@ class _NewVisitorInformationState extends State<NewVisitorInformation> {
   }
 
   Future<void> createNewVisitorProfile(
-      {required String accessToken, required String name, required String address, String? email, required String phone, required String relation, required String photo, required int flatId}) async {
+      {required String accessToken,
+      required String name,
+      required String address,
+      String? email,
+      required String phone,
+      required String relation,
+      required String photo,
+      required int flatId}) async {
     try {
       var response = await http.post(Uri.parse("$baseUrl/visitor/guard/create"),
-          headers: authHeader(accessToken), body: jsonEncode({"name": name, "address": address, "email": email, "phone": phone, "flatId": flatId, "relation": relation, "photo": photo}));
+          headers: authHeader(accessToken),
+          body: jsonEncode({"name": name, "address": address, "email": email, "phone": phone, "flatId": flatId, "relation": relation, "photo": photo}));
       Map result = jsonDecode(response.body);
       if (result["statusCode"] == 200 || result["statusCode"] == 201) {
         showSnackBar(context: context, label: result["message"]);
@@ -78,11 +87,9 @@ class _NewVisitorInformationState extends State<NewVisitorInformation> {
     }
   }
 
-  Future<void> askForPermissionToEnter(
-      {required String accessToken, required String phone, required int flatId}) async {
+  Future<void> askForPermissionToEnter({required String accessToken, required String phone, required int flatId}) async {
     try {
-      var response = await http.post(Uri.parse("$baseUrl/visitor/guard/access?fid=$flatId&phone=$phone"),
-          headers: authHeader(accessToken));
+      var response = await http.post(Uri.parse("$baseUrl/visitor/guard/access?fid=$flatId&phone=$phone"), headers: authHeader(accessToken));
       Map result = jsonDecode(response.body);
       print(result);
       if (result["statusCode"] == 200 || result["statusCode"] == 201) {
@@ -106,7 +113,9 @@ class _NewVisitorInformationState extends State<NewVisitorInformation> {
   Future getImage() async {
     final image = await _picker.pickImage(source: ImageSource.camera);
     setState(() => _image = File(image!.path));
-    setState(() => base64img = (base64Encode(_image.readAsBytesSync())));
+    var result = await FlutterImageCompress.compressWithFile(_image.absolute.path, minWidth: 512, minHeight: 512, quality: 60, rotate: 0);
+    setState(() => base64img =
+        (base64Encode(List<int>.from(result!)))); //error: The method 'readAsBytesSync' can't be unconditionally invoked because the receiver can be 'null'.
   }
 
 //Initiate
@@ -177,7 +186,9 @@ class _NewVisitorInformationState extends State<NewVisitorInformation> {
                   alignment: Alignment.center,
                   child: (base64img != "")
                       ? Stack(fit: StackFit.expand, alignment: Alignment.center, children: [
-                          ClipRRect(borderRadius: primaryBorderRadius / 1.4, child: Opacity(opacity: .5, child: Image.memory(base64Decode(base64img), fit: BoxFit.cover))),
+                          ClipRRect(
+                              borderRadius: primaryBorderRadius / 1.4,
+                              child: Opacity(opacity: .5, child: Image.memory(base64Decode(base64img), fit: BoxFit.cover))),
                           Image.memory(base64Decode(base64img))
                         ])
                       : ElevatedButton.icon(

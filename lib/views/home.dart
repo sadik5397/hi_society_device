@@ -11,7 +11,7 @@ import '../component/header_building_image.dart';
 import '../component/menu_grid_tile.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import '../component/snackbar.dart';
+import '../component/snack_bar.dart';
 import 'dart:io' show Platform;
 
 class Home extends StatefulWidget {

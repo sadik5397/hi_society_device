@@ -9,7 +9,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../api/api.dart';
-import '../../component/snackbar.dart';
+import '../../component/snack_bar.dart';
 
 class AssignFlatResident extends StatefulWidget {
   const AssignFlatResident({Key? key, required this.flatID, required this.flatNo}) : super(key: key);

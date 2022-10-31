@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../api/api.dart';
 import '../../component/button.dart';
 import '../../component/page_navigation.dart';
-import '../../component/snackbar.dart';
+import '../../component/snack_bar.dart';
 import '../../component/text_field.dart';
 import '../../theme/colors.dart';
 import '../../theme/padding_margin.dart';

@@ -8,3 +8,5 @@ Color primaryBlack = const Color(0xFF263238);
 Color primaryGrey = Colors.black26;
 Color primaryTitleColor = const Color(0xFF393F42);
 Color primaryColorOf = const Color(0xFFe8f5ff);
+Color allowedColor = const Color(0xFF35C0A5);
+Color rejectedColor = const Color(0xFFF15A4A);

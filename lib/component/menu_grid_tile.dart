@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:hi_society_device/component/page_navigation.dart';
-import 'package:hi_society_device/component/snackbar.dart';
+import 'package:hi_society_device/component/snack_bar.dart';
 import 'package:hi_society_device/theme/colors.dart';
 import '../theme/padding_margin.dart';
 

@@ -11,7 +11,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../api/api.dart';
-import '../../component/snackbar.dart';
+import '../../component/snack_bar.dart';
 
 class BuildingFlatsAndResidents extends StatefulWidget {
   const BuildingFlatsAndResidents({Key? key}) : super(key: key);
@@ -30,6 +30,7 @@ class _BuildingFlatsAndResidentsState extends State<BuildingFlatsAndResidents> {
     try {
       var response = await http.get(Uri.parse("$baseUrl/building/list/flat/by-guard"), headers: authHeader(accessToken));
       Map result = jsonDecode(response.body);
+      print(result);
       if (result["statusCode"] == 200 || result["statusCode"] == 201) {
         showSnackBar(context: context, label: result["message"]);
         setState(() => apiResult = result["data"]);
