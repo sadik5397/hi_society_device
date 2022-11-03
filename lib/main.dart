@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:hi_society_device/test.dart';
 import 'package:hi_society_device/theme/colors.dart';
 import 'package:hi_society_device/theme/text_style.dart';
 import 'package:hi_society_device/views/security_alert/security_alert_screen.dart';
@@ -93,8 +94,8 @@ class MyApp extends StatelessWidget {
           titleTextStyle: bold22White,
         )
       ),
-      home: accessToken.isEmpty ? const SignIn() : const Home(),
-      // home: const SecurityAlertScreen(),
+      // home: accessToken.isEmpty ? const SignIn() : const Home(),
+      home: const Test(),
     );
   }
 }
