@@ -8,6 +8,7 @@ Container primaryTextField(
     required String labelText,
     bool isPassword = false,
     double? bottomPadding,
+      double? leftPadding,
     bool isDate = false,
     bool hasSubmitButton = false,
     TextInputType keyboardType = TextInputType.text,
@@ -25,7 +26,7 @@ Container primaryTextField(
     bool isDisable = false}) {
   return Container(
     decoration: BoxDecoration(borderRadius: BorderRadius.circular(20), border: Border.all(color: trueWhite, width: 2)),
-    margin: EdgeInsets.fromLTRB(primaryPaddingValue * 3, 0, primaryPaddingValue * 3, primaryPaddingValue * 2),
+    margin: EdgeInsets.fromLTRB(leftPadding??primaryPaddingValue * 3, 0, primaryPaddingValue * 3, primaryPaddingValue * 2),
     child: Container(
         decoration: BoxDecoration(borderRadius: primaryBorderRadius, color: trueWhite, border: Border.all(color: primaryBackgroundColor, width: 2)),
         padding: EdgeInsets.all(primaryPaddingValue / 4),

@@ -15,19 +15,19 @@ import 'package:http/http.dart' as http;
 import '../../component/snack_bar.dart';
 import '../home.dart';
 
-class VisitorMobileNoEntry extends StatefulWidget {
-  const VisitorMobileNoEntry({Key? key, required this.buildingImg, required this.buildingName, required this.buildingAddress}) : super(key: key);
+class VisitorGatePassCodeEntry extends StatefulWidget {
+  const VisitorGatePassCodeEntry({Key? key, required this.buildingImg, required this.buildingName, required this.buildingAddress}) : super(key: key);
   final String buildingName, buildingAddress, buildingImg;
 
   @override
-  State<VisitorMobileNoEntry> createState() => _VisitorMobileNoEntryState();
+  State<VisitorGatePassCodeEntry> createState() => _VisitorGatePassCodeEntryState();
 }
 
-class _VisitorMobileNoEntryState extends State<VisitorMobileNoEntry> {
+class _VisitorGatePassCodeEntryState extends State<VisitorGatePassCodeEntry> {
   //Variables
   String accessToken = "";
   dynamic apiResult;
-  TextEditingController mobileNumberController = TextEditingController();
+  TextEditingController gadePassCodeController = TextEditingController();
   String? selectedFlat;
   String? selectedRelation;
   List<String> flatList = [];
@@ -91,45 +91,31 @@ class _VisitorMobileNoEntryState extends State<VisitorMobileNoEntry> {
     return Scaffold(
         appBar: primaryAppBar(context: context),
         body: Column(children: [
-          HeaderBuildingImage(buildingAddress: widget.buildingAddress, buildingImage: widget.buildingImg, buildingName: widget.buildingName),
-          Expanded(
-              child: Container(
-                  decoration: const BoxDecoration(image: DecorationImage(image: AssetImage("assets/smart_background.png"), fit: BoxFit.cover, opacity: .4)),
-                  child: Center(
-                      child: Padding(
-                          padding: EdgeInsets.only(top: primaryPaddingValue),
-                          child: Row(children: [
-                            Expanded(
-                                flex: 3,
-                                child: primaryDropdown(
-                                    paddingRight: 0, context: context, title: "Flat?", options: flatList, value: selectedFlat, onChanged: (value) => setState(() => selectedFlat = value.toString()))),
-                            Expanded(
-                                flex: 7,
-                                child: primaryTextField(
-                                    leftPadding: primaryPaddingValue,
-                                    autoFocus: true,
-                                    hintText: "01XXXXXXXXX",
-                                    keyboardType: TextInputType.number,
-                                    context: context,
-                                    labelText: "Enter Your Mobile Number...",
-                                    controller: mobileNumberController,
-                                    onFieldSubmitted: (value) async {
-                                      (selectedFlat != null)
-                                          ? await sendVisitorsPhoneNumber(
-                                              accessToken: accessToken,
-                                              mobileNumber: mobileNumberController.text,
-                                              existingVisitor: () => route(
-                                                  context,
-                                                  AskPermissionToEnter(
-                                                    flatID: flatID[flatList.indexOf(selectedFlat ?? "")],
-                                                    mobileNumber: mobileNumberController.text,
-                                                    visitorName: apiResult["name"],
-                                                    visitorPhoto: apiResult["photo"],
-                                                  )),
-                                              newVisitor: () => route(context, NewVisitorInformation(selectedFlat: selectedFlat.toString(), mobileNumber: mobileNumberController.text)))
-                                          : showSnackBar(context: context, label: "Please Select Flat");
-                                    }))
-                          ])))))
+          Padding(
+              padding: EdgeInsets.only(top: primaryPaddingValue),
+              child: primaryTextField(
+                  autoFocus: true,
+                  hintText: "XXXXX",
+                  context: context,
+                  labelText: " Enter Digital Gate Pass Code",
+                  controller: gadePassCodeController,
+                  textCapitalization: TextCapitalization.none,
+                  onFieldSubmitted: (value) async {
+                    (selectedFlat != null)
+                        ? await sendVisitorsPhoneNumber(
+                            accessToken: accessToken,
+                            mobileNumber: gadePassCodeController.text,
+                            existingVisitor: () => route(
+                                context,
+                                AskPermissionToEnter(
+                                  flatID: flatID[flatList.indexOf(selectedFlat ?? "")],
+                                  mobileNumber: gadePassCodeController.text,
+                                  visitorName: apiResult["name"],
+                                  visitorPhoto: apiResult["photo"],
+                                )),
+                            newVisitor: () => route(context, NewVisitorInformation(selectedFlat: selectedFlat.toString(), mobileNumber: gadePassCodeController.text)))
+                        : showSnackBar(context: context, label: "Please Select Flat");
+                  }))
         ]));
   }
 }

@@ -2,6 +2,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hi_society_device/theme/placeholder.dart';
+import 'package:hi_society_device/views/gate_pass/visitor_gate_pas_code_entry.dart';
 import 'package:hi_society_device/views/residents/building_residents.dart';
 import 'package:hi_society_device/views/visitor/visitor_mobile_no_entry.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -11,6 +12,7 @@ import '../component/header_building_image.dart';
 import '../component/menu_grid_tile.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import '../component/page_navigation.dart';
 import '../component/snack_bar.dart';
 import 'dart:io' show Platform;
 
@@ -68,6 +70,7 @@ class _HomeState extends State<Home> {
 
 //Functions
   defaultInit() async {
+    // initiateNotificationReceiver();
     final pref = await SharedPreferences.getInstance();
     setState(() => accessToken = pref.getString("accessToken") ?? "");
     setState(() => buildingName = pref.getString("buildingName"));
@@ -76,6 +79,27 @@ class _HomeState extends State<Home> {
     await readBuildingInfo(accessToken: accessToken);
     await sendFcmToken(accessToken: accessToken);
   }
+
+  //todo: SplashScreen e dibo
+  // initiateNotificationReceiver() async {
+  //   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+  //     RemoteNotification? notification = message.notification;
+  //     AndroidNotification? android = message.notification?.android;
+  //     if (notification != null && android != null) {
+  //       print("Got a New Notification: ${notification.title}\n${message.data}");
+  //     }
+  //   });
+  //   FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+  //     print('A new onMessageOpenedApp event was published!');
+  //     RemoteNotification? notification = message.notification;
+  //     AndroidNotification? android = message.notification?.android;
+  //     if (notification != null && android != null) {
+  //       print(message.data);
+  //       print("Got a New Notification: ${notification.title}\n${message.data}");
+  //       // if (message.data["topic"] == "visitor") route(context, PerformVisitorPermission(historyId: "${message.data["historyId"]}"));
+  //     }
+  //   });
+  // }
 
 //Initiate
   @override
@@ -105,7 +129,11 @@ class _HomeState extends State<Home> {
               Expanded(
                   flex: 2,
                   child: Row(children: [
-                    menuGridTile(title: "Gate Pass", assetImage: "gatePass", context: context),
+                    menuGridTile(
+                        title: "Gate Pass",
+                        assetImage: "gatePass",
+                        context: context,
+                        toPage: VisitorGatePassCodeEntry(buildingAddress: buildingAddress ?? "Getting Location...", buildingImg: buildingImg ?? placeholderImage, buildingName: buildingName ?? "LOADING!")),
                     menuGridTile(title: "Intercom", assetImage: "intercom", context: context),
                     menuGridTile(title: "Car Parking", assetImage: "parking", context: context)
                   ])),

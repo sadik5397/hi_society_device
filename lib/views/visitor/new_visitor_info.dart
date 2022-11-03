@@ -3,8 +3,10 @@ import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'dart:io';
 import 'package:hi_society_device/component/button.dart';
 import 'package:hi_society_device/component/dropdown_button.dart';
+import 'package:hi_society_device/component/page_navigation.dart';
 import 'package:hi_society_device/component/text_field.dart';
 import 'package:hi_society_device/theme/padding_margin.dart';
+import 'package:hi_society_device/views/visitor/ask_permission_to_enter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../api/api.dart';
 import '../../component/app_bar.dart';
@@ -16,8 +18,9 @@ import '../../theme/border_radius.dart';
 import '../../theme/colors.dart';
 
 class NewVisitorInformation extends StatefulWidget {
-  const NewVisitorInformation({Key? key, required this.mobileNumber}) : super(key: key);
+  const NewVisitorInformation({Key? key, required this.mobileNumber, required this.selectedFlat}) : super(key: key);
   final String mobileNumber;
+  final String selectedFlat;
 
   @override
   State<NewVisitorInformation> createState() => _NewVisitorInformationState();
@@ -34,7 +37,7 @@ class _NewVisitorInformationState extends State<NewVisitorInformation> {
   List<String> flatList = [];
   List<String> relationList = ["Father", "Mother", "Sister", "Brother", "Spouse", "Friend", "Colleague", "Others"];
   List<int> flatID = [];
-  String? selectedFlat;
+  late String selectedFlat = widget.selectedFlat;
   String? selectedRelation;
   late File _image = File("");
   String base64img = "";
@@ -69,32 +72,19 @@ class _NewVisitorInformationState extends State<NewVisitorInformation> {
       required String phone,
       required String relation,
       required String photo,
-      required int flatId}) async {
+      required int flatId,
+      required VoidCallback successRoute}) async {
     try {
       var response = await http.post(Uri.parse("$baseUrl/visitor/guard/create"),
-          headers: authHeader(accessToken),
-          body: jsonEncode({"name": name, "address": address, "email": email, "phone": phone, "flatId": flatId, "relation": relation, "photo": photo}));
+          headers: authHeader(accessToken), body: jsonEncode({"name": name, "address": address, "email": email, "phone": phone, "flatId": flatId, "relation": relation, "photo": photo}));
       Map result = jsonDecode(response.body);
-      if (result["statusCode"] == 200 || result["statusCode"] == 201) {
-        showSnackBar(context: context, label: result["message"]);
-        print(result);
-        askForPermissionToEnter(accessToken: accessToken, phone: phone, flatId: flatId);
-      } else {
-        showSnackBar(context: context, label: result["message"][0].toString().length == 1 ? result["message"].toString() : result["message"][0].toString());
-      }
-    } on Exception catch (e) {
-      showSnackBar(context: context, label: e.toString());
-    }
-  }
-
-  Future<void> askForPermissionToEnter({required String accessToken, required String phone, required int flatId}) async {
-    try {
-      var response = await http.post(Uri.parse("$baseUrl/visitor/guard/access?fid=$flatId&phone=$phone"), headers: authHeader(accessToken));
-      Map result = jsonDecode(response.body);
+      var body = jsonEncode({"name": name, "address": address, "email": email, "phone": phone, "flatId": flatId, "relation": relation, "photo": photo});
+      print(body);
       print(result);
       if (result["statusCode"] == 200 || result["statusCode"] == 201) {
         showSnackBar(context: context, label: result["message"]);
         print(result);
+        successRoute.call();
       } else {
         showSnackBar(context: context, label: result["message"][0].toString().length == 1 ? result["message"].toString() : result["message"][0].toString());
       }
@@ -114,8 +104,7 @@ class _NewVisitorInformationState extends State<NewVisitorInformation> {
     final image = await _picker.pickImage(source: ImageSource.camera);
     setState(() => _image = File(image!.path));
     var result = await FlutterImageCompress.compressWithFile(_image.absolute.path, minWidth: 512, minHeight: 512, quality: 60, rotate: 0);
-    setState(() => base64img =
-        (base64Encode(List<int>.from(result!)))); //error: The method 'readAsBytesSync' can't be unconditionally invoked because the receiver can be 'null'.
+    setState(() => base64img = (base64Encode(List<int>.from(result!)))); //error: The method 'readAsBytesSync' can't be unconditionally invoked because the receiver can be 'null'.
   }
 
 //Initiate
@@ -186,9 +175,7 @@ class _NewVisitorInformationState extends State<NewVisitorInformation> {
                   alignment: Alignment.center,
                   child: (base64img != "")
                       ? Stack(fit: StackFit.expand, alignment: Alignment.center, children: [
-                          ClipRRect(
-                              borderRadius: primaryBorderRadius / 1.4,
-                              child: Opacity(opacity: .5, child: Image.memory(base64Decode(base64img), fit: BoxFit.cover))),
+                          ClipRRect(borderRadius: primaryBorderRadius / 1.4, child: Opacity(opacity: .5, child: Image.memory(base64Decode(base64img), fit: BoxFit.cover))),
                           Image.memory(base64Decode(base64img))
                         ])
                       : ElevatedButton.icon(
@@ -209,13 +196,21 @@ class _NewVisitorInformationState extends State<NewVisitorInformation> {
                   title: "NEXT",
                   onTap: () async {
                     await createNewVisitorProfile(
-                        accessToken: accessToken,
-                        name: nameController.text,
-                        address: addressController.text,
-                        phone: mobileNumberController.text,
-                        relation: selectedRelation ?? "",
-                        photo: "data:image/png;base64,$base64img",
-                        flatId: flatID[flatList.indexOf(selectedFlat!)]);
+                      accessToken: accessToken,
+                      name: nameController.text,
+                      address: addressController.text,
+                      phone: mobileNumberController.text,
+                      relation: selectedRelation ?? "",
+                      photo: "data:image/png;base64,$base64img",
+                      flatId: flatID[flatList.indexOf(selectedFlat)],
+                      email: emailController.text.isEmpty ? null : emailController.text,
+                      successRoute: () => route(
+                          context,
+                          AskPermissionToEnter(
+                              visitorName: nameController.text, isNew: true, visitorPhoto: base64img, flatID: flatID[flatList.indexOf(selectedFlat)], mobileNumber:
+                          mobileNumberController
+                              .text)),
+                    );
                   }))
         ]));
   }
