@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:hi_society_device/views/delivery/wait_for_resident_response.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:hi_society_device/views/home.dart';
@@ -26,6 +27,9 @@ class _ReceiveParcelState extends State<ReceiveParcel> {
   List<int> flatID = [];
   List<String> itemTypeList = ["Product", "Food", "Medicine", "Document", "Others"];
   List<String> merchantList = ["Daraz", "Foodpanda", "Chaldal", "Other"];
+  List<String> deliveryMethod = ["I want to deliver the parcel at customer's door", "I want customer come down here to receive", "I want to drop the parcel here (PAID)"];
+  List<String> deliveryMethodKeys = ["door_delivery", "hand_receive", "drop_at_guard"];
+  String? selectedDeliveryMethod;
   String? selectedFlat;
   String? selectedItemType;
   String? selectedMerchant;
@@ -51,9 +55,10 @@ class _ReceiveParcelState extends State<ReceiveParcel> {
     }
   }
 
-  Future<void> createPPL({required String accessToken, required String itemType, required String merchant, required int flatId, required VoidCallback successRoute}) async {
+  Future<void> createPPL({required String deliveryMethod, required String accessToken, required String itemType, required String merchant, required int flatId, required VoidCallback successRoute}) async {
     try {
-      var response = await http.post(Uri.parse("$baseUrl/__"), headers: authHeader(accessToken), body: jsonEncode({}));
+      var response = await http.post(Uri.parse("$baseUrl/parcel-delivery/guard/create"),
+          headers: authHeader(accessToken), body: jsonEncode({"flatId": flatId, "vendor": merchant, "deliveryMethod": deliveryMethod, "item": itemType}));
       Map result = jsonDecode(response.body);
       print(result);
       if (result["statusCode"] == 200 || result["statusCode"] == 201) {
@@ -85,7 +90,7 @@ class _ReceiveParcelState extends State<ReceiveParcel> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: primaryAppBar(context: context,title: "Receive Parcel"),
+        appBar: primaryAppBar(context: context, title: "Receive Parcel"),
         body: ListView(padding: EdgeInsets.symmetric(vertical: primaryPaddingValue * 4), children: [
           primaryDropdown(
             context: context,
@@ -111,6 +116,13 @@ class _ReceiveParcelState extends State<ReceiveParcel> {
             value: selectedMerchant,
             onChanged: (value) => setState(() => selectedMerchant = value.toString()),
           ),
+          primaryDropdown(
+            context: context,
+            title: "Deliver Method",
+            options: deliveryMethod,
+            value: selectedDeliveryMethod,
+            onChanged: (value) => setState(() => selectedDeliveryMethod = value.toString()),
+          ),
           SizedBox(height: primaryPaddingValue),
           Padding(
               padding: const EdgeInsets.symmetric(horizontal: 36),
@@ -119,11 +131,18 @@ class _ReceiveParcelState extends State<ReceiveParcel> {
                   title: "NEXT",
                   onTap: () async {
                     await createPPL(
+                        deliveryMethod: selectedDeliveryMethod != null ? deliveryMethodKeys[deliveryMethod.indexOf(selectedDeliveryMethod!)] : "",
                         accessToken: accessToken,
                         itemType: selectedItemType ?? "",
                         merchant: selectedMerchant ?? "",
                         flatId: selectedFlat != null ? flatID[flatList.indexOf(selectedFlat!)] : -1,
-                        successRoute: () => route(context, const Home()));
+                        successRoute: () => route(
+                            context,
+                            WaitForResidentResponse(
+                                vendor: selectedMerchant ?? "...",
+                                deliveryMethod: deliveryMethodKeys[deliveryMethod.indexOf(selectedDeliveryMethod!)],
+                                flat: selectedFlat ?? "...",
+                                item: selectedItemType ?? "...")));
                   }))
         ]));
   }
