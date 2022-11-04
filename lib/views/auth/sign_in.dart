@@ -33,6 +33,7 @@ class _SignInState extends State<SignIn> {
     try {
       var response = await http.post(Uri.parse("$baseUrl/auth/login"), headers: primaryHeader, body: jsonEncode({"email": email, "password": password}));
       Map result = jsonDecode(response.body);
+      print(result);
       if (result["statusCode"] == 200 || result["statusCode"] == 201) {
         showSnackBar(context: context, label: result["message"]);
         setState(() => apiResult = result["data"]);
@@ -115,7 +116,10 @@ class _SignInState extends State<SignIn> {
                   Text("Having trouble login?", style: Theme.of(context).textTheme.titleSmall),
                   InkWell(
                       child: Text(" Please contact HI SOCIETY ", style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w900)),
-                      onTap: () => FocusManager.instance.primaryFocus?.unfocus())
+                      onTap: () {
+                        FocusManager.instance.primaryFocus?.unfocus();
+                        showSnackBar(context: context, label: "Please contact HI SOCIETY", seconds: 6);
+                      })
                 ]))
           ]),
         )));

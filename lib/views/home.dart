@@ -1,18 +1,24 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:hi_society_device/theme/placeholder.dart';
+import 'package:hi_society_device/views/car_parking/car_parking.dart';
+import 'package:hi_society_device/views/delivery/receive_or_distribute.dart';
 import 'package:hi_society_device/views/gate_pass/visitor_gate_pas_code_entry.dart';
+import 'package:hi_society_device/views/intercom/contactList.dart';
+import 'package:hi_society_device/views/overstay/overstay.dart';
 import 'package:hi_society_device/views/residents/building_residents.dart';
+import 'package:hi_society_device/views/utility/utility_contacts.dart';
 import 'package:hi_society_device/views/visitor/visitor_mobile_no_entry.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../api/api.dart';
 import '../component/app_bar.dart';
+import '../component/dialogue_box.dart';
 import '../component/header_building_image.dart';
 import '../component/menu_grid_tile.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import '../component/page_navigation.dart';
 import '../component/snack_bar.dart';
 import 'dart:io' show Platform;
 
@@ -110,40 +116,47 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-        top: false,
-        child: Scaffold(
-            appBar: primaryAppBar(context: context),
-            body: Column(children: [
-              HeaderBuildingImage(flex: 3, buildingAddress: buildingAddress ?? "Getting Location...", buildingImage: buildingImg ?? placeholderImage, buildingName: buildingName ?? "LOADING!"),
-              Expanded(
-                  flex: 2,
-                  child: Row(children: [
-                    menuGridTile(
-                        title: "Visitor Management",
-                        assetImage: "visitor",
-                        context: context,
-                        toPage: VisitorMobileNoEntry(buildingAddress: buildingAddress ?? "Getting Location...", buildingImg: buildingImg ?? placeholderImage, buildingName: buildingName ?? "LOADING!")),
-                    menuGridTile(title: "Delivery Management", assetImage: "delivery", context: context)
-                  ])),
-              Expanded(
-                  flex: 2,
-                  child: Row(children: [
-                    menuGridTile(
-                        title: "Gate Pass",
-                        assetImage: "gatePass",
-                        context: context,
-                        toPage: VisitorGatePassCodeEntry(buildingAddress: buildingAddress ?? "Getting Location...", buildingImg: buildingImg ?? placeholderImage, buildingName: buildingName ?? "LOADING!")),
-                    menuGridTile(title: "Intercom", assetImage: "intercom", context: context),
-                    menuGridTile(title: "Car Parking", assetImage: "parking", context: context)
-                  ])),
-              Expanded(
-                  flex: 2,
-                  child: Row(children: [
-                    menuGridTile(title: "Overstay Alert", assetImage: "overstay", context: context),
-                    menuGridTile(title: "Utility Contacts", assetImage: "utility", context: context),
-                    menuGridTile(title: "Residents", assetImage: "apartment", context: context, toPage: const BuildingFlatsAndResidents())
-                  ]))
-            ])));
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: SafeArea(
+          top: false,
+          child: Scaffold(
+              appBar: primaryAppBar(
+                context: context,
+                prefix: IconButton(onPressed: () => Phoenix.rebirth(context), icon: const Icon(Icons.settings_backup_restore)),
+                suffix: IconButton(onPressed: () => showDialog(context: context, builder: (BuildContext context) => switchGuardUser(context: context)), icon: const Icon(Icons.lock_outline_rounded)),
+              ),
+              body: Column(children: [
+                HeaderBuildingImage(flex: 3, buildingAddress: buildingAddress ?? "Getting Location...", buildingImage: buildingImg ?? placeholderImage, buildingName: buildingName ?? "LOADING!"),
+                Expanded(
+                    flex: 2,
+                    child: Row(children: [
+                      menuGridTile(
+                          title: "Visitor Management",
+                          assetImage: "visitor",
+                          context: context,
+                          toPage: VisitorMobileNoEntry(buildingAddress: buildingAddress ?? "Getting Location...", buildingImg: buildingImg ?? placeholderImage, buildingName: buildingName ?? "LOADING!")),
+                      menuGridTile(title: "Delivery Management", assetImage: "delivery", context: context, toPage: const ReceiveOrDistribute())
+                    ])),
+                Expanded(
+                    flex: 2,
+                    child: Row(children: [
+                      menuGridTile(
+                          title: "Gate Pass",
+                          assetImage: "gatePass",
+                          context: context,
+                          toPage: VisitorGatePassCodeEntry(buildingAddress: buildingAddress ?? "Getting Location...", buildingImg: buildingImg ?? placeholderImage, buildingName: buildingName ?? "LOADING!")),
+                      menuGridTile(title: "Intercom", assetImage: "intercom", context: context, toPage: const ContactList()),
+                      menuGridTile(title: "Car Parking", assetImage: "parking", context: context, toPage: const CarParking())
+                    ])),
+                Expanded(
+                    flex: 2,
+                    child: Row(children: [
+                      menuGridTile(title: "Overstay Alert", assetImage: "overstay", context: context, toPage: const OverstayAlerts()),
+                      menuGridTile(title: "Utility Contacts", assetImage: "utility", context: context, toPage: const UtilityContacts()),
+                      menuGridTile(title: "Residents", assetImage: "apartment", context: context, toPage: const BuildingFlatsAndResidents())
+                    ]))
+              ]))),
+    );
   }
 }

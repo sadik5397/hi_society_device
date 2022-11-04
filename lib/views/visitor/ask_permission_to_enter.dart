@@ -138,7 +138,6 @@ class _AskPermissionToEnterState extends State<AskPermissionToEnter> {
               image: const DecorationImage(image: AssetImage("assets/smart_background.png"), fit: BoxFit.cover, opacity: .4),
             ),
             child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
-              Text(allowStatus.toString()),
               Container(
                   margin: EdgeInsets.only(bottom: primaryPaddingValue),
                   width: (allowStatus == "true") ? MediaQuery.of(context).size.height * .25 : MediaQuery.of(context).size.height * .15,

@@ -2,10 +2,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:hi_society_device/test.dart';
 import 'package:hi_society_device/theme/colors.dart';
 import 'package:hi_society_device/theme/text_style.dart';
-import 'package:hi_society_device/views/security_alert/security_alert_screen.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'firebase_options.dart';
 import 'views/auth/sign_in.dart';
@@ -62,12 +61,12 @@ Future<void> main() async {
   (settings.authorizationStatus == AuthorizationStatus.authorized)
       ? print('FCM Notification : User granted permission')
       : (settings.authorizationStatus == AuthorizationStatus.provisional)
-      ? print('FCM Notification : User granted provisional permission')
-      : print('FCM Notification : User declined or has not accepted permission');
+          ? print('FCM Notification : User granted provisional permission')
+          : print('FCM Notification : User declined or has not accepted permission');
   //endregion
 
   //If everything is Okay, Run the App
-  runApp(MyApp(accessToken: accessTokenFromSharedPreferences));
+  runApp(Phoenix(child: MyApp(accessToken: accessTokenFromSharedPreferences)));
 }
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async => print("(Receive) FCM : app on Background : ${message.data}");
@@ -82,20 +81,19 @@ class MyApp extends StatelessWidget {
       title: 'Hi Society Guard',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: Colors.blue,
-        useMaterial3: true,
-        scaffoldBackgroundColor: primaryBackgroundColor,
-        brightness: Brightness.dark,
-        appBarTheme: AppBarTheme(
-          backgroundColor: primaryColor,
-          centerTitle: true,
-          foregroundColor: trueWhite,
-          systemOverlayStyle: const SystemUiOverlayStyle(statusBarColor: Colors.transparent, statusBarIconBrightness: Brightness.light),
-          titleTextStyle: bold22White,
-        )
-      ),
-      // home: accessToken.isEmpty ? const SignIn() : const Home(),
-      home: const Test(),
+          primarySwatch: Colors.blue,
+          useMaterial3: true,
+          scaffoldBackgroundColor: primaryBackgroundColor,
+          brightness: Brightness.dark,
+          appBarTheme: AppBarTheme(
+            backgroundColor: primaryColor,
+            centerTitle: true,
+            foregroundColor: trueWhite,
+            systemOverlayStyle: const SystemUiOverlayStyle(statusBarColor: Colors.transparent, statusBarIconBrightness: Brightness.light),
+            titleTextStyle: bold22White,
+          )),
+      home: accessToken.isEmpty ? const SignIn() : const Home(),
+      // home: const Call(),
     );
   }
 }

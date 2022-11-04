@@ -117,7 +117,7 @@ class _NewVisitorInformationState extends State<NewVisitorInformation> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: primaryAppBar(context: context),
+        appBar: primaryAppBar(context: context,title: "New Visitor"),
         body: ListView(padding: EdgeInsets.symmetric(vertical: primaryPaddingValue * 4), children: [
           // SelectableText(base64img),
           primaryTextField(

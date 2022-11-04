@@ -89,7 +89,7 @@ class _VisitorMobileNoEntryState extends State<VisitorMobileNoEntry> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: primaryAppBar(context: context),
+        appBar: primaryAppBar(context: context,title: "Visitor"),
         body: Column(children: [
           HeaderBuildingImage(buildingAddress: widget.buildingAddress, buildingImage: widget.buildingImg, buildingName: widget.buildingName),
           Expanded(
@@ -107,12 +107,13 @@ class _VisitorMobileNoEntryState extends State<VisitorMobileNoEntry> {
                                 flex: 7,
                                 child: primaryTextField(
                                     leftPadding: primaryPaddingValue,
-                                    autoFocus: true,
+                                    // autoFocus: true,
                                     hintText: "01XXXXXXXXX",
                                     keyboardType: TextInputType.number,
                                     context: context,
                                     labelText: "Enter Your Mobile Number...",
                                     controller: mobileNumberController,
+                                    textCapitalization: TextCapitalization.characters,
                                     onFieldSubmitted: (value) async {
                                       (selectedFlat != null)
                                           ? await sendVisitorsPhoneNumber(
