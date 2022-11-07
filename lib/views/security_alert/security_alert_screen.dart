@@ -6,7 +6,8 @@ import 'package:hi_society_device/theme/padding_margin.dart';
 import 'package:hi_society_device/theme/text_style.dart';
 
 class SecurityAlertScreen extends StatefulWidget {
-  const SecurityAlertScreen({Key? key}) : super(key: key);
+  const SecurityAlertScreen({Key? key, this.alert = "Fire"}) : super(key: key);
+  final String alert;
 
   @override
   State<SecurityAlertScreen> createState() => _SecurityAlertScreenState();
@@ -42,7 +43,7 @@ class _SecurityAlertScreenState extends State<SecurityAlertScreen> {
       child: Column(
         children: [
           SizedBox(height: primaryPaddingValue * 4),
-          Expanded(child: Image.asset("assets/alert/Fire.png", color: trueWhite)),
+          Expanded(child: AnimatedScale(duration: const Duration(milliseconds: 250), scale: (step % 3 == 0) ? .8 : 1, child: Image.asset("assets/alert/${widget.alert}.png", color: trueWhite))),
           SizedBox(height: primaryPaddingValue * 2),
           FittedBox(child: Text("Fire".toUpperCase(), style: bigOTP)),
           Text("From Flat A2".toUpperCase(), style: bigOTP, textScaleFactor: .3),
