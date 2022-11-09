@@ -9,8 +9,7 @@ import '../../component/app_bar.dart';
 import '../../component/snack_bar.dart';
 
 class VisitorGatePassCodeEntry extends StatefulWidget {
-  const VisitorGatePassCodeEntry({Key? key, required this.buildingImg, required this.buildingName, required this.buildingAddress}) : super(key: key);
-  final String buildingName, buildingAddress, buildingImg;
+  const VisitorGatePassCodeEntry({Key? key}) : super(key: key);
 
   @override
   State<VisitorGatePassCodeEntry> createState() => _VisitorGatePassCodeEntryState();
@@ -24,7 +23,7 @@ class _VisitorGatePassCodeEntryState extends State<VisitorGatePassCodeEntry> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: primaryAppBar(context: context,title: "Digital Gate Pass"),
+        appBar: primaryAppBar(context: context, title: "Digital Gate Pass"),
         body: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
           primaryTextField(
               autoFocus: true,

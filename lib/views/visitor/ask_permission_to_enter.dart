@@ -9,6 +9,7 @@ import 'package:hi_society_device/component/card.dart';
 import 'package:hi_society_device/component/page_navigation.dart';
 import 'package:hi_society_device/theme/border_radius.dart';
 import 'package:hi_society_device/theme/colors.dart';
+import 'package:hi_society_device/theme/date_format.dart';
 import 'package:hi_society_device/theme/padding_margin.dart';
 import 'package:hi_society_device/views/home.dart';
 import 'package:intl/intl.dart';
@@ -161,8 +162,8 @@ class _AskPermissionToEnterState extends State<AskPermissionToEnter> {
                 Padding(
                     padding: EdgeInsets.symmetric(vertical: primaryPaddingValue),
                     child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                      basic2LineInfoCard(key: "Current Time", value: apiResult != null ? DateFormat.jm().format(DateTime.now()) : "...", context: context),
-                      basic2LineInfoCard(key: "Last Visited", value: apiResult != null ? DateFormat.MMMd().format(DateTime.now()) : "...", context: context) //todo: Last Visited Date Lagbe
+                      basic2LineInfoCard(key: "Date", value: apiResult != null ? primaryDate(DateTime.now().toString()) : "...", context: context),
+                      basic2LineInfoCard(key: "Time", value: apiResult != null ? primaryTime(DateTime.now().toString()) : "...", context: context)
                     ])),
               if (allowStatus == null)
                 Expanded(
