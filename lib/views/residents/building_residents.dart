@@ -95,6 +95,8 @@ class _BuildingFlatsAndResidentsState extends State<BuildingFlatsAndResidents> {
                   context: context,
                   key: "Flat No.  ",
                   title: apiResult[index]["flatName"],
+                  isVerified: apiResult[index]["residentHead"] != null,
+                  subTitle: (apiResult[index]["residentHead"] != null) ? apiResult[index]["residentHead"]["name"] : null,
                   onTap: () => route(context, AssignFlatResident(flatID: apiResult[index]["flatId"], flatNo: apiResult[index]["flatName"]))))
         ]));
   }
