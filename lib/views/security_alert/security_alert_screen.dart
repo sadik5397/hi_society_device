@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_beep/flutter_beep.dart';
 import 'package:hi_society_device/component/button.dart';
 import 'package:hi_society_device/component/page_navigation.dart';
 import 'package:hi_society_device/theme/colors.dart';
@@ -23,9 +24,12 @@ class _SecurityAlertScreenState extends State<SecurityAlertScreen> {
 
   //functions
   colorShifter() async {
-    setState(() => step++);
-    await Future.delayed(const Duration(milliseconds: 250));
-    if (!madeResponse) await colorShifter();
+    if (!madeResponse) {
+      setState(() => step++);
+      await Future.delayed(const Duration(milliseconds: 250));
+      FlutterBeep.beep();
+      await colorShifter();
+    }
   }
 
   //initiate
@@ -57,7 +61,7 @@ class _SecurityAlertScreenState extends State<SecurityAlertScreen> {
                   title: "Acknowledged",
                   onTap: () async {
                     setState(() => madeResponse = true);
-                    await Future.delayed(const Duration(seconds: 3));
+                    await Future.delayed(const Duration(seconds: 1));
                     // ignore: use_build_context_synchronously
                     route(context, const Home());
                   })),
