@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:hi_society_device/component/app_bar.dart';
 import 'package:hi_society_device/component/utility_contact_list_tile.dart';
-import 'package:hi_society_device/theme/padding_margin.dart';
+import 'package:hi_society_device/theme/border_radius.dart';
+import 'package:hi_society_device/theme/placeholder.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+import '../../api/api.dart';
+import '../../component/app_bar.dart';
+import '../../component/snack_bar.dart';
+import '../../theme/colors.dart';
+import '../../theme/padding_margin.dart';
 
 class UtilityContacts extends StatefulWidget {
   const UtilityContacts({Key? key}) : super(key: key);
@@ -10,54 +18,105 @@ class UtilityContacts extends StatefulWidget {
   State<UtilityContacts> createState() => _UtilityContactsState();
 }
 
-class _UtilityContactsState extends State<UtilityContacts> with TickerProviderStateMixin {
-  //variable
-  List<String> tabs = ["All", "Electrician", "Tiles", "Plumber", "Dish/Internet"];
-  late TabController controller = TabController(length: tabs.length, vsync: this);
+class _UtilityContactsState extends State<UtilityContacts> {
+  //Variables
+  String accessToken = "";
+  List category = [];
+  List<List> contacts = [];
 
-  //initial
+//APIs
+  Future<void> readCategory({required String accessToken}) async {
+    try {
+      var response = await http.post(Uri.parse("$baseUrl/utility-contact/view/category"), headers: authHeader(accessToken));
+      Map result = jsonDecode(response.body);
+      print(result);
+      if (result["statusCode"] == 200 || result["statusCode"] == 201) {
+        showSnackBar(context: context, label: result["message"]);
+        setState(() => category = result["data"]);
+      } else {
+        showSnackBar(context: context, label: result["message"][0].toString().length == 1 ? result["message"].toString() : result["message"][0].toString());
+      }
+    } on Exception catch (e) {
+      showSnackBar(context: context, label: e.toString());
+    }
+  }
+
+  Future<void> readContacts({required String accessToken, required List category}) async {
+    try {
+      for (int i = 0; i < category.length; i++) {
+        var response = await http.post(Uri.parse("$baseUrl/utility-contact/view/contact/by-category?cid=${category[i]['utilityContactCategoryId']}"), headers: authHeader(accessToken));
+        Map result = jsonDecode(response.body);
+        print(result);
+        if (result["statusCode"] == 200 || result["statusCode"] == 201) {
+          showSnackBar(context: context, label: result["message"]);
+          (result["data"].length == 0)
+              ? setState(() => contacts.add([
+                    {"contactName": "Empty"}
+                  ]))
+              : setState(() => contacts.add(result["data"]));
+        } else {
+          showSnackBar(context: context, label: result["message"][0].toString().length == 1 ? result["message"].toString() : result["message"][0].toString());
+        }
+      }
+    } on Exception catch (e) {
+      showSnackBar(context: context, label: e.toString());
+    }
+  }
+
+//Functions
+  defaultInit() async {
+    final pref = await SharedPreferences.getInstance();
+    setState(() => accessToken = pref.getString("accessToken")!);
+    await readCategory(accessToken: accessToken);
+    await readContacts(accessToken: accessToken, category: category);
+  }
+
+//Initiate
   @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
+  void initState() {
+    super.initState();
+    defaultInit();
   }
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-        length: 5,
-        child: Scaffold(
-            appBar: primaryAppbarWithTabs(context: context, title: "Utility Person Contacts", tabs: tabs, controller: controller),
-            body: TabBarView(controller: controller, children: [
-              // TAB ONE
-              (false)
-                  ? const Center(child: CircularProgressIndicator())
-                  : ListView.builder(
-                      shrinkWrap: true,
-                      padding: primaryPadding * 2,
-                      itemCount: 10,
-                      itemBuilder: (context, index) => utilityContactListTile(
-                          photo: "https://www.kalerkantho.com/assets/news_images/2013/08/18/image_3407.tota-pakhi.jpg",
-                          type: "Electrician",
-                          context: context,
-                          title: "MD. Zulfiaqar Sayeed",
-                          number: "01515644470",
-                          flat: "1${((index + 1) % 10).toString()}F")),
-              // TAB TWO
-              (false)
-                  ? const Center(child: CircularProgressIndicator())
-                  : ListView.builder(
-                      shrinkWrap: true,
-                      padding: primaryPadding * 2,
-                      itemCount: 10,
-                      itemBuilder: (context, index) => utilityContactListTile(
-                            photo: "https://www.kalerkantho.com/assets/news_images/2013/08/18/image_3407.tota-pakhi.jpg",
-                            type: "Electrician",
-                            context: context,
-                            title: "MD. Zulfiaqar Sayeed",
-                            number: "01515644470",
-                            flat: "1${((index + 1) % 10).toString()}F",
-                          ))
-            ])));
+    return Scaffold(
+        appBar: primaryAppBar(context: context, title: "Utility Contacts"),
+        body: (category.isEmpty)
+            ? const Center(child: CircularProgressIndicator())
+            : ClipRRect(
+                borderRadius: primaryBorderRadius,
+                child: ListView.builder(
+                    padding: primaryPadding,
+                    itemCount: category.length,
+                    itemBuilder: (context, index) => ExpansionTile(
+                        initiallyExpanded: true,
+                        subtitle: Text("${(contacts[index][0]["contactName"] == "Empty") ? 0 : (contacts[index].length)} Contacts"),
+                        title: Text(category[index]["name"]),
+                        tilePadding: EdgeInsets.symmetric(horizontal: primaryPaddingValue),
+                        expandedAlignment: Alignment.centerLeft,
+                        backgroundColor: Colors.white,
+                        collapsedBackgroundColor: trueWhite,
+                        maintainState: true,
+                        iconColor: primaryColor,
+                        // collapsedIconColor: themeTitle,
+                        collapsedTextColor: primaryTitleColor,
+                        childrenPadding: EdgeInsets.symmetric(horizontal: primaryPaddingValue),
+                        textColor: primaryColor,
+                        children: (contacts.isEmpty)
+                            ? [const Center(child: CircularProgressIndicator())]
+                            : List.generate(contacts[index].length, (index2) {
+                                if (contacts[index][index2]["contactName"] != "Empty") {
+                                  return utilityContactListTile(
+                                    photo: placeholderImage,
+                                    context: context,
+                                    title: contacts[index][index2]["contactName"],
+                                    number: contacts[index][index2]["contactNumber"],
+                                  );
+                                } else {
+                                  return Padding(padding: EdgeInsets.only(bottom: primaryPaddingValue), child: Text("No Contacts Found", style: TextStyle(color: primaryTitleColor)));
+                                }
+                              }))),
+              ));
   }
 }

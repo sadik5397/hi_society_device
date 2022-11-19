@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:hi_society_device/theme/placeholder.dart';
+import 'package:hi_society_device/views/auth/sign_in.dart';
 import 'package:hi_society_device/views/car_parking/car_parking.dart';
 import 'package:hi_society_device/views/delivery/receive_or_distribute.dart';
 import 'package:hi_society_device/views/gate_pass/visitor_gate_pas_code_entry.dart';
@@ -34,6 +35,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
 //Variables
   String accessToken = "";
+  String refreshToken = "";
   String? buildingName, buildingAddress, buildingImg;
   dynamic apiResult;
 
@@ -76,14 +78,57 @@ class _HomeState extends State<Home> {
     }
   }
 
+  Future<void> verifyAccessToken({required String accessToken, required String refreshToken}) async {
+    try {
+      var response1 = await http.post(Uri.parse("$baseUrl/auth/jwt/verify"), headers: authHeader(accessToken));
+      Map result1 = jsonDecode(response1.body);
+      print(result1);
+      if (result1["statusCode"] == 200 || result1["statusCode"] == 201) {
+        showSnackBar(context: context, label: result1["message"]);
+        print("-------Access Token Verified---------");
+      } else {
+        showSnackBar(context: context, label: result1["message"][0].toString().length == 1 ? result1["message"].toString() : result1["message"][0].toString());
+        print("Access Token Invalid or Expired");
+        var response2 = await http.post(Uri.parse("$baseUrl/auth/jwt/refresh"), headers: authHeader(refreshToken));
+        print("Attempting to refresh the Access Token");
+        Map result2 = jsonDecode(response2.body);
+        print(result2);
+        if (result2["statusCode"] == 200 || result2["statusCode"] == 201) {
+          showSnackBar(context: context, label: result2["message"]);
+          final pref = await SharedPreferences.getInstance();
+          await pref.setString("accessToken", result2["data"]["accessToken"]);
+          await pref.setString("refreshToken", result2["data"]["refreshToken"]);
+        } else {
+          showSnackBar(context: context, label: result2["message"][0].toString().length == 1 ? result2["message"].toString() : result2["message"][0].toString());
+          print("Refresh Token Invalid or Expired");
+          print("User will be signed out");
+          var response3 = await http.post(Uri.parse("$baseUrl/auth/logout"), headers: authHeader(accessToken));
+          var response4 = await http.post(Uri.parse("$baseUrl/auth/logout"), headers: authHeader(refreshToken));
+          print("Attempting to Logging out");
+          Map result3 = jsonDecode(response3.body);
+          Map result4 = jsonDecode(response4.body);
+          print(result3);
+          print(result4);
+          final pref = await SharedPreferences.getInstance();
+          pref.remove("accessToken");
+          routeNoBack(context, const SignIn());
+        }
+      }
+    } on Exception catch (e) {
+      showSnackBar(context: context, label: e.toString());
+    }
+  }
+
 //Functions
   defaultInit() async {
     initiateNotificationReceiver();
     final pref = await SharedPreferences.getInstance();
     setState(() => accessToken = pref.getString("accessToken") ?? "");
+    setState(() => refreshToken = pref.getString("refreshToken") ?? "");
     setState(() => buildingName = pref.getString("buildingName"));
     setState(() => buildingAddress = pref.getString("buildingAddress"));
     setState(() => buildingImg = pref.getString("buildingImg"));
+    await verifyAccessToken(accessToken: accessToken, refreshToken: refreshToken);
     await readBuildingInfo(accessToken: accessToken);
     await sendFcmToken(accessToken: accessToken);
   }
@@ -107,18 +152,18 @@ class _HomeState extends State<Home> {
         //     });
       }
     }
-    // );
-    // FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-    //   print('A new onMessageOpenedApp event was published!');
-    //   RemoteNotification? notification = message.notification;
-    //   AndroidNotification? android = message.notification?.android;
-    //   if (notification != null && android != null) {
-    //     print(message.data);
-    //     print(notification.body);
-    //     if (message.data["topic"] == "security-alert") route(context, SecurityAlertScreen(alert: message.data["alertTypeName"], flat: message.data["flatName"]));
-    //   }
-    // }
-    );
+        // );
+        // FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+        //   print('A new onMessageOpenedApp event was published!');
+        //   RemoteNotification? notification = message.notification;
+        //   AndroidNotification? android = message.notification?.android;
+        //   if (notification != null && android != null) {
+        //     print(message.data);
+        //     print(notification.body);
+        //     if (message.data["topic"] == "security-alert") route(context, SecurityAlertScreen(alert: message.data["alertTypeName"], flat: message.data["flatName"]));
+        //   }
+        // }
+        );
   }
 
 //Initiate
