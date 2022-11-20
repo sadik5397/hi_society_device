@@ -10,7 +10,8 @@ import '../theme/colors.dart';
 import '../theme/padding_margin.dart';
 import '../views/auth/sign_in.dart';
 
-Scaffold switchGuardUser({required BuildContext context}) {
+Scaffold switchGuardUser({required BuildContext context, required
+VoidCallback onSignOut}) {
   return Scaffold(
       backgroundColor: trueBlack.withOpacity(.5),
       body: Center(
@@ -36,10 +37,6 @@ Scaffold switchGuardUser({required BuildContext context}) {
                         primary: false,
                         context: context,
                         title: "DEACTIVATE DEVICE",
-                        onTap: () async {
-                          final pref = await SharedPreferences.getInstance();
-                          await pref.clear();
-                          route(context, const SignIn());
-                        }))
+                        onTap: onSignOut))
               ]))));
 }

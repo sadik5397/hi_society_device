@@ -42,20 +42,26 @@ class _HomeState extends State<Home> {
 // APIs
   Future<void> readBuildingInfo({required String accessToken}) async {
     try {
-      var response = await http.get(Uri.parse("$baseUrl/building/info/by-guard"), headers: authHeader(accessToken));
+      var response = await http.get(
+          Uri.parse("$baseUrl/building/info/by-guard"),
+          headers: authHeader(accessToken));
       Map result = jsonDecode(response.body);
-      if (result["code"] == 200) showSnackBar(context: context, label: result["response"]); //success
-      if (result["code"] != 200) showSnackBar(context: context, label: result["message"]); //error
+      if (result["code"] == 200)
+        showSnackBar(context: context, label: result["response"]); //success
+      if (result["code"] != 200)
+        showSnackBar(context: context, label: result["message"]); //error
       setState(() => apiResult = result["data"]);
       setState(() => buildingName = apiResult["buildingName"]);
       setState(() => buildingAddress = apiResult["address"]);
-      setState(() => buildingImg = "https://source.unsplash.com/random/?building");
+      setState(
+          () => buildingImg = "https://source.unsplash.com/random/?building");
       final pref = await SharedPreferences.getInstance();
       await pref.setString("buildingName", apiResult["buildingName"]);
       await pref.setString("buildingAddress", apiResult["address"]);
       await pref.setInt("buildingID", apiResult["buildingId"]);
       await pref.setString("buildingUniqueID", apiResult["uniqueId"]);
-      await pref.setString("buildingImg", "https://source.unsplash.com/random/?building");
+      await pref.setString(
+          "buildingImg", "https://source.unsplash.com/random/?building");
     } on Exception catch (e) {
       showSnackBar(context: context, label: e.toString());
     }
@@ -66,30 +72,43 @@ class _HomeState extends State<Home> {
     String platform = (Platform.isAndroid) ? "android" : "ios";
     if (kDebugMode) print('$platform Token: $fcmToken');
     try {
-      var response = await http.post(Uri.parse("$baseUrl/push/token/update"), headers: authHeader(accessToken), body: jsonEncode({"token": fcmToken, "device": platform}));
+      var response = await http.post(Uri.parse("$baseUrl/push/token/update"),
+          headers: authHeader(accessToken),
+          body: jsonEncode({"token": fcmToken, "device": platform}));
       Map result = jsonDecode(response.body);
       if (result["statusCode"] == 200 || result["statusCode"] == 201) {
         showSnackBar(context: context, label: result["message"]);
       } else {
-        showSnackBar(context: context, label: result["message"][0].toString().length == 1 ? result["message"].toString() : result["message"][0].toString());
+        showSnackBar(
+            context: context,
+            label: result["message"][0].toString().length == 1
+                ? result["message"].toString()
+                : result["message"][0].toString());
       }
     } on Exception catch (e) {
       showSnackBar(context: context, label: e.toString());
     }
   }
 
-  Future<void> verifyAccessToken({required String accessToken, required String refreshToken}) async {
+  Future<void> verifyAccessToken(
+      {required String accessToken, required String refreshToken}) async {
     try {
-      var response1 = await http.post(Uri.parse("$baseUrl/auth/jwt/verify"), headers: authHeader(accessToken));
+      var response1 = await http.post(Uri.parse("$baseUrl/auth/jwt/verify"),
+          headers: authHeader(accessToken));
       Map result1 = jsonDecode(response1.body);
       print(result1);
       if (result1["statusCode"] == 200 || result1["statusCode"] == 201) {
         showSnackBar(context: context, label: result1["message"]);
         print("-------Access Token Verified---------");
       } else {
-        showSnackBar(context: context, label: result1["message"][0].toString().length == 1 ? result1["message"].toString() : result1["message"][0].toString());
+        showSnackBar(
+            context: context,
+            label: result1["message"][0].toString().length == 1
+                ? result1["message"].toString()
+                : result1["message"][0].toString());
         print("Access Token Invalid or Expired");
-        var response2 = await http.post(Uri.parse("$baseUrl/auth/jwt/refresh"), headers: authHeader(refreshToken));
+        var response2 = await http.post(Uri.parse("$baseUrl/auth/jwt/refresh"),
+            headers: authHeader(refreshToken));
         print("Attempting to refresh the Access Token");
         Map result2 = jsonDecode(response2.body);
         print(result2);
@@ -99,11 +118,17 @@ class _HomeState extends State<Home> {
           await pref.setString("accessToken", result2["data"]["accessToken"]);
           await pref.setString("refreshToken", result2["data"]["refreshToken"]);
         } else {
-          showSnackBar(context: context, label: result2["message"][0].toString().length == 1 ? result2["message"].toString() : result2["message"][0].toString());
+          showSnackBar(
+              context: context,
+              label: result2["message"][0].toString().length == 1
+                  ? result2["message"].toString()
+                  : result2["message"][0].toString());
           print("Refresh Token Invalid or Expired");
           print("User will be signed out");
-          var response3 = await http.post(Uri.parse("$baseUrl/auth/logout"), headers: authHeader(accessToken));
-          var response4 = await http.post(Uri.parse("$baseUrl/auth/logout"), headers: authHeader(refreshToken));
+          var response3 = await http.post(Uri.parse("$baseUrl/auth/logout"),
+              headers: authHeader(accessToken));
+          var response4 = await http.post(Uri.parse("$baseUrl/auth/logout"),
+              headers: authHeader(refreshToken));
           print("Attempting to Logging out");
           Map result3 = jsonDecode(response3.body);
           Map result4 = jsonDecode(response4.body);
@@ -119,6 +144,24 @@ class _HomeState extends State<Home> {
     }
   }
 
+  Future<void> doSignOutFromSystem(
+      {required String accessToken, required String refreshToken}) async {
+    var response1 = await http.post(Uri.parse("$baseUrl/auth/logout"),
+        headers: authHeader(accessToken));
+    Map result1 = jsonDecode(response1.body);
+    print(result1);
+    if (result1["statusCode"] == 200 || result1["statusCode"] == 201) {
+      showSnackBar(context: context, label: result1["message"]);
+    }
+    var response2 = await http.post(Uri.parse("$baseUrl/auth/logout"),
+        headers: authHeader(refreshToken));
+    Map result2 = jsonDecode(response2.body);
+    print(result2);
+    if (result2["statusCode"] == 200 || result2["statusCode"] == 201) {
+      showSnackBar(context: context, label: result2["message"]);
+    }
+  }
+
 //Functions
   defaultInit() async {
     initiateNotificationReceiver();
@@ -128,7 +171,8 @@ class _HomeState extends State<Home> {
     setState(() => buildingName = pref.getString("buildingName"));
     setState(() => buildingAddress = pref.getString("buildingAddress"));
     setState(() => buildingImg = pref.getString("buildingImg"));
-    await verifyAccessToken(accessToken: accessToken, refreshToken: refreshToken);
+    await verifyAccessToken(
+        accessToken: accessToken, refreshToken: refreshToken);
     await readBuildingInfo(accessToken: accessToken);
     await sendFcmToken(accessToken: accessToken);
   }
@@ -141,7 +185,12 @@ class _HomeState extends State<Home> {
       AndroidNotification? android = message.notification?.android;
       if (notification != null && android != null) {
         print("${message.data}-------------------->>");
-        if (message.data["topic"] == "security-alert") route(context, SecurityAlertScreen(alert: message.data["alertTypeName"], flat: message.data["flatName"]));
+        if (message.data["topic"] == "security-alert")
+          route(
+              context,
+              SecurityAlertScreen(
+                  alert: message.data["alertTypeName"],
+                  flat: message.data["flatName"]));
         // showSnackBar(
         //     context: context,
         //     label: message.notification!.title ?? "Got a New Notification",
@@ -182,11 +231,31 @@ class _HomeState extends State<Home> {
           child: Scaffold(
               appBar: primaryAppBar(
                 context: context,
-                prefix: IconButton(onPressed: () => Phoenix.rebirth(context), icon: const Icon(Icons.settings_backup_restore)),
-                suffix: IconButton(onPressed: () => showDialog(context: context, builder: (BuildContext context) => switchGuardUser(context: context)), icon: const Icon(Icons.lock_outline_rounded)),
+                prefix: IconButton(
+                    onPressed: () => Phoenix.rebirth(context),
+                    icon: const Icon(Icons.settings_backup_restore)),
+                suffix: IconButton(
+                    onPressed: () => showDialog(
+                        context: context,
+                        builder: (BuildContext context) => switchGuardUser(
+                            context: context,
+                            onSignOut: () async {
+                              route(context, const SignIn());
+                              final pref =
+                                  await SharedPreferences.getInstance();
+                              await pref.clear();
+                              await doSignOutFromSystem(
+                                  accessToken: accessToken,
+                                  refreshToken: refreshToken);
+                            })),
+                    icon: const Icon(Icons.lock_outline_rounded)),
               ),
               body: Column(children: [
-                HeaderBuildingImage(flex: 3, buildingAddress: buildingAddress ?? "Getting Location...", buildingImage: buildingImg ?? placeholderImage, buildingName: buildingName ?? "LOADING!"),
+                HeaderBuildingImage(
+                    flex: 3,
+                    buildingAddress: buildingAddress ?? "Getting Location...",
+                    buildingImage: buildingImg ?? placeholderImage,
+                    buildingName: buildingName ?? "LOADING!"),
                 Expanded(
                     flex: 2,
                     child: Row(children: [
@@ -194,22 +263,54 @@ class _HomeState extends State<Home> {
                           title: "Visitor Management",
                           assetImage: "visitor",
                           context: context,
-                          toPage: VisitorMobileNoEntry(buildingAddress: buildingAddress ?? "Getting Location...", buildingImg: buildingImg ?? placeholderImage, buildingName: buildingName ?? "LOADING!")),
-                      menuGridTile(title: "Delivery Management", assetImage: "delivery", context: context, toPage: const ReceiveOrDistribute())
+                          toPage: VisitorMobileNoEntry(
+                              buildingAddress:
+                                  buildingAddress ?? "Getting Location...",
+                              buildingImg: buildingImg ?? placeholderImage,
+                              buildingName: buildingName ?? "LOADING!")),
+                      menuGridTile(
+                          title: "Delivery Management",
+                          assetImage: "delivery",
+                          context: context,
+                          toPage: const ReceiveOrDistribute())
                     ])),
                 Expanded(
                     flex: 2,
                     child: Row(children: [
-                      menuGridTile(title: "Gate Pass", assetImage: "gatePass", context: context, toPage: const VisitorGatePassCodeEntry()),
-                      menuGridTile(title: "Intercom", assetImage: "intercom", context: context, toPage: const ContactList()),
-                      menuGridTile(title: "Car Parking", assetImage: "parking", context: context, toPage: const CarParking())
+                      menuGridTile(
+                          title: "Gate Pass",
+                          assetImage: "gatePass",
+                          context: context,
+                          toPage: const VisitorGatePassCodeEntry()),
+                      menuGridTile(
+                          title: "Intercom",
+                          assetImage: "intercom",
+                          context: context,
+                          toPage: const ContactList()),
+                      menuGridTile(
+                          title: "Car Parking",
+                          assetImage: "parking",
+                          context: context,
+                          toPage: const CarParking())
                     ])),
                 Expanded(
                     flex: 2,
                     child: Row(children: [
-                      menuGridTile(title: "Overstay Alert", assetImage: "overstay", context: context, toPage: const OverstayAlerts()),
-                      menuGridTile(title: "Utility Contacts", assetImage: "utility", context: context, toPage: const UtilityContacts()),
-                      menuGridTile(title: "Residents", assetImage: "apartment", context: context, toPage: const BuildingFlatsAndResidents())
+                      menuGridTile(
+                          title: "Overstay Alert",
+                          assetImage: "overstay",
+                          context: context,
+                          toPage: const OverstayAlerts()),
+                      menuGridTile(
+                          title: "Utility Contacts",
+                          assetImage: "utility",
+                          context: context,
+                          toPage: const UtilityContacts()),
+                      menuGridTile(
+                          title: "Residents",
+                          assetImage: "apartment",
+                          context: context,
+                          toPage: const BuildingFlatsAndResidents())
                     ]))
               ]))),
     );
