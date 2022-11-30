@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:hi_society_device/component/app_bar.dart';
@@ -6,7 +8,6 @@ import 'package:hi_society_device/component/page_navigation.dart';
 import 'package:hi_society_device/theme/colors.dart';
 import 'package:hi_society_device/theme/padding_margin.dart';
 import 'package:hi_society_device/views/residents/assign_flat_resident.dart';
-import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -72,13 +73,15 @@ class _BuildingFlatsAndResidentsState extends State<BuildingFlatsAndResidents> {
               child: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
                 CachedNetworkImage(imageUrl: buildingImg, height: 160, width: 160, fit: BoxFit.cover),
                 SizedBox(width: primaryPaddingValue * 1.5),
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Text(buildingName, style: Theme.of(context).textTheme.displaySmall?.copyWith(color: primaryTitleColor, fontWeight: FontWeight.w600)),
-                  const SizedBox(height: 10),
-                  Text("Building ID: $buildingUniqueID", style: Theme.of(context).textTheme.titleLarge?.copyWith(color: primaryTitleColor, height: 1.5)),
-                  Text("Address: $buildingAddress", style: Theme.of(context).textTheme.titleLarge?.copyWith(color: primaryTitleColor)),
-                  Text("Chairman: S.a. Sadik", style: Theme.of(context).textTheme.titleLarge?.copyWith(color: primaryTitleColor))
-                ])
+                Expanded(
+                  child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                    Text(buildingName, style: Theme.of(context).textTheme.displaySmall?.copyWith(color: primaryTitleColor, fontWeight: FontWeight.w600)),
+                    const SizedBox(height: 10),
+                    Text("Building ID: $buildingUniqueID", style: Theme.of(context).textTheme.titleLarge?.copyWith(color: primaryTitleColor, height: 1.5)),
+                    Text("Address: $buildingAddress", style: Theme.of(context).textTheme.titleLarge?.copyWith(color: primaryTitleColor)),
+                    Text("Chairman: S.a. Sadik", style: Theme.of(context).textTheme.titleLarge?.copyWith(color: primaryTitleColor)) //todo: change Chairman/Manager Name
+                  ]),
+                )
               ])),
           Padding(
               padding: EdgeInsets.all(primaryPaddingValue * 2),
@@ -97,7 +100,11 @@ class _BuildingFlatsAndResidentsState extends State<BuildingFlatsAndResidents> {
                   title: apiResult[index]["flatName"],
                   isVerified: apiResult[index]["residentHead"] != null,
                   subTitle: (apiResult[index]["residentHead"] != null) ? apiResult[index]["residentHead"]["name"] : null,
-                  onTap: () => route(context, AssignFlatResident(flatID: apiResult[index]["flatId"], flatNo: apiResult[index]["flatName"]))))
+                  onTap: () {
+                    (apiResult[index]["residentHead"] != null)
+                        ? showSnackBar(context: context, label: '${apiResult[index]["residentHead"]["name"]} Is Assigned Already', seconds: 5) //todo: show ERROR
+                        : route(context, AssignFlatResident(flatID: apiResult[index]["flatId"], flatNo: apiResult[index]["flatName"]));
+                  }))
         ]));
   }
 }

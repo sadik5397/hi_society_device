@@ -1,15 +1,15 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:qr_flutter/qr_flutter.dart';
-import '../../component/app_bar.dart';
-import '../../theme/colors.dart';
-import '../../theme/padding_margin.dart';
 import 'package:http/http.dart' as http;
+import 'package:qr_flutter/qr_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../api/api.dart';
+import '../../component/app_bar.dart';
 import '../../component/snack_bar.dart';
+import '../../theme/colors.dart';
+import '../../theme/padding_margin.dart';
 
 class AssignFlatResident extends StatefulWidget {
   const AssignFlatResident({Key? key, required this.flatID, required this.flatNo}) : super(key: key);
@@ -73,7 +73,7 @@ class _AssignFlatResidentState extends State<AssignFlatResident> {
                   padding: EdgeInsets.only(bottom: primaryPaddingValue * 4),
                   alignment: Alignment.center,
                   color: primaryColor,
-                  child: SelectableText(apiResult["code"] ?? "WAIT", style: Theme.of(context).textTheme.displayLarge?.copyWith(color: trueWhite, fontWeight: FontWeight.bold, fontSize: 150))))
+                  child: FittedBox(child: SelectableText(apiResult["code"] ?? "WAIT", style: Theme.of(context).textTheme.displayLarge?.copyWith(color: trueWhite, fontWeight: FontWeight.bold, fontSize: 150)))))
         ]));
   }
 }
