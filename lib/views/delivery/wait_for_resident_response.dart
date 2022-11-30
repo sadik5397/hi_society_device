@@ -1,4 +1,5 @@
-import 'package:cached_network_image/cached_network_image.dart';
+import 'dart:convert';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:hi_society_device/component/app_bar.dart';
@@ -9,10 +10,9 @@ import 'package:hi_society_device/theme/border_radius.dart';
 import 'package:hi_society_device/theme/colors.dart';
 import 'package:hi_society_device/theme/padding_margin.dart';
 import 'package:hi_society_device/views/home.dart';
-import 'package:intl/intl.dart';
-import 'package:lottie/lottie.dart';
-import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:lottie/lottie.dart';
+
 import '../../api/api.dart';
 import '../../component/snack_bar.dart';
 
@@ -36,8 +36,8 @@ class _WaitForResidentResponseState extends State<WaitForResidentResponse> {
   String? allowStatus; //should be "false" or "true"
   bool timeOut = false;
   TextEditingController mobileNumberController = TextEditingController();
-  int checkStatusIntervalSec = 15;
-  int autoRejectAfterHowManyCount = 4;
+  int checkStatusIntervalSec = 60;
+  int autoRejectAfterHowManyCount = 5;
   int requestedVisitorHistoryID = 0;
 
   //APIs

@@ -1,5 +1,6 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+
 import '../theme/border_radius.dart';
 import '../theme/colors.dart';
 import '../theme/padding_margin.dart';
@@ -29,14 +30,18 @@ Container primaryDropdown(
             dropdownPadding: EdgeInsets.zero,
             dropdownDecoration: BoxDecoration(borderRadius: primaryBorderRadius, color: trueWhite),
             hint: SelectableText(title, style: Theme.of(context).textTheme.titleLarge?.copyWith(color: primaryBlack, fontWeight: FontWeight.w500)),
-            items: options
-                .map((item) => DropdownMenuItem<String>(
-                    value: item,
+            items: List.generate(
+                options.length,
+                (index) => DropdownMenuItem<String>(
+                    value: options[index],
                     child: Column(children: [
-                      Expanded(child: Center(child: Text(item, style: Theme.of(context).textTheme.titleLarge?.copyWith(color: primaryBlack, fontWeight: FontWeight.w500)))),
+                      Expanded(
+                          child: Container(
+                              alignment: Alignment.center,
+                              color: (index % 2 == 0) ? Colors.blueAccent.shade100.withOpacity(.15) : Colors.orangeAccent.shade100.withOpacity(.15),
+                              child: Text(options[index], style: Theme.of(context).textTheme.titleLarge?.copyWith(color: primaryBlack, fontWeight: FontWeight.w500)))),
                       Divider(color: primaryGrey, indent: 0, endIndent: 0, height: 1, thickness: .5)
-                    ])))
-                .toList(),
+                    ]))),
             selectedItemBuilder: (context) => List.generate(
                 options.length,
                 (index) => Align(

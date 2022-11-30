@@ -1,6 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:hi_society_device/theme/padding_margin.dart';
 import 'package:hi_society_device/theme/placeholder.dart';
+
 import '../theme/colors.dart';
 
 class HeaderBuildingImage extends StatefulWidget {
@@ -30,7 +32,9 @@ class _HeaderBuildingImageState extends State<HeaderBuildingImage> {
                     Image.asset("assets/icon/icon.png", height: 72),
                     const SizedBox(height: 12),
                     Text(widget.buildingName!, textAlign: TextAlign.center, style: Theme.of(context).textTheme.displayLarge?.copyWith(fontWeight: FontWeight.bold, color: trueWhite)),
-                    Text(widget.buildingAddress!, style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold))
+                    Padding(
+                        padding: EdgeInsets.symmetric(horizontal: primaryPaddingValue * 2),
+                        child: Text(widget.buildingAddress!, style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold), textAlign: TextAlign.center))
                   ]))),
         ));
   }

@@ -1,18 +1,20 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
-import 'dart:io';
 import 'package:hi_society_device/component/button.dart';
 import 'package:hi_society_device/component/dropdown_button.dart';
 import 'package:hi_society_device/component/page_navigation.dart';
 import 'package:hi_society_device/component/text_field.dart';
 import 'package:hi_society_device/theme/padding_margin.dart';
 import 'package:hi_society_device/views/visitor/ask_permission_to_enter.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import '../../api/api.dart';
-import '../../component/app_bar.dart';
-import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../api/api.dart';
+import '../../component/app_bar.dart';
 import '../../component/snack_bar.dart';
 import '../../theme/border_radius.dart';
 import '../../theme/colors.dart';
@@ -35,7 +37,7 @@ class _NewVisitorInformationState extends State<NewVisitorInformation> {
   TextEditingController emailController = TextEditingController();
   late TextEditingController mobileNumberController = TextEditingController(text: widget.mobileNumber);
   List<String> flatList = [];
-  List<String> relationList = ["Father", "Mother", "Sister", "Brother", "Spouse", "Friend", "Colleague", "Others"];
+  List<String> relationList = ["Family Meet", "Official", "Others"];
   List<int> flatID = [];
   late String selectedFlat = widget.selectedFlat;
   String? selectedRelation;
@@ -117,7 +119,7 @@ class _NewVisitorInformationState extends State<NewVisitorInformation> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: primaryAppBar(context: context,title: "New Visitor"),
+        appBar: primaryAppBar(context: context, title: "New Visitor"),
         body: ListView(padding: EdgeInsets.symmetric(vertical: primaryPaddingValue * 4), children: [
           // SelectableText(base64img),
           primaryTextField(
@@ -158,8 +160,8 @@ class _NewVisitorInformationState extends State<NewVisitorInformation> {
           ),
           primaryDropdown(
             context: context,
-            key: "Relation",
-            title: "Relation?",
+            key: "Purpose",
+            title: "Purpose?",
             options: relationList,
             value: selectedRelation,
             onChanged: (value) => setState(() => selectedRelation = value.toString()),
@@ -207,9 +209,7 @@ class _NewVisitorInformationState extends State<NewVisitorInformation> {
                       successRoute: () => route(
                           context,
                           AskPermissionToEnter(
-                              visitorName: nameController.text, isNew: true, visitorPhoto: base64img, flatID: flatID[flatList.indexOf(selectedFlat)], mobileNumber:
-                          mobileNumberController
-                              .text)),
+                              visitorName: nameController.text, isNew: true, visitorPhoto: base64img, flatID: flatID[flatList.indexOf(selectedFlat)], mobileNumber: mobileNumberController.text)),
                     );
                   }))
         ]));

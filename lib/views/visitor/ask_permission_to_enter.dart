@@ -1,4 +1,4 @@
-import 'dart:typed_data';
+import 'dart:convert';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -12,11 +12,10 @@ import 'package:hi_society_device/theme/colors.dart';
 import 'package:hi_society_device/theme/date_format.dart';
 import 'package:hi_society_device/theme/padding_margin.dart';
 import 'package:hi_society_device/views/home.dart';
-import 'package:intl/intl.dart';
+import 'package:http/http.dart' as http;
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
+
 import '../../api/api.dart';
 import '../../component/snack_bar.dart';
 
@@ -39,8 +38,8 @@ class _AskPermissionToEnterState extends State<AskPermissionToEnter> {
   dynamic permissionResult;
   String? allowStatus; //should be "false" or "true"
   TextEditingController mobileNumberController = TextEditingController();
-  int checkStatusIntervalSec = 15;
-  int autoRejectAfterHowManyCount = 4;
+  int checkStatusIntervalSec = 60;
+  int autoRejectAfterHowManyCount = 5;
   int requestedVisitorHistoryID = 0;
 
   //APIs

@@ -229,9 +229,9 @@ class _HomeState extends State<Home> {
                 Expanded(
                     flex: 2,
                     child: Row(children: [
-                      menuGridTile(title: "Gate Pass", assetImage: "gatePass", context: context, toPage: const VisitorGatePassCodeEntry()),
+                      menuGridTile(title: "Digital Gate Pass", assetImage: "gatePass", context: context, toPage: const VisitorGatePassCodeEntry()),
                       menuGridTile(title: "Intercom", assetImage: "intercom", context: context, toPage: const ContactList()),
-                      menuGridTile(title: "Car Parking", assetImage: "parking", context: context, toPage: const CarParking())
+                      menuGridTile(title: "Required Car Parking", assetImage: "parking", context: context, toPage: const CarParking())
                     ])),
                 Expanded(
                     flex: 2,
