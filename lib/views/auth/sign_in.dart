@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hi_society_device/api/i18n.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -27,6 +28,7 @@ class _SignInState extends State<SignIn> {
   final TextEditingController passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   dynamic apiResult = {};
+  bool isBN = false;
 
 //APIs
   Future<void> doSignIn({required String email, required String password, required VoidCallback home}) async {
@@ -51,7 +53,10 @@ class _SignInState extends State<SignIn> {
   }
 
 //Functions
-  defaultInit() async {}
+  defaultInit() async {
+    final pref = await SharedPreferences.getInstance();
+    setState(() => isBN = pref.getBool("isBN") ?? false);
+  }
 
 //Initiate
   @override
@@ -68,7 +73,7 @@ class _SignInState extends State<SignIn> {
             body: Center(
           child: ListView(shrinkWrap: true, children: [
             Image.asset("assets/icon/icon_only.png", height: 200),
-            Text("Hi Society", textAlign: TextAlign.center, style: Theme.of(context).textTheme.displayMedium?.copyWith(fontWeight: FontWeight.bold, color: trueWhite)),
+            Text(i18n_appTitle(isBN), textAlign: TextAlign.center, style: Theme.of(context).textTheme.displayMedium?.copyWith(fontWeight: FontWeight.bold, color: trueWhite)),
             SizedBox(height: primaryPaddingValue * 3),
             Form(
                 key: _formKey,
@@ -76,17 +81,17 @@ class _SignInState extends State<SignIn> {
                   primaryTextField(
                       context: context,
                       controller: emailController,
-                      labelText: "Enter Hi Society Email",
+                      labelText: i18n_enterEmail(isBN),
                       keyboardType: TextInputType.emailAddress,
                       autoFocus: true,
-                      errorText: "Username/Email required",
+                      errorText: i18n_requiredField(isBN),
                       textCapitalization: TextCapitalization.none),
                   primaryTextField(
                       context: context,
                       controller: passwordController,
-                      labelText: "Enter Password",
+                      labelText: i18n_enterPassword(isBN),
                       isPassword: true,
-                      errorText: "Password required",
+                      errorText: i18n_requiredField(isBN),
                       textCapitalization: TextCapitalization.none,
                       showPassword: showPassword,
                       showPasswordPressed: () => setState(() => showPassword = !showPassword))
@@ -96,7 +101,7 @@ class _SignInState extends State<SignIn> {
                 child: primaryButton(
                     context: context,
                     // loadingWait: loadingWait,
-                    title: "Login",
+                    title: i18n_login(isBN),
                     onTap: () async {
                       FocusManager.instance.primaryFocus?.unfocus();
                       // setState(() => loadingWait = true);
@@ -107,19 +112,19 @@ class _SignInState extends State<SignIn> {
                           home: () => route(context, const Home()),
                         );
                       } else {
-                        showSnackBar(context: context, label: "Invalid Entry! Please Check");
+                        showSnackBar(context: context, label: i18n_invalidEntry(isBN));
                       }
                       // setState(() => loadingWait = false);
                     })),
             Padding(
                 padding: EdgeInsets.only(top: primaryPaddingValue, bottom: primaryPaddingValue * 4),
                 child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                  Text("Having trouble login?", style: Theme.of(context).textTheme.titleSmall),
+                  Text(i18n_havingTroubleLogin(isBN), style: Theme.of(context).textTheme.titleSmall),
                   InkWell(
-                      child: Text(" Please contact HI SOCIETY ", style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w900)),
+                      child: Text(" ${i18n_pleaseContact(isBN)} ", style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w900)),
                       onTap: () {
                         FocusManager.instance.primaryFocus?.unfocus();
-                        showSnackBar(context: context, label: "Please contact HI SOCIETY", seconds: 6);
+                        showSnackBar(context: context, label: i18n_pleaseContact(isBN), seconds: 6);
                       })
                 ]))
           ]),

@@ -5,6 +5,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
+import 'package:hi_society_device/api/i18n.dart';
 import 'package:hi_society_device/theme/placeholder.dart';
 import 'package:hi_society_device/views/auth/sign_in.dart';
 import 'package:hi_society_device/views/car_parking/car_parking.dart';
@@ -40,6 +41,9 @@ class _HomeState extends State<Home> {
   String refreshToken = "";
   String? buildingName, buildingAddress, buildingImg;
   dynamic apiResult;
+  bool validToken = false;
+  bool isBN = true;
+
 
 // APIs
   Future<void> readBuildingInfo({required String accessToken}) async {
@@ -89,6 +93,7 @@ class _HomeState extends State<Home> {
       if (result1["statusCode"] == 200 || result1["statusCode"] == 201) {
         showSnackBar(context: context, label: result1["message"]);
         print("-------Access Token Verified---------");
+        setState(() => validToken = true);
       } else {
         showSnackBar(context: context, label: result1["message"][0].toString().length == 1 ? result1["message"].toString() : result1["message"][0].toString());
         print("Access Token Invalid or Expired");
@@ -147,8 +152,8 @@ class _HomeState extends State<Home> {
     setState(() => buildingAddress = pref.getString("buildingAddress"));
     setState(() => buildingImg = pref.getString("buildingImg"));
     await verifyAccessToken(accessToken: accessToken, refreshToken: refreshToken);
-    await readBuildingInfo(accessToken: accessToken);
-    await sendFcmToken(accessToken: accessToken);
+    if (validToken) await readBuildingInfo(accessToken: accessToken);
+    if (validToken) await sendFcmToken(accessToken: accessToken);
   }
 
   //todo: SplashScreen e dibo
@@ -213,32 +218,34 @@ class _HomeState extends State<Home> {
                               await doSignOutFromSystem(accessToken: accessToken, refreshToken: refreshToken);
                             })),
                     icon: const Icon(Icons.lock_outline_rounded)),
+                isBN: isBN,
               ),
               body: Column(children: [
-                HeaderBuildingImage(flex: 3, buildingAddress: buildingAddress ?? "Getting Location...", buildingImage: buildingImg ?? placeholderImage, buildingName: buildingName ?? "LOADING!"),
+                HeaderBuildingImage(flex: 3, buildingAddress: buildingAddress ?? "...", buildingImage: buildingImg ?? placeholderImage, buildingName: buildingName ?? "..."),
                 Expanded(
                     flex: 2,
                     child: Row(children: [
                       menuGridTile(
-                          title: "Visitor Management",
+                          title: i18n_visitorManagement(isBN),
                           assetImage: "visitor",
                           context: context,
-                          toPage: VisitorMobileNoEntry(buildingAddress: buildingAddress ?? "Getting Location...", buildingImg: buildingImg ?? placeholderImage, buildingName: buildingName ?? "LOADING!")),
-                      menuGridTile(title: "Delivery Management", assetImage: "delivery", context: context, toPage: const ReceiveOrDistribute())
+                          toPage:
+                              VisitorMobileNoEntry(buildingAddress: buildingAddress ?? "...", buildingImg: buildingImg ?? placeholderImage, buildingName: buildingName ?? "...")),
+                      menuGridTile(title: i18n_deliveryManagement(isBN), assetImage: "delivery", context: context, toPage: const ReceiveOrDistribute())
                     ])),
                 Expanded(
                     flex: 2,
                     child: Row(children: [
-                      menuGridTile(title: "Digital Gate Pass", assetImage: "gatePass", context: context, toPage: const VisitorGatePassCodeEntry()),
-                      menuGridTile(title: "Intercom", assetImage: "intercom", context: context, toPage: const ContactList()),
-                      menuGridTile(title: "Required Car Parking", assetImage: "parking", context: context, toPage: const CarParking())
+                      menuGridTile(title: i18n_digitalGatePass(isBN), assetImage: "gatePass", context: context, toPage: const VisitorGatePassCodeEntry()),
+                      menuGridTile(title: i18n_intercom(isBN), assetImage: "intercom", context: context, toPage: const ContactList()),
+                      menuGridTile(title: i18n_requiredCarParking(isBN), assetImage: "parking", context: context, toPage: const CarParking())
                     ])),
                 Expanded(
                     flex: 2,
                     child: Row(children: [
-                      menuGridTile(title: "Overstay Alert", assetImage: "overstay", context: context, toPage: const OverstayAlerts()),
-                      menuGridTile(title: "Utility Contacts", assetImage: "utility", context: context, toPage: const UtilityContacts()),
-                      menuGridTile(title: "Residents", assetImage: "apartment", context: context, toPage: const BuildingFlatsAndResidents())
+                      menuGridTile(title: i18n_overstayAlert(isBN), assetImage: "overstay", context: context, toPage: const OverstayAlerts()),
+                      menuGridTile(title: i18n_utilityContacts(isBN), assetImage: "utility", context: context, toPage: const UtilityContacts()),
+                      menuGridTile(title: i18n_residents(isBN), assetImage: "apartment", context: context, toPage: const BuildingFlatsAndResidents())
                     ]))
               ]))),
     );

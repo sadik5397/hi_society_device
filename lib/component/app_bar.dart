@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hi_society_device/api/i18n.dart';
 import 'package:hi_society_device/component/page_navigation.dart';
 import 'package:hi_society_device/views/auth/sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -6,10 +7,10 @@ import '../theme/colors.dart';
 import '../theme/padding_margin.dart';
 import '../theme/text_style.dart';
 
-AppBar primaryAppBar({required BuildContext context, String? title, Widget? prefix, Widget? suffix}) =>
-    AppBar(leading: (prefix != null) ? prefix : null, title: Text(title ?? "Hi Society"), actions: (suffix != null) ? [suffix] : null);
+AppBar primaryAppBar({required BuildContext context, String? title, Widget? prefix, Widget? suffix, bool isBN = false}) =>
+    AppBar(leading: (prefix != null) ? prefix : null, title: Text(title ?? i18n_appTitle(isBN)), actions: (suffix != null) ? [suffix] : null);
 
-AppBar primaryAppbarWithTabs({required BuildContext context, String? title, required List<String> tabs, TabController? controller}) {
+AppBar primaryAppbarWithTabs({required BuildContext context, String? title, required List<String> tabs, TabController? controller, bool isBN = false}) {
   return AppBar(
       bottom: TabBar(
         controller: controller,
@@ -26,7 +27,7 @@ AppBar primaryAppbarWithTabs({required BuildContext context, String? title, requ
         indicatorColor: primaryColor,
         tabs: List.generate(tabs.length, (index) => Tab(text: tabs[index])),
       ),
-      title: Text(title ?? "Hi Society"),
+      title: Text(title ?? i18n_appTitle(isBN)),
       actions: [
         IconButton(
             onPressed: () async {
@@ -39,6 +40,6 @@ AppBar primaryAppbarWithTabs({required BuildContext context, String? title, requ
       ]);
 }
 
-AppBar blankAppBar({String? title}) {
-  return AppBar(title: Text(title ?? "Hi Society", style: semiBold20Black), centerTitle: true);
+AppBar blankAppBar({String? title, bool isBN = false}) {
+  return AppBar(title: Text(title ?? i18n_appTitle(isBN), style: semiBold20Black), centerTitle: true);
 }
