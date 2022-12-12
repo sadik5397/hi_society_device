@@ -1,9 +1,12 @@
 import 'dart:developer';
 import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:hi_society_device/api/i18n.dart';
 import 'package:hi_society_device/views/delivery/verify_ppl.dart';
-import 'package:hi_society_device/views/gate_pass/verify_gate_pass.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 import '../../component/button.dart';
 import '../../component/page_navigation.dart';
 import '../../theme/colors.dart';
@@ -20,6 +23,7 @@ class ScanPPLQR extends StatefulWidget {
 class _ScanPPLQRState extends State<ScanPPLQR> {
   //Variables
   Barcode? result;
+  bool isBN = false;
   QRViewController? controller;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   bool cameraPaused = false;
@@ -45,7 +49,14 @@ class _ScanPPLQRState extends State<ScanPPLQR> {
 
   void _onQRViewCreated(QRViewController controller) {
     setState(() => this.controller = controller);
-    controller.scannedDataStream.listen((scanData) => setState(() => result = scanData));
+    controller.scannedDataStream.listen((scanData) {
+      setState(() => result = scanData);
+      if (result != null) {
+        controller.stopCamera();
+        controller.dispose();
+        route(context, VerifyPPL(gatePassCode: result!.code.toString()));
+      }
+    });
   }
 
   void _onPermissionSet(BuildContext context, QRViewController ctrl, bool p) {
@@ -55,10 +66,16 @@ class _ScanPPLQRState extends State<ScanPPLQR> {
     }
   }
 
+  defaultInit() async {
+    final pref = await SharedPreferences.getInstance();
+    setState(() => isBN = pref.getBool("isBN") ?? false);
+  }
+
   //Initiate
   @override
   void initState() {
     super.initState();
+    defaultInit();
     controller?.resumeCamera();
     controller?.flipCamera();
   }
@@ -80,32 +97,32 @@ class _ScanPPLQRState extends State<ScanPPLQR> {
             Padding(
                 padding: primaryPadding,
                 child: Column(mainAxisAlignment: MainAxisAlignment.end, crossAxisAlignment: CrossAxisAlignment.center, children: [
-                  Text("If you have a Pickup Parcel Later OTP with QR code,", style: semiBold14White, textAlign: TextAlign.center),
-                  Text("open it and face it to the screen", style: semiBold14White, textAlign: TextAlign.center),
-                  Text("Scan The QR Code", style: bold22White)
+                  Text(i18n_rcvParcelQrLine1(isBN), style: semiBold14White, textAlign: TextAlign.center),
+                  Text(i18n_rcvParcelQrLine2(isBN), style: semiBold14White, textAlign: TextAlign.center),
+                  Text(i18n_rcvParcelQrLine3(isBN), style: bold22White)
                 ]))
           ])),
           Padding(
               padding: primaryPadding * 2,
               child: Column(children: [
-                Padding(
-                    padding: EdgeInsets.only(bottom: primaryPaddingValue),
-                    child: Text((result != null) ? "QR Code Found! Tap Submit to Proceed" : "Having trouble scanning QR code?", textAlign: TextAlign.center, style: normal14Black)),
+                Padding(padding: EdgeInsets.only(bottom: primaryPaddingValue), child: Text((result != null) ? i18n_qrFound(isBN) : i18n_qrTrouble(isBN), textAlign: TextAlign.center, style: normal14Black)),
                 (result != null)
                     ? primaryButton(
                         context: context,
-                        title: "Submit",
+                        title: i18n_submit(isBN),
                         onTap: () async {
                           route(context, VerifyPPL(gatePassCode: result!.code.toString()));
                           await controller?.pauseCamera();
+                          await controller?.stopCamera();
                         })
                     : primaryButton(
                         context: context,
                         primary: false,
-                        title: "Type the CODE Manually",
+                        title: i18n_typeManually(isBN),
                         onTap: () async {
                           routeBack(context);
                           await controller?.pauseCamera();
+                          await controller?.stopCamera();
                         })
               ]))
         ]));

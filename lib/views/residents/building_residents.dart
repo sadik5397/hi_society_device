@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:hi_society_device/api/i18n.dart';
 import 'package:hi_society_device/component/app_bar.dart';
 import 'package:hi_society_device/component/basic_list_tile.dart';
 import 'package:hi_society_device/component/page_navigation.dart';
@@ -25,6 +26,7 @@ class _BuildingFlatsAndResidentsState extends State<BuildingFlatsAndResidents> {
   //Variables
   String accessToken = "", buildingName = "", buildingAddress = "", buildingImg = "", buildingUniqueID = "";
   dynamic apiResult = "";
+  bool isBN = false;
 
 //APIs
   Future<void> readFlatListOfThisBuilding({required String accessToken}) async {
@@ -47,6 +49,7 @@ class _BuildingFlatsAndResidentsState extends State<BuildingFlatsAndResidents> {
   defaultInit() async {
     final pref = await SharedPreferences.getInstance();
     setState(() => accessToken = pref.getString("accessToken")!);
+    setState(() => isBN = pref.getBool("isBN") ?? false);
     setState(() => buildingName = pref.getString("buildingName")!);
     setState(() => buildingAddress = pref.getString("buildingAddress")!);
     setState(() => buildingImg = pref.getString("buildingImg")!);
@@ -64,7 +67,7 @@ class _BuildingFlatsAndResidentsState extends State<BuildingFlatsAndResidents> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: primaryAppBar(context: context, title: "Building Flats & Residents"),
+        appBar: primaryAppBar(context: context, title: i18n_residents(isBN)),
         body: ListView(children: [
           Container(
               color: primaryColorOf,
@@ -74,35 +77,35 @@ class _BuildingFlatsAndResidentsState extends State<BuildingFlatsAndResidents> {
                 CachedNetworkImage(imageUrl: buildingImg, height: 160, width: 160, fit: BoxFit.cover),
                 SizedBox(width: primaryPaddingValue * 1.5),
                 Expanded(
-                  child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    Text(buildingName, style: Theme.of(context).textTheme.displaySmall?.copyWith(color: primaryTitleColor, fontWeight: FontWeight.w600)),
-                    const SizedBox(height: 10),
-                    Text("Building ID: $buildingUniqueID", style: Theme.of(context).textTheme.titleLarge?.copyWith(color: primaryTitleColor, height: 1.5)),
-                    Text("Address: $buildingAddress", style: Theme.of(context).textTheme.titleLarge?.copyWith(color: primaryTitleColor)),
-                    Text("Chairman: S.a. Sadik", style: Theme.of(context).textTheme.titleLarge?.copyWith(color: primaryTitleColor)) //todo: change Chairman/Manager Name
-                  ]),
-                )
+                    child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Text(buildingName, style: Theme.of(context).textTheme.displaySmall?.copyWith(color: primaryTitleColor, fontWeight: FontWeight.w600)),
+                  const SizedBox(height: 10),
+                  Text("${i18n_buildingId(isBN)}: $buildingUniqueID", style: Theme.of(context).textTheme.titleLarge?.copyWith(color: primaryTitleColor, height: 1.5)),
+                  Text("${i18n_buildingAddress(isBN)}: $buildingAddress", style: Theme.of(context).textTheme.titleLarge?.copyWith(color: primaryTitleColor)),
+                  Text("${i18n_buildingManager(isBN)}: S.a. Sadik", style: Theme.of(context).textTheme.titleLarge?.copyWith(color: primaryTitleColor)) //todo: change Chairman/Manager Name
+                ]))
               ])),
           Padding(
               padding: EdgeInsets.all(primaryPaddingValue * 2),
               child: Column(children: [
-                Text("List of Flat Number of this building", style: Theme.of(context).textTheme.headlineMedium?.copyWith(color: trueWhite, fontWeight: FontWeight.w500)),
+                Text(i18n_listOfFlats(isBN), style: Theme.of(context).textTheme.headlineMedium?.copyWith(color: trueWhite, fontWeight: FontWeight.w500)),
                 const SizedBox(height: 6),
-                Text("Tap to assign resident(s)", style: Theme.of(context).textTheme.titleMedium)
+                Text(i18n_tapToAssign(isBN), style: Theme.of(context).textTheme.titleMedium)
               ])),
           ListView.builder(
               shrinkWrap: true,
               primary: false,
               itemCount: apiResult.length,
               itemBuilder: (context, index) => basicListTile(
+                  isBN: isBN,
                   context: context,
-                  key: "Flat No.  ",
+                  key: i18n_flat(isBN),
                   title: apiResult[index]["flatName"],
                   isVerified: apiResult[index]["residentHead"] != null,
                   subTitle: (apiResult[index]["residentHead"] != null) ? apiResult[index]["residentHead"]["name"] : null,
                   onTap: () {
                     (apiResult[index]["residentHead"] != null)
-                        ? showSnackBar(context: context, label: '${apiResult[index]["residentHead"]["name"]} Is Assigned Already', seconds: 5) //todo: show ERROR
+                        ? showSnackBar(context: context, label: '${apiResult[index]["residentHead"]["name"]} ${i18n_isAlreadyAssigned(isBN)}', seconds: 5) //todo: show ERROR
                         : route(context, AssignFlatResident(flatID: apiResult[index]["flatId"], flatNo: apiResult[index]["flatName"]));
                   }))
         ]));

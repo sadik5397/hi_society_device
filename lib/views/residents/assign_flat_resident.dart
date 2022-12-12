@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:hi_society_device/api/i18n.dart';
 import 'package:http/http.dart' as http;
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -23,6 +24,7 @@ class AssignFlatResident extends StatefulWidget {
 class _AssignFlatResidentState extends State<AssignFlatResident> {
   String accessToken = "";
   Map apiResult = {};
+  bool isBN = false;
 
 //APIs
   Future<void> getQrCodeToAssignResidentHeadToFlat({required String accessToken, required int flatID}) async {
@@ -44,6 +46,7 @@ class _AssignFlatResidentState extends State<AssignFlatResident> {
   defaultInit() async {
     final pref = await SharedPreferences.getInstance();
     setState(() => accessToken = pref.getString("accessToken")!);
+    setState(() => isBN = pref.getBool("isBN") ?? false);
     getQrCodeToAssignResidentHeadToFlat(accessToken: accessToken, flatID: widget.flatID);
   }
 
@@ -57,7 +60,7 @@ class _AssignFlatResidentState extends State<AssignFlatResident> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: primaryAppBar(context: context, title: "Assigning Resident to Flat ${widget.flatNo}"),
+        appBar: primaryAppBar(context: context, title: "${i18n_assigningResident(isBN)} ${widget.flatNo}"),
         body: Column(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
           Expanded(
               flex: 2,
@@ -73,7 +76,8 @@ class _AssignFlatResidentState extends State<AssignFlatResident> {
                   padding: EdgeInsets.only(bottom: primaryPaddingValue * 4),
                   alignment: Alignment.center,
                   color: primaryColor,
-                  child: FittedBox(child: SelectableText(apiResult["code"] ?? "WAIT", style: Theme.of(context).textTheme.displayLarge?.copyWith(color: trueWhite, fontWeight: FontWeight.bold, fontSize: 150)))))
+                  child: FittedBox(
+                      child: SelectableText(apiResult["code"] ?? i18n_wait(isBN), style: Theme.of(context).textTheme.displayLarge?.copyWith(color: trueWhite, fontWeight: FontWeight.bold, fontSize: 150)))))
         ]));
   }
 }

@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:hi_society_device/api/i18n.dart';
 import 'package:hi_society_device/component/button.dart';
 import 'package:hi_society_device/component/dropdown_button.dart';
 import 'package:hi_society_device/component/page_navigation.dart';
@@ -44,6 +45,7 @@ class _NewVisitorInformationState extends State<NewVisitorInformation> {
   late File _image = File("");
   String base64img = "";
   final ImagePicker _picker = ImagePicker();
+  bool isBN = false;
 
 //APIs
   Future<void> getFlatList({required String accessToken}) async {
@@ -99,7 +101,8 @@ class _NewVisitorInformationState extends State<NewVisitorInformation> {
   defaultInit() async {
     final pref = await SharedPreferences.getInstance();
     setState(() => accessToken = pref.getString("accessToken").toString());
-    getFlatList(accessToken: accessToken);
+    setState(() => isBN = pref.getBool("isBN") ?? false);
+    await getFlatList(accessToken: accessToken);
   }
 
   Future getImage() async {
@@ -119,25 +122,25 @@ class _NewVisitorInformationState extends State<NewVisitorInformation> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: primaryAppBar(context: context, title: "New Visitor"),
+        appBar: primaryAppBar(context: context, title: i18n_newVisitor(isBN)),
         body: ListView(padding: EdgeInsets.symmetric(vertical: primaryPaddingValue * 4), children: [
           // SelectableText(base64img),
           primaryTextField(
             autoFocus: true,
             context: context,
-            labelText: "Full Name",
+            labelText: i18n_fullName(isBN),
             controller: nameController,
             textCapitalization: TextCapitalization.words,
           ),
           primaryTextField(
             context: context,
-            labelText: "Address",
+            labelText: i18n_address(isBN),
             controller: addressController,
             textCapitalization: TextCapitalization.words,
           ),
           primaryTextField(
             context: context,
-            labelText: "Email (Optional)",
+            labelText: i18n_email(isBN),
             controller: emailController,
             textCapitalization: TextCapitalization.none,
             keyboardType: TextInputType.emailAddress,
@@ -145,23 +148,23 @@ class _NewVisitorInformationState extends State<NewVisitorInformation> {
           primaryTextField(
             context: context,
             isDisable: true,
-            labelText: "Mobile Number",
+            labelText: i18n_mobile(isBN),
             controller: mobileNumberController,
             textCapitalization: TextCapitalization.none,
             keyboardType: TextInputType.phone,
           ),
           primaryDropdown(
             context: context,
-            key: "Flat",
-            title: "Which Flat to Go?",
+            key: i18n_flat(isBN),
+            title: i18n_whichFlat(isBN),
             options: flatList,
             value: selectedFlat,
             onChanged: (value) => setState(() => selectedFlat = value.toString()),
           ),
           primaryDropdown(
             context: context,
-            key: "Purpose",
-            title: "Purpose?",
+            key: i18n_purpose(isBN),
+            title: i18n_purpose(isBN),
             options: relationList,
             value: selectedRelation,
             onChanged: (value) => setState(() => selectedRelation = value.toString()),
@@ -183,7 +186,7 @@ class _NewVisitorInformationState extends State<NewVisitorInformation> {
                       : ElevatedButton.icon(
                           onPressed: getImage,
                           icon: const Icon(Icons.camera_alt_outlined),
-                          label: const Text("Take Photo"),
+                          label: Text(i18n_takePhoto(isBN)),
                           style: ElevatedButton.styleFrom(
                               elevation: 0,
                               backgroundColor: trueWhite,
@@ -195,22 +198,21 @@ class _NewVisitorInformationState extends State<NewVisitorInformation> {
               padding: const EdgeInsets.symmetric(horizontal: 36),
               child: primaryButton(
                   context: context,
-                  title: "NEXT",
+                  title: i18n_next(isBN),
                   onTap: () async {
                     await createNewVisitorProfile(
-                      accessToken: accessToken,
-                      name: nameController.text,
-                      address: addressController.text,
-                      phone: mobileNumberController.text,
-                      relation: selectedRelation ?? "",
-                      photo: "data:image/png;base64,$base64img",
-                      flatId: flatID[flatList.indexOf(selectedFlat)],
-                      email: emailController.text.isEmpty ? null : emailController.text,
-                      successRoute: () => route(
-                          context,
-                          AskPermissionToEnter(
-                              visitorName: nameController.text, isNew: true, visitorPhoto: base64img, flatID: flatID[flatList.indexOf(selectedFlat)], mobileNumber: mobileNumberController.text)),
-                    );
+                        accessToken: accessToken,
+                        name: nameController.text,
+                        address: addressController.text,
+                        phone: mobileNumberController.text,
+                        relation: selectedRelation ?? "",
+                        photo: "data:image/png;base64,$base64img",
+                        flatId: flatID[flatList.indexOf(selectedFlat)],
+                        email: emailController.text.isEmpty ? null : emailController.text,
+                        successRoute: () => route(
+                            context,
+                            AskPermissionToEnter(
+                                visitorName: nameController.text, isNew: true, visitorPhoto: base64img, flatID: flatID[flatList.indexOf(selectedFlat)], mobileNumber: mobileNumberController.text)));
                   }))
         ]));
   }

@@ -1,10 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:hi_society_device/api/i18n.dart';
 import 'package:hi_society_device/component/utility_contact_list_tile.dart';
 import 'package:hi_society_device/theme/border_radius.dart';
 import 'package:hi_society_device/theme/placeholder.dart';
-import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+
 import '../../api/api.dart';
 import '../../component/app_bar.dart';
 import '../../component/snack_bar.dart';
@@ -23,6 +26,7 @@ class _UtilityContactsState extends State<UtilityContacts> {
   String accessToken = "";
   List category = [];
   List<List> contacts = [];
+  bool isBN = false;
 
 //APIs
   Future<void> readCategory({required String accessToken}) async {
@@ -67,6 +71,7 @@ class _UtilityContactsState extends State<UtilityContacts> {
   defaultInit() async {
     final pref = await SharedPreferences.getInstance();
     setState(() => accessToken = pref.getString("accessToken")!);
+    setState(() => isBN = pref.getBool("isBN") ?? false);
     await readCategory(accessToken: accessToken);
     await readContacts(accessToken: accessToken, category: category);
   }
@@ -81,7 +86,7 @@ class _UtilityContactsState extends State<UtilityContacts> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: primaryAppBar(context: context, title: "Utility Contacts"),
+        appBar: primaryAppBar(context: context, title: i18n_utilityContacts(isBN)),
         body: (category.isEmpty)
             ? const Center(child: CircularProgressIndicator())
             : ClipRRect(
@@ -91,7 +96,7 @@ class _UtilityContactsState extends State<UtilityContacts> {
                     itemCount: category.length,
                     itemBuilder: (context, index) => ExpansionTile(
                         initiallyExpanded: true,
-                        subtitle: Text("${(contacts[index][0]["contactName"] == "Empty") ? 0 : (contacts[index].length)} Contacts"),
+                        subtitle: Text("${(contacts[index][0]["contactName"] == "Empty") ? 0 : (contacts[index].length)} ${i18n_contacts(isBN)}"),
                         title: Text(category[index]["name"]),
                         tilePadding: EdgeInsets.symmetric(horizontal: primaryPaddingValue),
                         expandedAlignment: Alignment.centerLeft,
@@ -107,16 +112,10 @@ class _UtilityContactsState extends State<UtilityContacts> {
                             ? [const Center(child: CircularProgressIndicator())]
                             : List.generate(contacts[index].length, (index2) {
                                 if (contacts[index][index2]["contactName"] != "Empty") {
-                                  return utilityContactListTile(
-                                    photo: placeholderImage,
-                                    context: context,
-                                    title: contacts[index][index2]["contactName"],
-                                    number: contacts[index][index2]["contactNumber"],
-                                  );
+                                  return utilityContactListTile(photo: placeholderImage, context: context, title: contacts[index][index2]["contactName"], number: contacts[index][index2]["contactNumber"]);
                                 } else {
-                                  return Padding(padding: EdgeInsets.only(bottom: primaryPaddingValue), child: Text("No Contacts Found", style: TextStyle(color: primaryTitleColor)));
+                                  return Padding(padding: EdgeInsets.only(bottom: primaryPaddingValue), child: Text(i18n_noContactFound(isBN), style: TextStyle(color: primaryTitleColor)));
                                 }
-                              }))),
-              ));
+                              })))));
   }
 }

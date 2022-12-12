@@ -1,9 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:hi_society_device/api/i18n.dart';
 import 'package:hi_society_device/component/app_bar.dart';
 import 'package:hi_society_device/theme/padding_margin.dart';
-import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+
 import '../../api/api.dart';
 import '../../component/overstay_list_tile.dart';
 import '../../component/snack_bar.dart';
@@ -19,6 +22,7 @@ class OverstayAlerts extends StatefulWidget {
 class _OverstayAlertsState extends State<OverstayAlerts> {
   //Variables
   String accessToken = "";
+  bool isBN = false;
   List apiResult = [];
 
 //APIs
@@ -43,6 +47,7 @@ class _OverstayAlertsState extends State<OverstayAlerts> {
   defaultInit() async {
     final pref = await SharedPreferences.getInstance();
     setState(() => accessToken = pref.getString("accessToken").toString());
+    setState(() => isBN = pref.getBool("isBN") ?? false);
     await getOverstayList(accessToken: accessToken);
   }
 
@@ -56,7 +61,7 @@ class _OverstayAlertsState extends State<OverstayAlerts> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: primaryAppBar(context: context, title: "Overstay Requests: ${primaryDate(DateTime.now().toString())}"),
+        appBar: primaryAppBar(context: context, title: "${i18n_overstayAlert(isBN)}: ${primaryDate(DateTime.now().toString())}"),
         body: (apiResult.isEmpty)
             ? const Center(child: CircularProgressIndicator())
             : ListView.builder(

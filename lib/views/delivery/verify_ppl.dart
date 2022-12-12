@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:hi_society_device/api/i18n.dart';
 import 'package:hi_society_device/component/app_bar.dart';
 import 'package:hi_society_device/component/button.dart';
 import 'package:hi_society_device/component/card.dart';
@@ -7,10 +10,10 @@ import 'package:hi_society_device/theme/border_radius.dart';
 import 'package:hi_society_device/theme/colors.dart';
 import 'package:hi_society_device/theme/padding_margin.dart';
 import 'package:hi_society_device/views/home.dart';
+import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
+
 import '../../api/api.dart';
 import '../../component/snack_bar.dart';
 
@@ -26,6 +29,7 @@ class _VerifyPPLState extends State<VerifyPPL> {
   //Variables
   String accessToken = "";
   dynamic apiResult;
+  bool isBN = false;
   String? allowStatus; //should be "false" or "true"
 
   //APIs
@@ -68,6 +72,7 @@ class _VerifyPPLState extends State<VerifyPPL> {
   defaultInit() async {
     final pref = await SharedPreferences.getInstance();
     setState(() => accessToken = pref.getString("accessToken").toString());
+    setState(() => isBN = pref.getBool("isBN") ?? false);
     await verifyPPL(accessToken: accessToken, gatePassCode: widget.gatePassCode);
   }
 
@@ -81,7 +86,7 @@ class _VerifyPPLState extends State<VerifyPPL> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: primaryAppBar(context: context, title: "Distribute Parcel"),
+        appBar: primaryAppBar(context: context, title: i18n_dsbParcel(isBN)),
         body: AnimatedContainer(
             duration: const Duration(seconds: 1),
             padding: EdgeInsets.symmetric(vertical: primaryPaddingValue * 4),
@@ -103,12 +108,12 @@ class _VerifyPPLState extends State<VerifyPPL> {
                           padding: EdgeInsets.only(top: primaryPaddingValue * 2, bottom: primaryPaddingValue),
                           child: Icon(Icons.cancel_outlined, size: MediaQuery.of(context).size.height * .4),
                         )),
-                        Text("Sorry!! We didn’t find your", style: Theme.of(context).textTheme.displayMedium?.copyWith(color: trueWhite, fontWeight: FontWeight.w300)),
-                        Text("PARCEL", style: Theme.of(context).textTheme.displayLarge?.copyWith(color: trueWhite, fontWeight: FontWeight.w600)),
+                        Text(i18n_weNoFound(isBN), style: Theme.of(context).textTheme.displayMedium?.copyWith(color: trueWhite, fontWeight: FontWeight.w300)),
+                        Text(i18n_parcel(isBN), style: Theme.of(context).textTheme.displayLarge?.copyWith(color: trueWhite, fontWeight: FontWeight.w600)),
                         SizedBox(height: primaryPaddingValue * 3),
-                        SizedBox(width: MediaQuery.of(context).size.width * .75, child: primaryButton(context: context, title: "Try Again", onTap: () => routeBack(context))),
+                        SizedBox(width: MediaQuery.of(context).size.width * .75, child: primaryButton(context: context, title: i18n_tryAgain(isBN), onTap: () => routeBack(context))),
                         SizedBox(height: primaryPaddingValue),
-                        SizedBox(width: MediaQuery.of(context).size.width * .75, child: primaryButton(context: context, title: "Go to Main Screen", onTap: () => route(context, const Home()))),
+                        SizedBox(width: MediaQuery.of(context).size.width * .75, child: primaryButton(context: context, title: i18n_goHome(isBN), onTap: () => route(context, const Home()))),
                         SizedBox(height: primaryPaddingValue * 4)
                       ]
                     : (allowStatus == "true")
@@ -122,19 +127,19 @@ class _VerifyPPLState extends State<VerifyPPL> {
                                     borderRadius: primaryBorderRadius * 2,
                                     border: Border.all(width: 2, color: trueWhite),
                                     image: const DecorationImage(fit: BoxFit.cover, image: AssetImage("assets/parcel.png")))),
-                            Text("We’ve found your", style: Theme.of(context).textTheme.displayMedium?.copyWith(color: trueWhite, fontWeight: FontWeight.w300)),
-                            Text("PARCEL", style: Theme.of(context).textTheme.displayLarge?.copyWith(color: trueWhite, fontWeight: FontWeight.w600)),
+                            Text(i18n_weFound(isBN), style: Theme.of(context).textTheme.displayMedium?.copyWith(color: trueWhite, fontWeight: FontWeight.w300)),
+                            Text(i18n_parcel(isBN), style: Theme.of(context).textTheme.displayLarge?.copyWith(color: trueWhite, fontWeight: FontWeight.w600)),
                             Padding(
                                 padding: EdgeInsets.symmetric(vertical: primaryPaddingValue * 2),
                                 child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                                  basic2LineInfoCard(is3: true, key: "Flat", value: apiResult != null ? apiResult["flat"]["flatName"] : "...", context: context),
-                                  basic2LineInfoCard(is3: true, key: "Merchant", value: apiResult != null ? apiResult["vendor"] : "...", context: context),
-                                  basic2LineInfoCard(is3: true, key: "Arrived at", value: apiResult != null ? DateFormat.jm().format(DateTime.parse(apiResult["createdAt"])) : "...", context: context)
+                                  basic2LineInfoCard(is3: true, key: i18n_flat(isBN), value: apiResult != null ? apiResult["flat"]["flatName"] : "...", context: context),
+                                  basic2LineInfoCard(is3: true, key: i18n_merchant(isBN), value: apiResult != null ? apiResult["vendor"] : "...", context: context),
+                                  basic2LineInfoCard(is3: true, key: i18n_arrivedAt(isBN), value: apiResult != null ? DateFormat.jm().format(DateTime.parse(apiResult["createdAt"])) : "...", context: context)
                                 ])),
                             const Expanded(child: SizedBox()),
                             Padding(
                                 padding: EdgeInsets.only(top: primaryPaddingValue * 4, left: primaryPaddingValue * 8, right: primaryPaddingValue * 8),
-                                child: primaryButton(context: context, title: "Go to Main Screen", onTap: () => route(context, const Home())))
+                                child: primaryButton(context: context, title: i18n_goHome(isBN), onTap: () => route(context, const Home())))
                           ]
                         : [Center(child: CircularProgressIndicator(color: trueWhite))])));
   }

@@ -1,11 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:hi_society_device/api/i18n.dart';
 
 import '../theme/border_radius.dart';
 import '../theme/colors.dart';
 import '../theme/padding_margin.dart';
 
-Container flatAvatar({required BuildContext context, required String label}) {
+Container flatAvatar({required BuildContext context, required String label, bool isBN = false}) {
   return Container(
       margin: EdgeInsets.only(right: primaryPaddingValue),
       alignment: Alignment.center,
@@ -15,7 +16,7 @@ Container flatAvatar({required BuildContext context, required String label}) {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text("FLAT", style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold, color: primaryBlack)),
+          Text(i18n_flat(isBN), style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold, color: primaryBlack)),
           Text(label, style: Theme.of(context).textTheme.displaySmall?.copyWith(fontWeight: FontWeight.bold, color: primaryBlack)),
         ],
       ));

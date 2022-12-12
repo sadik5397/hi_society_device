@@ -1,13 +1,15 @@
 import 'dart:convert';
+
+import 'package:flutter/material.dart';
+import 'package:hi_society_device/api/i18n.dart';
 import 'package:hi_society_device/views/delivery/wait_for_resident_response.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter/material.dart';
-import 'package:hi_society_device/views/home.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import '../../api/api.dart';
 import '../../component/app_bar.dart';
-import '../../component/dropdown_button.dart';
 import '../../component/button.dart';
+import '../../component/dropdown_button.dart';
 import '../../component/page_navigation.dart';
 import '../../component/snack_bar.dart';
 import '../../theme/padding_margin.dart';
@@ -33,6 +35,7 @@ class _ReceiveParcelState extends State<ReceiveParcel> {
   String? selectedFlat;
   String? selectedItemType;
   String? selectedMerchant;
+  bool isBN = false;
 
   //APIs
   Future<void> getFlatList({required String accessToken}) async {
@@ -77,6 +80,7 @@ class _ReceiveParcelState extends State<ReceiveParcel> {
   defaultInit() async {
     final pref = await SharedPreferences.getInstance();
     setState(() => accessToken = pref.getString("accessToken").toString());
+    setState(() => isBN = pref.getBool("isBN") ?? false);
     getFlatList(accessToken: accessToken);
   }
 
@@ -90,35 +94,35 @@ class _ReceiveParcelState extends State<ReceiveParcel> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: primaryAppBar(context: context, title: "Receive Parcel"),
+        appBar: primaryAppBar(context: context, title: i18n_rcvParcel(isBN)),
         body: ListView(padding: EdgeInsets.symmetric(vertical: primaryPaddingValue * 4), children: [
           primaryDropdown(
             context: context,
-            key: "Flat",
-            title: "Which Flat to Go?",
+            key: i18n_flat(isBN),
+            title: i18n_whichFlat(isBN),
             options: flatList,
             value: selectedFlat,
             onChanged: (value) => setState(() => selectedFlat = value.toString()),
           ),
           primaryDropdown(
             context: context,
-            key: "Item Type",
-            title: "What Item?",
+            key: i18n_itemType(isBN),
+            title: i18n_whatItem(isBN),
             options: itemTypeList,
             value: selectedItemType,
             onChanged: (value) => setState(() => selectedItemType = value.toString()),
           ),
           primaryDropdown(
             context: context,
-            key: "Merchant",
-            title: "Which Merchant?",
+            key: i18n_merchant(isBN),
+            title: i18n_whichMerchant(isBN),
             options: merchantList,
             value: selectedMerchant,
             onChanged: (value) => setState(() => selectedMerchant = value.toString()),
           ),
           primaryDropdown(
             context: context,
-            title: "Deliver Method",
+            title: i18n_deliverMethod(isBN),
             options: deliveryMethod,
             value: selectedDeliveryMethod,
             onChanged: (value) => setState(() => selectedDeliveryMethod = value.toString()),
@@ -128,7 +132,7 @@ class _ReceiveParcelState extends State<ReceiveParcel> {
               padding: const EdgeInsets.symmetric(horizontal: 36),
               child: primaryButton(
                   context: context,
-                  title: "NEXT",
+                  title: i18n_next(isBN),
                   onTap: () async {
                     await createPPL(
                         deliveryMethod: selectedDeliveryMethod != null ? deliveryMethodKeys[deliveryMethod.indexOf(selectedDeliveryMethod!)] : "",

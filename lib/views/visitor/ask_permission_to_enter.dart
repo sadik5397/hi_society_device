@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:hi_society_device/api/i18n.dart';
 import 'package:hi_society_device/component/app_bar.dart';
 import 'package:hi_society_device/component/button.dart';
 import 'package:hi_society_device/component/card.dart';
@@ -41,6 +42,7 @@ class _AskPermissionToEnterState extends State<AskPermissionToEnter> {
   int checkStatusIntervalSec = 60;
   int autoRejectAfterHowManyCount = 5;
   int requestedVisitorHistoryID = 0;
+  bool isBN = false;
 
   //APIs
   Future<void> askForPermissionToEnter({required String accessToken, required String phone, required int flatId}) async {
@@ -97,6 +99,7 @@ class _AskPermissionToEnterState extends State<AskPermissionToEnter> {
     initiateRealtimeStatusChecker();
     final pref = await SharedPreferences.getInstance();
     setState(() => accessToken = pref.getString("accessToken").toString());
+    setState(() => isBN = pref.getBool("isBN") ?? false);
     await askForPermissionToEnter(accessToken: accessToken, phone: widget.mobileNumber, flatId: widget.flatID);
     await Future.delayed(const Duration(seconds: 5));
     await visitorPermissionStatus(accessToken: accessToken, visitorHistoryId: requestedVisitorHistoryID);
@@ -148,21 +151,21 @@ class _AskPermissionToEnterState extends State<AskPermissionToEnter> {
                       image: DecorationImage(
                           fit: BoxFit.cover, image: widget.isNew ? Image.memory(base64Decode(widget.visitorPhoto)).image : CachedNetworkImageProvider("$baseUrl/photos/${widget.visitorPhoto}")))),
               if (allowStatus == "true") const Expanded(child: SizedBox()),
-              if (allowStatus == "true") Text("Welcome Back", style: Theme.of(context).textTheme.displayMedium?.copyWith(color: trueWhite, fontWeight: FontWeight.w300)),
+              if (allowStatus == "true") Text(i18n_welcomeBack(isBN), style: Theme.of(context).textTheme.displayMedium?.copyWith(color: trueWhite, fontWeight: FontWeight.w300)),
               Text(widget.visitorName.toString(), style: Theme.of(context).textTheme.displayLarge?.copyWith(color: trueWhite, fontWeight: FontWeight.w600)),
               if (allowStatus == "true") const Expanded(child: SizedBox()),
               Padding(
                   padding: EdgeInsets.symmetric(vertical: primaryPaddingValue),
                   child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                    basic2LineInfoCard(key: "Flat", value: apiResult != null ? apiResult["flat"]["flatName"] : "...", context: context),
-                    basic2LineInfoCard(key: "Purpose", value: apiResult != null ? apiResult["visitor"]["relation"] : "...", context: context)
+                    basic2LineInfoCard(key: i18n_flat(isBN), value: apiResult != null ? apiResult["flat"]["flatName"] : "...", context: context),
+                    basic2LineInfoCard(key: i18n_purpose(isBN), value: apiResult != null ? apiResult["visitor"]["relation"] : "...", context: context)
                   ])),
               if (allowStatus == "true")
                 Padding(
                     padding: EdgeInsets.symmetric(vertical: primaryPaddingValue),
                     child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                      basic2LineInfoCard(key: "Date", value: apiResult != null ? primaryDate(DateTime.now().toString()) : "...", context: context),
-                      basic2LineInfoCard(key: "Time", value: apiResult != null ? primaryTime(DateTime.now().toString()) : "...", context: context)
+                      basic2LineInfoCard(key: i18n_date(isBN), value: apiResult != null ? primaryDate(DateTime.now().toString()) : "...", context: context),
+                      basic2LineInfoCard(key: i18n_time(isBN), value: apiResult != null ? primaryTime(DateTime.now().toString()) : "...", context: context)
                     ])),
               if (allowStatus == null)
                 Expanded(
@@ -176,11 +179,11 @@ class _AskPermissionToEnterState extends State<AskPermissionToEnter> {
                   padding: EdgeInsets.only(top: primaryPaddingValue * 2, bottom: primaryPaddingValue),
                   child: Icon(Icons.cancel_outlined, size: MediaQuery.of(context).size.height * .25),
                 )),
-              if (allowStatus == null) Text("Please Wait...", textScaleFactor: .75, style: Theme.of(context).textTheme.displaySmall?.copyWith(color: trueWhite)),
-              if (allowStatus == "false") Text("PERMISSION DECLINED", textScaleFactor: .75, style: Theme.of(context).textTheme.displaySmall?.copyWith(color: trueWhite)),
+              if (allowStatus == null) Text("${i18n_pleaseWait(isBN)}...", textScaleFactor: .75, style: Theme.of(context).textTheme.displaySmall?.copyWith(color: trueWhite)),
+              if (allowStatus == "false") Text(i18n_permissionDeclined(isBN), textScaleFactor: .75, style: Theme.of(context).textTheme.displaySmall?.copyWith(color: trueWhite)),
               Padding(
                   padding: EdgeInsets.only(top: primaryPaddingValue * 4, left: primaryPaddingValue * 8, right: primaryPaddingValue * 8),
-                  child: primaryButton(context: context, title: (allowStatus == null) ? "Cancel" : "Go to Main Screen", onTap: () => route(context, const Home())))
+                  child: primaryButton(context: context, title: (allowStatus == null) ? i18n_cancel(isBN) : i18n_goHome(isBN), onTap: () => route(context, const Home())))
             ])));
   }
 }

@@ -1,8 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:hi_society_device/api/i18n.dart';
-import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+
 import '../../api/api.dart';
 import '../../component/button.dart';
 import '../../component/page_navigation.dart';
@@ -55,7 +57,7 @@ class _SignInState extends State<SignIn> {
 //Functions
   defaultInit() async {
     final pref = await SharedPreferences.getInstance();
-    setState(() => isBN = pref.getBool("isBN") ?? false);
+    setState(() => isBN = pref.getBool("isBN") ?? true);
   }
 
 //Initiate

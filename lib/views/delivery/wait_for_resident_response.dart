@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:hi_society_device/api/i18n.dart';
 import 'package:hi_society_device/component/app_bar.dart';
 import 'package:hi_society_device/component/button.dart';
 import 'package:hi_society_device/component/card.dart';
@@ -12,6 +13,7 @@ import 'package:hi_society_device/theme/padding_margin.dart';
 import 'package:hi_society_device/views/home.dart';
 import 'package:http/http.dart' as http;
 import 'package:lottie/lottie.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../api/api.dart';
 import '../../component/snack_bar.dart';
@@ -39,6 +41,7 @@ class _WaitForResidentResponseState extends State<WaitForResidentResponse> {
   int checkStatusIntervalSec = 60;
   int autoRejectAfterHowManyCount = 5;
   int requestedVisitorHistoryID = 0;
+  bool isBN = false;
 
   //APIs
   Future<void> askForPermissionToEnter({required String accessToken, required String phone, required int flatId}) async {
@@ -73,6 +76,9 @@ class _WaitForResidentResponseState extends State<WaitForResidentResponse> {
 
 //Functions
   defaultInit() async {
+    final pref = await SharedPreferences.getInstance();
+    setState(() => accessToken = pref.getString("accessToken").toString());
+    setState(() => isBN = pref.getBool("isBN") ?? false);
     checkInPaid();
     initiateRealtimeStatusChecker();
     await timer();
@@ -125,35 +131,35 @@ class _WaitForResidentResponseState extends State<WaitForResidentResponse> {
                   decoration: BoxDecoration(color: trueWhite, borderRadius: primaryBorderRadius * 2, border: Border.all(width: 2, color: trueWhite)),
                   child: Image.asset("assets/parcel.png", fit: BoxFit.cover)),
               if (allowStatus == "true") const Expanded(child: SizedBox()),
-              if (allowStatus == "true" && widget.deliveryMethod != "drop_at_guard") const Text("Resident's Response", style: TextStyle(fontSize: 22)),
+              if (allowStatus == "true" && widget.deliveryMethod != "drop_at_guard") Text(i18n_residentsResponse(isBN), style: TextStyle(fontSize: 22)),
               if (allowStatus == "true" && widget.deliveryMethod != "drop_at_guard")
                 Text(residentResponse.toUpperCase(), style: Theme.of(context).textTheme.displayMedium?.copyWith(color: trueWhite, fontWeight: FontWeight.w300)),
-              if (widget.deliveryMethod == "drop_at_guard") Text("Parcel Received", style: Theme.of(context).textTheme.displayMedium?.copyWith(color: trueWhite, fontWeight: FontWeight.w300)),
+              if (widget.deliveryMethod == "drop_at_guard") Text(i18n_parcelRcvd(isBN), style: Theme.of(context).textTheme.displayMedium?.copyWith(color: trueWhite, fontWeight: FontWeight.w300)),
               Text(widget.item.toString(), style: Theme.of(context).textTheme.displayLarge?.copyWith(color: trueWhite, fontWeight: FontWeight.w600)),
               if (allowStatus == "true") const Expanded(child: SizedBox()),
               Padding(
                   padding: EdgeInsets.symmetric(vertical: primaryPaddingValue),
                   child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: [basic2LineInfoCard(key: "Flat", value: widget.flat, context: context), basic2LineInfoCard(key: "Vendor", value: widget.vendor, context: context)])),
+                      children: [basic2LineInfoCard(key: i18n_flat(isBN), value: widget.flat, context: context), basic2LineInfoCard(key: i18n_merchant(isBN), value: widget.vendor, context: context)])),
               if (allowStatus == null && !timeOut)
                 Expanded(
                     child: Container(
                         margin: EdgeInsets.only(top: primaryPaddingValue * 2, bottom: primaryPaddingValue),
                         decoration: BoxDecoration(color: trueWhite, borderRadius: primaryBorderRadius),
                         child: Lottie.network("https://assets1.lottiefiles.com/packages/lf20_ntbhn8nr.json"))),
-              if (timeOut) Expanded(child: Center(child: Text("TIME OUT", style: Theme.of(context).textTheme.displayLarge?.copyWith(color: trueWhite)))),
+              if (timeOut) Expanded(child: Center(child: Text(i18n_timeOut(isBN), style: Theme.of(context).textTheme.displayLarge?.copyWith(color: trueWhite)))),
               if (allowStatus == "false")
                 Expanded(
                     child: Padding(
                   padding: EdgeInsets.only(top: primaryPaddingValue * 2, bottom: primaryPaddingValue),
                   child: Icon(Icons.cancel_outlined, size: MediaQuery.of(context).size.height * .25),
                 )),
-              if (allowStatus == null && !timeOut) Text("Please Wait...", textScaleFactor: .75, style: Theme.of(context).textTheme.displaySmall?.copyWith(color: trueWhite)),
-              if (allowStatus == "false") Text("CAN'T RECEIVE PARCEL NOW", textScaleFactor: .75, style: Theme.of(context).textTheme.displaySmall?.copyWith(color: trueWhite)),
+              if (allowStatus == null && !timeOut) Text("${i18n_pleaseWait(isBN)}...", textScaleFactor: .75, style: Theme.of(context).textTheme.displaySmall?.copyWith(color: trueWhite)),
+              if (allowStatus == "false") Text(i18n_cantRcv(isBN), textScaleFactor: .75, style: Theme.of(context).textTheme.displaySmall?.copyWith(color: trueWhite)),
               Padding(
                   padding: EdgeInsets.only(top: primaryPaddingValue * 4, left: primaryPaddingValue * 8, right: primaryPaddingValue * 8),
-                  child: primaryButton(context: context, title: (allowStatus == null && !timeOut) ? "Cancel" : "Go to Main Screen", onTap: () => route(context, const Home())))
+                  child: primaryButton(context: context, title: (allowStatus == null && !timeOut) ? i18n_cancel(isBN) : i18n_goHome(isBN), onTap: () => route(context, const Home())))
             ])));
   }
 }

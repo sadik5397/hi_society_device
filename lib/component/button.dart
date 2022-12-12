@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hi_society_device/theme/padding_margin.dart';
+
 import '../theme/border_radius.dart';
 import '../theme/colors.dart';
 
@@ -9,6 +10,7 @@ ElevatedButton primaryButton({required BuildContext context, required String tit
       style: ElevatedButton.styleFrom(
           foregroundColor: primary ? primaryColor : trueWhite,
           backgroundColor: primary ? trueWhite : primaryColor,
+          elevation: 0,
           fixedSize: const Size(double.maxFinite, 64),
           textStyle: Theme.of(context).textTheme.titleLarge?.copyWith(color: !primary ? trueWhite : primaryColor, fontWeight: FontWeight.bold),
           shape: RoundedRectangleBorder(side: BorderSide(color: trueWhite, width: 2), borderRadius: primaryBorderRadius)),

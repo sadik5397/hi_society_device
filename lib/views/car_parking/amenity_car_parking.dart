@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:hi_society_device/api/i18n.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -22,6 +23,7 @@ class _AmenityCarParkingState extends State<AmenityCarParking> {
   //variables
   String accessToken = "";
   List bookingList = [];
+  bool isBN = false;
 
   //APIs
   Future<void> readAmenityBookingByDate({required String accessToken, required String date}) async {
@@ -45,8 +47,8 @@ class _AmenityCarParkingState extends State<AmenityCarParking> {
   defaultInit() async {
     final pref = await SharedPreferences.getInstance();
     setState(() => accessToken = pref.getString("accessToken")!);
+    setState(() => isBN = pref.getBool("isBN") ?? false);
     await readAmenityBookingByDate(accessToken: accessToken, date: DateFormat('yyyy-M-dd').format(DateTime.now()));
-    // await readAmenityBookingByDate(accessToken: accessToken, date: 1669431840);
   }
 
 //Initiate
@@ -59,7 +61,7 @@ class _AmenityCarParkingState extends State<AmenityCarParking> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: primaryAppBar(context: context, title: "Car Park Bookings"),
+        appBar: primaryAppBar(context: context, title: i18n_requiredCarParking(isBN)),
         body: (bookingList.isEmpty)
             ? const Center(child: CircularProgressIndicator())
             : ListView.builder(

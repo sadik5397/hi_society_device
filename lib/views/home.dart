@@ -8,7 +8,7 @@ import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:hi_society_device/api/i18n.dart';
 import 'package:hi_society_device/theme/placeholder.dart';
 import 'package:hi_society_device/views/auth/sign_in.dart';
-import 'package:hi_society_device/views/car_parking/car_parking.dart';
+import 'package:hi_society_device/views/car_parking/amenity_car_parking.dart';
 import 'package:hi_society_device/views/delivery/receive_or_distribute.dart';
 import 'package:hi_society_device/views/gate_pass/visitor_gate_pas_code_entry.dart';
 import 'package:hi_society_device/views/intercom/contactList.dart';
@@ -42,8 +42,7 @@ class _HomeState extends State<Home> {
   String? buildingName, buildingAddress, buildingImg;
   dynamic apiResult;
   bool validToken = false;
-  bool isBN = true;
-
+  bool isBN = false;
 
 // APIs
   Future<void> readBuildingInfo({required String accessToken}) async {
@@ -146,6 +145,7 @@ class _HomeState extends State<Home> {
   defaultInit() async {
     initiateNotificationReceiver();
     final pref = await SharedPreferences.getInstance();
+    setState(() => isBN = pref.getBool("isBN") ?? true);
     setState(() => accessToken = pref.getString("accessToken") ?? "");
     setState(() => refreshToken = pref.getString("refreshToken") ?? "");
     setState(() => buildingName = pref.getString("buildingName"));
@@ -209,9 +209,9 @@ class _HomeState extends State<Home> {
                 suffix: IconButton(
                     onPressed: () => showDialog(
                         context: context,
-                        builder: (BuildContext context) => switchGuardUser(
-                            context: context,
-                            onSignOut: () async {
+                        builder: (BuildContext context) => SwitchGuardUser(
+                                // context: context,
+                                onSignOut: () async {
                               route(context, const SignIn());
                               final pref = await SharedPreferences.getInstance();
                               await pref.clear();
@@ -229,8 +229,7 @@ class _HomeState extends State<Home> {
                           title: i18n_visitorManagement(isBN),
                           assetImage: "visitor",
                           context: context,
-                          toPage:
-                              VisitorMobileNoEntry(buildingAddress: buildingAddress ?? "...", buildingImg: buildingImg ?? placeholderImage, buildingName: buildingName ?? "...")),
+                          toPage: VisitorMobileNoEntry(buildingAddress: buildingAddress ?? "...", buildingImg: buildingImg ?? placeholderImage, buildingName: buildingName ?? "...")),
                       menuGridTile(title: i18n_deliveryManagement(isBN), assetImage: "delivery", context: context, toPage: const ReceiveOrDistribute())
                     ])),
                 Expanded(
@@ -238,7 +237,7 @@ class _HomeState extends State<Home> {
                     child: Row(children: [
                       menuGridTile(title: i18n_digitalGatePass(isBN), assetImage: "gatePass", context: context, toPage: const VisitorGatePassCodeEntry()),
                       menuGridTile(title: i18n_intercom(isBN), assetImage: "intercom", context: context, toPage: const ContactList()),
-                      menuGridTile(title: i18n_requiredCarParking(isBN), assetImage: "parking", context: context, toPage: const CarParking())
+                      menuGridTile(title: i18n_requiredCarParking(isBN), assetImage: "parking", context: context, toPage: const AmenityCarParking())
                     ])),
                 Expanded(
                     flex: 2,

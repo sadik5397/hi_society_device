@@ -1,6 +1,7 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:hi_society_device/api/i18n.dart';
 import 'package:hi_society_device/component/app_bar.dart';
 import 'package:hi_society_device/component/button.dart';
 import 'package:hi_society_device/component/card.dart';
@@ -9,11 +10,9 @@ import 'package:hi_society_device/theme/border_radius.dart';
 import 'package:hi_society_device/theme/colors.dart';
 import 'package:hi_society_device/theme/padding_margin.dart';
 import 'package:hi_society_device/views/home.dart';
-import 'package:intl/intl.dart';
-import 'package:lottie/lottie.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+
 import '../../api/api.dart';
 import '../../component/snack_bar.dart';
 
@@ -30,6 +29,7 @@ class _VerifyGatePassState extends State<VerifyGatePass> {
   String accessToken = "";
   dynamic apiResult;
   String? allowStatus; //should be "false" or "true"
+  bool isBN = false;
 
   //APIs
   Future<void> verifyDigitalGatePass({required String accessToken, required String gatePassCode}) async {
@@ -71,6 +71,7 @@ class _VerifyGatePassState extends State<VerifyGatePass> {
   defaultInit() async {
     final pref = await SharedPreferences.getInstance();
     setState(() => accessToken = pref.getString("accessToken").toString());
+    setState(() => isBN = pref.getBool("isBN") ?? false);
     await verifyDigitalGatePass(accessToken: accessToken, gatePassCode: widget.gatePassCode);
   }
 
@@ -84,7 +85,7 @@ class _VerifyGatePassState extends State<VerifyGatePass> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: primaryAppBar(context: context,title: "Digital Gate Pass"),
+        appBar: primaryAppBar(context: context, title: i18n_digitalGatePass(isBN)),
         body: AnimatedContainer(
             duration: const Duration(seconds: 1),
             padding: EdgeInsets.symmetric(vertical: primaryPaddingValue * 4),
@@ -106,12 +107,12 @@ class _VerifyGatePassState extends State<VerifyGatePass> {
                           padding: EdgeInsets.only(top: primaryPaddingValue * 2, bottom: primaryPaddingValue),
                           child: Icon(Icons.cancel_outlined, size: MediaQuery.of(context).size.height * .4),
                         )),
-                        Text("Sorry!!", style: Theme.of(context).textTheme.displayMedium?.copyWith(color: trueWhite, fontWeight: FontWeight.w300)),
-                        Text("INVALID GATE PASS", style: Theme.of(context).textTheme.displayLarge?.copyWith(color: trueWhite, fontWeight: FontWeight.w600)),
+                        Text(i18n_sorry(isBN), style: Theme.of(context).textTheme.displayMedium?.copyWith(color: trueWhite, fontWeight: FontWeight.w300)),
+                        Text(i18n_invalidGatePass(isBN), style: Theme.of(context).textTheme.displayLarge?.copyWith(color: trueWhite, fontWeight: FontWeight.w600)),
                         SizedBox(height: primaryPaddingValue * 3),
-                        SizedBox(width: MediaQuery.of(context).size.width * .75, child: primaryButton(context: context, title: "Try Again", onTap: () => routeBack(context))),
+                        SizedBox(width: MediaQuery.of(context).size.width * .75, child: primaryButton(context: context, title: i18n_tryAgain(isBN), onTap: () => routeBack(context))),
                         SizedBox(height: primaryPaddingValue),
-                        SizedBox(width: MediaQuery.of(context).size.width * .75, child: primaryButton(context: context, title: "Go to Main Screen", onTap: () => route(context, const Home()))),
+                        SizedBox(width: MediaQuery.of(context).size.width * .75, child: primaryButton(context: context, title: i18n_goHome(isBN), onTap: () => route(context, const Home()))),
                         SizedBox(height: primaryPaddingValue * 4)
                       ]
                     : (allowStatus == "true")
@@ -125,18 +126,18 @@ class _VerifyGatePassState extends State<VerifyGatePass> {
                                     borderRadius: primaryBorderRadius * 2,
                                     border: Border.all(width: 2, color: trueWhite),
                                     image: const DecorationImage(fit: BoxFit.cover, image: AssetImage("assets/visitor_gate_pass.png")))),
-                            Text("Welcome Back", style: Theme.of(context).textTheme.displayMedium?.copyWith(color: trueWhite, fontWeight: FontWeight.w300)),
+                            Text(i18n_welcomeBack(isBN), style: Theme.of(context).textTheme.displayMedium?.copyWith(color: trueWhite, fontWeight: FontWeight.w300)),
                             Text(apiResult["visitorName"], style: Theme.of(context).textTheme.displayLarge?.copyWith(color: trueWhite, fontWeight: FontWeight.w600)),
                             Padding(
                                 padding: EdgeInsets.symmetric(vertical: primaryPaddingValue * 2),
                                 child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                                  basic2LineInfoCard(key: "Flat", value: apiResult != null ? apiResult["flat"]["flatName"] : "...", context: context),
-                                  basic2LineInfoCard(key: "Gate Pass", value: apiResult != null ? apiResult["code"] : "...", context: context)
+                                  basic2LineInfoCard(key: i18n_flat(isBN), value: apiResult != null ? apiResult["flat"]["flatName"] : "...", context: context),
+                                  basic2LineInfoCard(key: i18n_gatePass(isBN), value: apiResult != null ? apiResult["code"] : "...", context: context)
                                 ])),
                             const Expanded(child: SizedBox()),
                             Padding(
                                 padding: EdgeInsets.only(top: primaryPaddingValue * 4, left: primaryPaddingValue * 8, right: primaryPaddingValue * 8),
-                                child: primaryButton(context: context, title: "Go to Main Screen", onTap: () => route(context, const Home())))
+                                child: primaryButton(context: context, title: i18n_goHome(isBN), onTap: () => route(context, const Home())))
                           ]
                         : [const Center(child: CircularProgressIndicator())])));
   }
