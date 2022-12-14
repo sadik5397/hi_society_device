@@ -3,6 +3,8 @@ import 'package:hi_society_device/component/app_bar.dart';
 import 'package:hi_society_device/component/parkStatusGrdTile.dart';
 import 'package:hi_society_device/theme/padding_margin.dart';
 
+import '../../component/no_data.dart';
+
 class ParkingStatus extends StatefulWidget {
   const ParkingStatus({Key? key}) : super(key: key);
 
@@ -19,7 +21,7 @@ class _ParkingStatusState extends State<ParkingStatus> {
     return Scaffold(
         appBar: primaryAppBar(context: context, title: "Car Parking Status"),
         body: (false)
-            ? const Center(child: CircularProgressIndicator())
+            ? noData()
             : GridView.builder(
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, childAspectRatio: 1, crossAxisSpacing: primaryPaddingValue * 2, mainAxisSpacing: primaryPaddingValue * 2),
                 shrinkWrap: true,

@@ -14,6 +14,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../api/api.dart';
+import '../../component/no_data.dart';
 import '../../component/snack_bar.dart';
 
 class VerifyGatePass extends StatefulWidget {
@@ -139,6 +140,6 @@ class _VerifyGatePassState extends State<VerifyGatePass> {
                                 padding: EdgeInsets.only(top: primaryPaddingValue * 4, left: primaryPaddingValue * 8, right: primaryPaddingValue * 8),
                                 child: primaryButton(context: context, title: i18n_goHome(isBN), onTap: () => route(context, const Home())))
                           ]
-                        : [const Center(child: CircularProgressIndicator())])));
+                        : [noData()])));
   }
 }

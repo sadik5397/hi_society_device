@@ -2,12 +2,14 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:hi_society_device/api/i18n.dart';
+import 'package:hi_society_device/theme/date_format.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../api/api.dart';
 import '../../component/app_bar.dart';
+import '../../component/no_data.dart';
 import '../../component/parking_booking.dart';
 import '../../component/snack_bar.dart';
 import '../../theme/padding_margin.dart';
@@ -23,6 +25,7 @@ class _AmenityCarParkingState extends State<AmenityCarParking> {
   //variables
   String accessToken = "";
   List bookingList = [];
+  List parkingBookingList = [];
   bool isBN = false;
 
   //APIs
@@ -35,6 +38,9 @@ class _AmenityCarParkingState extends State<AmenityCarParking> {
       if (result["statusCode"] == 200 || result["statusCode"] == 201) {
         showSnackBar(context: context, label: result["message"]);
         setState(() => bookingList = result["data"]);
+        for (int i = 0; i < bookingList.length; i++) {
+          if (bookingList[i]["amenity"]["amenityCategory"]["categoryName"] == "Common Car Parking") setState(() => parkingBookingList.add(bookingList[i]));
+        }
       } else {
         showSnackBar(context: context, label: result["message"][0].toString().length == 1 ? result["message"].toString() : result["message"][0].toString());
       }
@@ -62,19 +68,21 @@ class _AmenityCarParkingState extends State<AmenityCarParking> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: primaryAppBar(context: context, title: i18n_requiredCarParking(isBN)),
-        body: (bookingList.isEmpty)
-            ? const Center(child: CircularProgressIndicator())
+        body: (parkingBookingList.isEmpty)
+            ? noData()
             : ListView.builder(
                 shrinkWrap: true,
                 padding: primaryPadding * 2,
-                itemCount: 50,
+                itemCount: parkingBookingList.length,
                 itemBuilder: (context, index) => parkBookingListTile(
-                  context: context,
-                  title: "MD. Zulfiaqar Sayeed",
-                  date: "12-05-2023",
-                  time: "03:45 AM",
-                  flat: "1${((index + 1) % 10).toString()}F",
-                ),
-              ));
+                    isBN: isBN,
+                    context: context,
+                    title: parkingBookingList[index]["bookedBy"]["name"].toString(),
+                    date: primaryDate(parkingBookingList[index]["bookedDate"]),
+                    time: primaryTime(parkingBookingList[index]["bookedDate"]),
+                    flat: parkingBookingList[index]["flat"]["flatName"].toString(),
+                    park: parkingBookingList[index]["amenity"]["amenityName"].toString(),
+                    duration: parkingBookingList[index]["bookHours"].toString(),
+                    note: parkingBookingList[index]["description"])));
   }
 }

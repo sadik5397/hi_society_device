@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:hi_society_device/component/flat_avatar.dart';
+
 import '../theme/border_radius.dart';
 import '../theme/colors.dart';
 import '../theme/padding_margin.dart';
 
-Container overstayRequestListTile({required BuildContext context, required String title, required String eta, String? guestOf, required String flat, double? bottomPadding}) {
+Container overstayRequestListTile({required BuildContext context, bool isBN = false, required String title, required String eta, String? guestOf, required String flat, double? bottomPadding}) {
   return Container(
       padding: primaryPadding,
       decoration: BoxDecoration(color: trueWhite, borderRadius: primaryBorderRadius),
       margin: EdgeInsets.only(bottom: bottomPadding ?? primaryPaddingValue * 1.5),
       child: Row(children: [
-        flatAvatar(context: context, label: flat),
+        flatAvatar(context: context, label: flat, isBN: isBN),
         Expanded(
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.center, children: [
           Text(title, style: Theme.of(context).textTheme.displaySmall?.copyWith(fontWeight: FontWeight.w600, color: primaryColor)),

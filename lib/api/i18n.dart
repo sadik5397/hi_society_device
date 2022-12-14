@@ -11,7 +11,7 @@ String i18n_pleaseContact(bool isBN) => isBN ? "'হাই সোসাইটি
 
 //region ---------- Home ----------
 String i18n_appTitle(bool isBN) => isBN ? 'হাই সোসাইটি' : 'Hi Society';
-String i18n_visitorManagement(bool isBN) => isBN ? 'ভিজিটার ম্যানেজমেন্ট / অতিথি ব্যবস্থাপনা' : 'Visitor Management';
+String i18n_visitorManagement(bool isBN) => isBN ? 'ভিজিটার ম্যানেজমেন্ট' : 'Visitor Management';
 String i18n_deliveryManagement(bool isBN) => isBN ? 'পার্সেল ডেলিভারি' : 'Delivery Management';
 String i18n_digitalGatePass(bool isBN) => isBN ? 'ডিজিটাল গেট পাস' : 'Digital Gate Pass';
 String i18n_intercom(bool isBN) => isBN ? 'ইন্টার-কম' : 'Intercom';
@@ -20,7 +20,7 @@ String i18n_overstayAlert(bool isBN) => isBN ? 'অধিক রাত্রি�
 String i18n_utilityContacts(bool isBN) => isBN ? 'জরুরী কাজের লোক' : 'Utility Contacts';
 String i18n_residents(bool isBN) => isBN ? 'বসবাসকারী' : 'Residents';
 String i18n_tapSwitchGuard(bool isBN) => isBN ? 'গার্ড প্রোফাইলে যেতে ক্লিক করুন' : 'Tap to switch Guard profile';
-String i18n_deActiveDevice(bool isBN) => isBN ? 'ডিএক্টিভেট ডিভাইস / ডিভাইস নিষ্ক্রিয় করতে' : 'Deactivate Device';
+String i18n_deActiveDevice(bool isBN) => isBN ? 'ডিএক্টিভেট ডিভাইস' : 'Deactivate Device';
 //endregion
 
 //region ---------- Delivery Management ----------
@@ -45,8 +45,8 @@ String i18n_parcelRcvd(bool isBN) => isBN ? 'পার্সেল গ্রহ�
 String i18n_residentsResponse(bool isBN) => isBN ? 'পার্সেল গ্রহীতার উত্তর' : 'Resident\'s Response';
 String i18n_enterCode(bool isBN) => isBN ? 'পরবর্তীতে পার্সেল নেয়ার জন্য ওটিপি' : 'Enter Pickup Parcel Later OTP Below';
 String i18n_pickupCodeNoEmpty(bool isBN) => isBN ? 'ওটিপির ঘর খালি থাকা যাবে না' : 'Pickup Code Mustn\'t be Empty';
-String i18n_orScanQr(bool isBN) => isBN ? 'অথবা কিউআর কোডটি স্ক্যান করুন' : 'Or, Scan QR';
-String i18n_rcvParcelQrLine1(bool isBN) => isBN ? 'আপনার পার্সেলটি পরে নেয়ার জন্য ওটিপি/ কিউআর কোড' : 'If you have a Pickup Parcel Later OTP with QR code,';
+String i18n_orScanQr(bool isBN) => isBN ? 'অথবা QR স্ক্যান করুন' : 'Or, Scan QR';
+String i18n_rcvParcelQrLine1(bool isBN) => isBN ? 'আপনার পার্সেলটি পরে নেয়ার জন্য ওটিপি/কিউআর' : 'If you have a Pickup Parcel Later OTP with QR code,';
 String i18n_rcvParcelQrLine2(bool isBN) => isBN ? 'কোডটি বের করুন এবং ক‍্যামেরার সামনে ধরুন' : 'Open it and face it to the screen';
 String i18n_rcvParcelQrLine3(bool isBN) => isBN ? 'কিউআর কোডটি স্ক‍্যান করুন' : 'Scan The QR Code';
 String i18n_qrFound(bool isBN) => isBN ? 'কিউআর কোড পাওয়া গেছে! "পরবর্তী" টিপুন' : 'QR Code Found! Tap Submit to Proceed';
@@ -55,7 +55,7 @@ String i18n_typeManually(bool isBN) => isBN ? 'কোড টি নিজে ল
 String i18n_arrivedAt(bool isBN) => isBN ? 'পৌঁছানো সময়' : 'Arrived at';
 String i18n_weFound(bool isBN) => isBN ? 'আমরা আপনার পার্সেলটি পেয়েছি / পার্সেলটি পাওয়া গেছে' : 'We’ve found your';
 String i18n_weNoFound(bool isBN) => isBN ? 'দুঃখিত! আপনার পার্সেলটি পাওয়া যাচ্ছে না!!' : 'Sorry!! We did not find your';
-String i18n_parcel(bool isBN) => isBN ? '' : 'PARCEL';
+String i18n_parcel(bool isBN) => isBN ? 'পার্সেল' : 'PARCEL';
 //endregion
 
 //region ---------- Digital Gate Pass ----------
@@ -101,6 +101,6 @@ String i18n_address(bool isBN) => isBN ? 'ঠিকানা' : 'Address';
 String i18n_email(bool isBN) => isBN ? 'ইমেইল (ঐচ্ছিক)' : 'Email (Optional)';
 String i18n_mobile(bool isBN) => isBN ? 'মোবাইল নাম্বার' : 'Mobile Number';
 String i18n_takePhoto(bool isBN) => isBN ? 'ছবি আপলোড করুন' : 'Take Photo';
-String i18n_enterMobile(bool isBN) => isBN ? 'আপনার মোবাইল নাম্বারটি দিন' : 'Enter Your Mobile Number';
+String i18n_enterMobile(bool isBN) => isBN ? 'আপনার মোবাইল নাম্বার দিন' : 'Enter Your Mobile Number';
 String i18n_selectFlat(bool isBN) => isBN ? 'ফ্ল্যাটটি নির্বাচন করুন' : 'Please Select Flat';
 //endregion

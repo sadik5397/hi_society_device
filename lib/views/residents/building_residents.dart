@@ -82,7 +82,7 @@ class _BuildingFlatsAndResidentsState extends State<BuildingFlatsAndResidents> {
                   const SizedBox(height: 10),
                   Text("${i18n_buildingId(isBN)}: $buildingUniqueID", style: Theme.of(context).textTheme.titleLarge?.copyWith(color: primaryTitleColor, height: 1.5)),
                   Text("${i18n_buildingAddress(isBN)}: $buildingAddress", style: Theme.of(context).textTheme.titleLarge?.copyWith(color: primaryTitleColor)),
-                  Text("${i18n_buildingManager(isBN)}: S.a. Sadik", style: Theme.of(context).textTheme.titleLarge?.copyWith(color: primaryTitleColor)) //todo: change Chairman/Manager Name
+                  // Text("${i18n_buildingManager(isBN)}: S.a. Sadik", style: Theme.of(context).textTheme.titleLarge?.copyWith(color: primaryTitleColor))
                 ]))
               ])),
           Padding(

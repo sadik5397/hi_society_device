@@ -8,6 +8,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../api/api.dart';
+import '../../component/no_data.dart';
 import '../../component/overstay_list_tile.dart';
 import '../../component/snack_bar.dart';
 import '../../theme/date_format.dart';
@@ -63,7 +64,7 @@ class _OverstayAlertsState extends State<OverstayAlerts> {
     return Scaffold(
         appBar: primaryAppBar(context: context, title: "${i18n_overstayAlert(isBN)}: ${primaryDate(DateTime.now().toString())}"),
         body: (apiResult.isEmpty)
-            ? const Center(child: CircularProgressIndicator())
+            ? noData()
             : ListView.builder(
                 shrinkWrap: true,
                 padding: primaryPadding * 2,

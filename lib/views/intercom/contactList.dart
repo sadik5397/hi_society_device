@@ -7,6 +7,8 @@ import 'package:hi_society_device/theme/padding_margin.dart';
 import 'package:hi_society_device/views/intercom/call.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../component/no_data.dart';
+
 class ContactList extends StatefulWidget {
   const ContactList({Key? key}) : super(key: key);
 
@@ -47,7 +49,7 @@ class _ContactListState extends State<ContactList> {
             SizedBox(height: primaryPaddingValue),
             Expanded(
                 child: (false)
-                    ? const Center(child: CircularProgressIndicator())
+                    ? noData()
                     : ListView.builder(
                         shrinkWrap: true,
                         padding: EdgeInsets.fromLTRB(primaryPaddingValue * 2, primaryPaddingValue / 2, primaryPaddingValue * 2, primaryPaddingValue * 2),

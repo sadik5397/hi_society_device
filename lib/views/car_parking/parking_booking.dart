@@ -2,13 +2,13 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:hi_society_device/component/app_bar.dart';
-import 'package:hi_society_device/component/parking_booking.dart';
 import 'package:hi_society_device/theme/padding_margin.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../api/api.dart';
+import '../../component/no_data.dart';
 import '../../component/snack_bar.dart';
 
 class ParkingBooking extends StatefulWidget {
@@ -65,18 +65,12 @@ class _ParkingBookingState extends State<ParkingBooking> {
     return Scaffold(
         appBar: primaryAppBar(context: context, title: "Car Park Bookings"),
         body: (apiResult.isEmpty)
-            ? const Center(child: CircularProgressIndicator())
+            ? noData()
             : ListView.builder(
                 shrinkWrap: true,
                 padding: primaryPadding * 2,
                 itemCount: apiResult.length,
-                itemBuilder: (context, index) => parkBookingListTile(
-                  context: context,
-                  title: "MD. Zulfiaqar Sayeed",
-                  date: "12-05-2023",
-                  time: "03:45 AM",
-                  flat: "1${((index + 1) % 10).toString()}F",
-                ),
+                itemBuilder: (context, index) => const FlutterLogo(),
               ));
   }
 }
