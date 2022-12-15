@@ -200,19 +200,21 @@ class _NewVisitorInformationState extends State<NewVisitorInformation> {
                   context: context,
                   title: i18n_next(isBN),
                   onTap: () async {
-                    await createNewVisitorProfile(
-                        accessToken: accessToken,
-                        name: nameController.text,
-                        address: addressController.text,
-                        phone: mobileNumberController.text,
-                        relation: selectedRelation ?? "",
-                        photo: "data:image/png;base64,$base64img",
-                        flatId: flatID[flatList.indexOf(selectedFlat)],
-                        email: emailController.text.isEmpty ? null : emailController.text,
-                        successRoute: () => route(
-                            context,
-                            AskPermissionToEnter(
-                                visitorName: nameController.text, isNew: true, visitorPhoto: base64img, flatID: flatID[flatList.indexOf(selectedFlat)], mobileNumber: mobileNumberController.text)));
+                    (selectedRelation == null)
+                        ? showSnackBar(context: context, label: i18n_selectPurpose(isBN))
+                        : await createNewVisitorProfile(
+                            accessToken: accessToken,
+                            name: nameController.text,
+                            address: addressController.text,
+                            phone: mobileNumberController.text,
+                            relation: selectedRelation ?? "",
+                            photo: "data:image/png;base64,$base64img",
+                            flatId: flatID[flatList.indexOf(selectedFlat)],
+                            email: emailController.text.isEmpty ? null : emailController.text,
+                            successRoute: () => route(
+                                context,
+                                AskPermissionToEnter(
+                                    visitorName: nameController.text, isNew: true, visitorPhoto: base64img, flatID: flatID[flatList.indexOf(selectedFlat)], mobileNumber: mobileNumberController.text)));
                   }))
         ]));
   }

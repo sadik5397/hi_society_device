@@ -93,6 +93,8 @@ String i18n_contacts(bool isBN) => isBN ? 'যোগাযোগ' : 'Conta
 
 //region ---------- Visitor Management ----------
 String i18n_purpose(bool isBN) => isBN ? 'উদ্দেশ্য' : 'Purpose';
+String i18n_selectPurpose(bool isBN) => isBN ? 'উদ্দেশ্য নির্বাচন করুন' : 'Please Select Purpose';
+String i18n_invalidPhone(bool isBN) => isBN ? 'সঠিক মোবাইল নম্বর লিখুন' : 'Please type a valid mobile number';
 String i18n_date(bool isBN) => isBN ? 'তারিখ' : 'Date';
 String i18n_time(bool isBN) => isBN ? 'সময়' : 'Time';
 String i18n_permissionDeclined(bool isBN) => isBN ? 'অনুরোধটি রাখা হয়নি' : 'PERMISSION DECLINED';

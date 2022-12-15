@@ -12,6 +12,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../api/api.dart';
+import '../../api/phone_number_validator.dart';
 import '../../component/app_bar.dart';
 import '../../component/header_building_image.dart';
 import '../../component/snack_bar.dart';
@@ -118,19 +119,23 @@ class _VisitorMobileNoEntryState extends State<VisitorMobileNoEntry> {
                                     controller: mobileNumberController,
                                     textCapitalization: TextCapitalization.characters,
                                     onFieldSubmitted: (value) async {
-                                      (selectedFlat != null)
-                                          ? await sendVisitorsPhoneNumber(
-                                              accessToken: accessToken,
-                                              mobileNumber: mobileNumberController.text,
-                                              existingVisitor: () => route(
-                                                  context,
-                                                  AskPermissionToEnter(
-                                                      flatID: flatID[flatList.indexOf(selectedFlat ?? "")],
-                                                      mobileNumber: mobileNumberController.text,
-                                                      visitorName: apiResult["name"],
-                                                      visitorPhoto: apiResult["photo"])),
-                                              newVisitor: () => route(context, NewVisitorInformation(selectedFlat: selectedFlat.toString(), mobileNumber: mobileNumberController.text)))
-                                          : showSnackBar(context: context, label: i18n_selectFlat(isBN));
+                                      bool valid = true;
+                                      valid = await validatePhoneNumber(mobileNumberController.text);
+                                      !valid
+                                          ? showSnackBar(context: context, label: i18n_invalidPhone(isBN))
+                                          : (selectedFlat != null)
+                                              ? await sendVisitorsPhoneNumber(
+                                                  accessToken: accessToken,
+                                                  mobileNumber: mobileNumberController.text,
+                                                  existingVisitor: () => route(
+                                                      context,
+                                                      AskPermissionToEnter(
+                                                          flatID: flatID[flatList.indexOf(selectedFlat ?? "")],
+                                                          mobileNumber: mobileNumberController.text,
+                                                          visitorName: apiResult["name"],
+                                                          visitorPhoto: apiResult["photo"])),
+                                                  newVisitor: () => route(context, NewVisitorInformation(selectedFlat: selectedFlat.toString(), mobileNumber: mobileNumberController.text)))
+                                              : showSnackBar(context: context, label: i18n_selectFlat(isBN));
                                     }))
                           ])))))
         ]));
