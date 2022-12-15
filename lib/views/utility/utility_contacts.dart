@@ -28,6 +28,8 @@ class _UtilityContactsState extends State<UtilityContacts> {
   List category = [];
   List<List> contacts = [];
   bool isBN = false;
+  bool loaded = false;
+  double loadedValue = 0;
 
 //APIs
   Future<void> readCategory({required String accessToken}) async {
@@ -47,8 +49,10 @@ class _UtilityContactsState extends State<UtilityContacts> {
   }
 
   Future<void> readContacts({required String accessToken, required List category}) async {
+    setState(() => loaded = false);
     try {
       for (int i = 0; i < category.length; i++) {
+        setState(() => loadedValue = loadedValue + (1 / category.length));
         var response = await http.post(Uri.parse("$baseUrl/utility-contact/view/contact/by-category?cid=${category[i]['utilityContactCategoryId']}"), headers: authHeader(accessToken));
         Map result = jsonDecode(response.body);
         print(result);
@@ -66,6 +70,7 @@ class _UtilityContactsState extends State<UtilityContacts> {
     } on Exception catch (e) {
       showSnackBar(context: context, label: e.toString());
     }
+    setState(() => loaded = true);
   }
 
 //Functions
@@ -88,8 +93,13 @@ class _UtilityContactsState extends State<UtilityContacts> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: primaryAppBar(context: context, title: i18n_utilityContacts(isBN)),
-        body: (category.isEmpty)
-            ? noData()
+        body: (category.isEmpty || !loaded)
+            ? Column(children: [
+                noData(),
+                Padding(
+                    padding: EdgeInsets.symmetric(horizontal: primaryPaddingValue * 4),
+                    child: LinearProgressIndicator(value: loadedValue, color: trueWhite, minHeight: 10, backgroundColor: trueBlack.withOpacity(.15)))
+              ])
             : ClipRRect(
                 borderRadius: primaryBorderRadius,
                 child: ListView.builder(

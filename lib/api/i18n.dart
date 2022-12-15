@@ -21,6 +21,7 @@ String i18n_utilityContacts(bool isBN) => isBN ? 'জরুরী কাজে�
 String i18n_residents(bool isBN) => isBN ? 'বসবাসকারী' : 'Residents';
 String i18n_tapSwitchGuard(bool isBN) => isBN ? 'গার্ড প্রোফাইলে যেতে ক্লিক করুন' : 'Tap to switch Guard profile';
 String i18n_deActiveDevice(bool isBN) => isBN ? 'ডিএক্টিভেট ডিভাইস' : 'Deactivate Device';
+String i18n_switchProfile(bool isBN) => isBN ? 'গার্ড প্রোফাইল পরিবর্তন করুন' : 'Switch Guard Profile';
 //endregion
 
 //region ---------- Delivery Management ----------

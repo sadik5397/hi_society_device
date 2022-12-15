@@ -6,6 +6,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:hi_society_device/api/i18n.dart';
+import 'package:hi_society_device/theme/colors.dart';
+import 'package:hi_society_device/theme/padding_margin.dart';
 import 'package:hi_society_device/theme/placeholder.dart';
 import 'package:hi_society_device/views/auth/sign_in.dart';
 import 'package:hi_society_device/views/car_parking/amenity_car_parking.dart';
@@ -43,6 +45,7 @@ class _HomeState extends State<Home> {
   dynamic apiResult;
   bool validToken = false;
   bool isBN = false;
+  List<String> selectedGuardsAvatars = [];
 
 // APIs
   Future<void> readBuildingInfo({required String accessToken}) async {
@@ -151,6 +154,7 @@ class _HomeState extends State<Home> {
     setState(() => buildingName = pref.getString("buildingName"));
     setState(() => buildingAddress = pref.getString("buildingAddress"));
     setState(() => buildingImg = pref.getString("buildingImg"));
+    setState(() => selectedGuardsAvatars = pref.getStringList("selectedGuardsAvatars") ?? []);
     await verifyAccessToken(accessToken: accessToken, refreshToken: refreshToken);
     if (validToken) await readBuildingInfo(accessToken: accessToken);
     if (validToken) await sendFcmToken(accessToken: accessToken);
@@ -204,22 +208,33 @@ class _HomeState extends State<Home> {
           top: false,
           child: Scaffold(
               appBar: primaryAppBar(
-                context: context,
-                prefix: IconButton(onPressed: () => Phoenix.rebirth(context), icon: const Icon(Icons.settings_backup_restore)),
-                suffix: IconButton(
-                    onPressed: () => showDialog(
-                        context: context,
-                        builder: (BuildContext context) => SwitchGuardUser(
-                                // context: context,
-                                onSignOut: () async {
-                              route(context, const SignIn());
-                              final pref = await SharedPreferences.getInstance();
-                              await pref.clear();
-                              await doSignOutFromSystem(accessToken: accessToken, refreshToken: refreshToken);
-                            })),
-                    icon: const Icon(Icons.lock_outline_rounded)),
-                isBN: isBN,
-              ),
+                  isBN: isBN,
+                  context: context,
+                  prefix: IconButton(onPressed: () => Phoenix.rebirth(context), icon: const Icon(Icons.settings_backup_restore)),
+                  suffix: IconButton(
+                      onPressed: () => showDialog(
+                          barrierDismissible: true,
+                          context: context,
+                          builder: (BuildContext context) => SwitchGuardUser(onSignOut: () async {
+                                route(context, const SignIn());
+                                final pref = await SharedPreferences.getInstance();
+                                await pref.clear();
+                                await doSignOutFromSystem(accessToken: accessToken, refreshToken: refreshToken);
+                              })),
+                      icon: selectedGuardsAvatars.isEmpty
+                          ? Padding(padding: const EdgeInsets.symmetric(horizontal: 8.0), child: Icon(Icons.lock_clock_rounded, color: trueWhite))
+                          : Stack(
+                              alignment: Alignment.centerRight,
+                              children: List.generate(
+                                  selectedGuardsAvatars.length,
+                                  (index) => Container(
+                                      margin: EdgeInsets.only(right: primaryPaddingValue * index * 2.5),
+                                      height: 40,
+                                      width: 40,
+                                      decoration: BoxDecoration(
+                                          border: Border.all(color: trueWhite, width: 2),
+                                          borderRadius: BorderRadius.circular(100),
+                                          image: DecorationImage(image: MemoryImage(base64Decode(selectedGuardsAvatars[index])), fit: BoxFit.cover))))))),
               body: Column(children: [
                 HeaderBuildingImage(flex: 3, buildingAddress: buildingAddress ?? "...", buildingImage: buildingImg ?? placeholderImage, buildingName: buildingName ?? "..."),
                 Expanded(
