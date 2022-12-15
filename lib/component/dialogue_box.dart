@@ -78,13 +78,15 @@ class _SwitchGuardUserState extends State<SwitchGuardUser> {
                     child: Text(i18n_tapSwitchGuard(isBN), textAlign: TextAlign.center, style: Theme.of(context).textTheme.titleLarge?.copyWith(color: primaryTitleColor, fontWeight: FontWeight.bold)),
                   ),
                   AnimatedCrossFade(
+                      alignment: Alignment.center,
                       firstChild: Padding(padding: primaryPadding * 2, child: const CircularProgressIndicator()),
                       secondChild: GridView.builder(
                           itemCount: guardList.length,
                           padding: EdgeInsets.symmetric(horizontal: primaryPaddingValue * 2),
                           shrinkWrap: true,
                           primary: false,
-                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, mainAxisSpacing: primaryPaddingValue, crossAxisSpacing: primaryPaddingValue),
+                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: guardList.length < 2 ? 1 : 2, mainAxisSpacing: primaryPaddingValue, crossAxisSpacing: primaryPaddingValue, childAspectRatio: guardList.length < 2 ? 1.25 : 1),
                           itemBuilder: (context, index) => guardGridTile(
                               context: context,
                               onTap: () {

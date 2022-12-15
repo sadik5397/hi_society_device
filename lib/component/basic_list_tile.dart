@@ -16,6 +16,7 @@ ListTile basicListTile({required BuildContext context, bool isBN = false, requir
           : const Icon(Icons.arrow_forward_ios_rounded, size: 40, color: Colors.black38),
       title: Row(children: [
         Text(key ?? "", style: Theme.of(context).textTheme.displaySmall?.copyWith(color: isVerified ? primaryColor : trueBlack, fontWeight: FontWeight.w300)),
+        if (key != null) SizedBox(width: primaryPaddingValue),
         Text(title, style: Theme.of(context).textTheme.displaySmall?.copyWith(color: isVerified ? primaryColor : trueBlack, fontWeight: FontWeight.w500))
       ]),
       contentPadding: EdgeInsets.all(primaryPaddingValue * 2),

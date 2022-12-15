@@ -151,7 +151,7 @@ class _AskPermissionToEnterState extends State<AskPermissionToEnter> {
                       image: DecorationImage(
                           fit: BoxFit.cover, image: widget.isNew ? Image.memory(base64Decode(widget.visitorPhoto)).image : CachedNetworkImageProvider("$baseUrl/photos/${widget.visitorPhoto}")))),
               if (allowStatus == "true") const Expanded(child: SizedBox()),
-              if (allowStatus == "true") Text(i18n_welcomeBack(isBN), style: Theme.of(context).textTheme.displayMedium?.copyWith(color: trueWhite, fontWeight: FontWeight.w300)),
+              if (allowStatus == "true") Text(i18n_welcomeBack(isBN), style: Theme.of(context).textTheme.displayMedium?.copyWith(color: trueWhite, fontWeight: FontWeight.w300), textAlign: TextAlign.center),
               Text(widget.visitorName.toString(), style: Theme.of(context).textTheme.displayLarge?.copyWith(color: trueWhite, fontWeight: FontWeight.w600)),
               if (allowStatus == "true") const Expanded(child: SizedBox()),
               Padding(
