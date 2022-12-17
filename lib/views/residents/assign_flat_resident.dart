@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hi_society_device/api/i18n.dart';
 import 'package:http/http.dart' as http;
@@ -32,7 +33,7 @@ class _AssignFlatResidentState extends State<AssignFlatResident> {
       var response = await http.post(Uri.parse("$baseUrl/building/assign/flat/code?fid=$flatID"), headers: authHeader(accessToken));
       Map result = jsonDecode(response.body);
       if (result["statusCode"] == 200 || result["statusCode"] == 201) {
-        showSnackBar(context: context, label: result["message"]);
+        if (kDebugMode) showSnackBar(context: context, label: result["message"]);
         setState(() => apiResult = result["data"]);
       } else {
         showSnackBar(context: context, label: result["message"][0].toString().length == 1 ? result["message"].toString() : result["message"][0].toString());

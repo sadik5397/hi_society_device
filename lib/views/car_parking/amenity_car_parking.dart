@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hi_society_device/api/i18n.dart';
 import 'package:hi_society_device/theme/date_format.dart';
@@ -36,7 +37,7 @@ class _AmenityCarParkingState extends State<AmenityCarParking> {
       print("$baseUrl/amenity-booking/list/amenity/booking/by-date?date=$date");
       print(result);
       if (result["statusCode"] == 200 || result["statusCode"] == 201) {
-        showSnackBar(context: context, label: result["message"]);
+        if (kDebugMode) showSnackBar(context: context, label: result["message"]);
         setState(() => bookingList = result["data"]);
         for (int i = 0; i < bookingList.length; i++) {
           if (bookingList[i]["amenity"]["amenityCategory"]["categoryName"] == "Common Car Parking") setState(() => parkingBookingList.add(bookingList[i]));

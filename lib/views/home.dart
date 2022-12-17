@@ -54,7 +54,7 @@ class _HomeState extends State<Home> {
       Map result = jsonDecode(response.body);
       print(result);
       if (result["code"] == 200) showSnackBar(context: context, label: result["response"]); //success
-      if (result["code"] != 200) showSnackBar(context: context, label: result["message"]); //error
+      if (result["code"] != 200) if (kDebugMode) showSnackBar(context: context, label: result["message"]); //error
       setState(() => apiResult = result["data"]);
       setState(() => buildingName = apiResult["buildingName"]);
       setState(() => buildingAddress = apiResult["address"]);
@@ -78,7 +78,7 @@ class _HomeState extends State<Home> {
       var response = await http.post(Uri.parse("$baseUrl/push/token/update"), headers: authHeader(accessToken), body: jsonEncode({"token": fcmToken, "device": platform}));
       Map result = jsonDecode(response.body);
       if (result["statusCode"] == 200 || result["statusCode"] == 201) {
-        showSnackBar(context: context, label: result["message"]);
+        if (kDebugMode) showSnackBar(context: context, label: result["message"]);
       } else {
         showSnackBar(context: context, label: result["message"][0].toString().length == 1 ? result["message"].toString() : result["message"][0].toString());
       }
@@ -135,6 +135,8 @@ class _HomeState extends State<Home> {
     print(result1);
     if (result1["statusCode"] == 200 || result1["statusCode"] == 201) {
       showSnackBar(context: context, label: result1["message"]);
+      final pref = await SharedPreferences.getInstance();
+      await pref.clear();
     }
     var response2 = await http.post(Uri.parse("$baseUrl/auth/logout"), headers: authHeader(refreshToken));
     Map result2 = jsonDecode(response2.body);

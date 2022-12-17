@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hi_society_device/api/i18n.dart';
 import 'package:hi_society_device/component/app_bar.dart';
@@ -50,7 +51,7 @@ class _WaitForResidentResponseState extends State<WaitForResidentResponse> {
       Map result = jsonDecode(response.body);
       print(result);
       if (result["statusCode"] == 200 || result["statusCode"] == 201) {
-        showSnackBar(context: context, label: result["message"]);
+        if (kDebugMode) showSnackBar(context: context, label: result["message"]);
         setState(() => apiResult = result["data"]);
         setState(() => requestedVisitorHistoryID = result["data"]["visitorHistoryId"]);
       } else {

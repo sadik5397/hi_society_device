@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hi_society_device/api/i18n.dart';
 import 'package:hi_society_device/views/delivery/wait_for_resident_response.dart';
@@ -44,7 +45,7 @@ class _ReceiveParcelState extends State<ReceiveParcel> {
       Map result = jsonDecode(response.body);
       print(result);
       if (result["statusCode"] == 200 || result["statusCode"] == 201) {
-        showSnackBar(context: context, label: result["message"]);
+        if (kDebugMode) showSnackBar(context: context, label: result["message"]);
         setState(() => apiResult = result["data"]);
         for (int i = 0; i < apiResult.length; i++) {
           setState(() => flatList.add(apiResult[i]["flatName"]));
@@ -65,7 +66,7 @@ class _ReceiveParcelState extends State<ReceiveParcel> {
       Map result = jsonDecode(response.body);
       print(result);
       if (result["statusCode"] == 200 || result["statusCode"] == 201) {
-        showSnackBar(context: context, label: result["message"]);
+        if (kDebugMode) showSnackBar(context: context, label: result["message"]);
         print(result);
         successRoute.call();
       } else {
@@ -134,19 +135,21 @@ class _ReceiveParcelState extends State<ReceiveParcel> {
                   context: context,
                   title: i18n_next(isBN),
                   onTap: () async {
-                    await createPPL(
-                        deliveryMethod: selectedDeliveryMethod != null ? deliveryMethodKeys[deliveryMethod.indexOf(selectedDeliveryMethod!)] : "",
-                        accessToken: accessToken,
-                        itemType: selectedItemType ?? "",
-                        merchant: selectedMerchant ?? "",
-                        flatId: selectedFlat != null ? flatID[flatList.indexOf(selectedFlat!)] : -1,
-                        successRoute: () => route(
-                            context,
-                            WaitForResidentResponse(
-                                vendor: selectedMerchant ?? "...",
-                                deliveryMethod: deliveryMethodKeys[deliveryMethod.indexOf(selectedDeliveryMethod!)],
-                                flat: selectedFlat ?? "...",
-                                item: selectedItemType ?? "...")));
+                    selectedFlat == null
+                        ? showSnackBar(context: context, label: i18n_selectFlat(isBN))
+                        : await createPPL(
+                            deliveryMethod: selectedDeliveryMethod != null ? deliveryMethodKeys[deliveryMethod.indexOf(selectedDeliveryMethod!)] : "",
+                            accessToken: accessToken,
+                            itemType: selectedItemType ?? "",
+                            merchant: selectedMerchant ?? "",
+                            flatId: selectedFlat != null ? flatID[flatList.indexOf(selectedFlat!)] : -1,
+                            successRoute: () => route(
+                                context,
+                                WaitForResidentResponse(
+                                    vendor: selectedMerchant ?? "...",
+                                    deliveryMethod: deliveryMethodKeys[deliveryMethod.indexOf(selectedDeliveryMethod!)],
+                                    flat: selectedFlat ?? "...",
+                                    item: selectedItemType ?? "...")));
                   }))
         ]));
   }

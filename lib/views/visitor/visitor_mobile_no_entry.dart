@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hi_society_device/api/i18n.dart';
 import 'package:hi_society_device/component/dropdown_button.dart';
@@ -43,7 +44,7 @@ class _VisitorMobileNoEntryState extends State<VisitorMobileNoEntry> {
       Map result = jsonDecode(response.body);
       if (result["statusCode"] == 200 || result["statusCode"] == 201) {
         FocusManager.instance.primaryFocus?.unfocus();
-        showSnackBar(context: context, label: result["message"]);
+        if (kDebugMode) showSnackBar(context: context, label: result["message"]);
         setState(() => apiResult = result["data"]);
         existingVisitor.call();
       } else {
@@ -61,7 +62,7 @@ class _VisitorMobileNoEntryState extends State<VisitorMobileNoEntry> {
       Map result = jsonDecode(response.body);
       print(result);
       if (result["statusCode"] == 200 || result["statusCode"] == 201) {
-        showSnackBar(context: context, label: result["message"]);
+        if (kDebugMode) showSnackBar(context: context, label: result["message"]);
         setState(() => apiResult = result["data"]);
         for (int i = 0; i < apiResult.length; i++) {
           setState(() => flatList.add(apiResult[i]["flatName"]));

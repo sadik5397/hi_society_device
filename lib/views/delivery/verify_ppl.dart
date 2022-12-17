@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hi_society_device/api/i18n.dart';
 import 'package:hi_society_device/component/app_bar.dart';
@@ -39,7 +40,7 @@ class _VerifyPPLState extends State<VerifyPPL> {
       Map result = jsonDecode(response.body);
       print(result);
       if (result["statusCode"] == 200 || result["statusCode"] == 201) {
-        showSnackBar(context: context, label: result["message"]);
+        if (kDebugMode) showSnackBar(context: context, label: result["message"]);
         setState(() => apiResult = result["data"]);
         (apiResult["otpUsedAt"] == null) ? setState(() => allowStatus = "true") : setState(() => allowStatus = "false");
         if (allowStatus == "true") await usePPL(accessToken: accessToken, gatePassCode: widget.gatePassCode);
@@ -58,7 +59,7 @@ class _VerifyPPLState extends State<VerifyPPL> {
       Map result = jsonDecode(response.body);
       print(result);
       if (result["statusCode"] == 200 || result["statusCode"] == 201) {
-        showSnackBar(context: context, label: result["message"]);
+        if (kDebugMode) showSnackBar(context: context, label: result["message"]);
       } else {
         showSnackBar(context: context, label: result["message"][0].toString().length == 1 ? result["message"].toString() : result["message"][0].toString());
         setState(() => allowStatus = "false");

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hi_society_device/api/i18n.dart';
 import 'package:hi_society_device/component/utility_contact_list_tile.dart';
@@ -38,7 +39,7 @@ class _UtilityContactsState extends State<UtilityContacts> {
       Map result = jsonDecode(response.body);
       print(result);
       if (result["statusCode"] == 200 || result["statusCode"] == 201) {
-        showSnackBar(context: context, label: result["message"]);
+        if (kDebugMode) showSnackBar(context: context, label: result["message"]);
         setState(() => category = result["data"]);
       } else {
         showSnackBar(context: context, label: result["message"][0].toString().length == 1 ? result["message"].toString() : result["message"][0].toString());
@@ -57,7 +58,7 @@ class _UtilityContactsState extends State<UtilityContacts> {
         Map result = jsonDecode(response.body);
         print(result);
         if (result["statusCode"] == 200 || result["statusCode"] == 201) {
-          showSnackBar(context: context, label: result["message"]);
+          if (kDebugMode) showSnackBar(context: context, label: result["message"]);
           (result["data"].length == 0)
               ? setState(() => contacts.add([
                     {"contactName": "Empty"}

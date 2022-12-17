@@ -37,7 +37,7 @@ class _SwitchGuardUserState extends State<SwitchGuardUser> {
       Map result = jsonDecode(response.body);
       if (kDebugMode) print(result.toString());
       if (result["statusCode"] == 200 || result["statusCode"] == 201) {
-        if (kDebugMode) showSnackBar(context: context, label: result["message"]);
+        if (kDebugMode) if (kDebugMode) showSnackBar(context: context, label: result["message"]);
         setState(() => guardList = result["data"]);
       } else {
         showSnackBar(context: context, label: result["message"][0].toString().length == 1 ? result["message"].toString() : result["message"][0].toString());

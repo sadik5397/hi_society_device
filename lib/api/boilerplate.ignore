@@ -12,7 +12,7 @@ import 'package:http/http.dart' as http;
       var response = await http.post(Uri.parse("$baseUrl__"), headers: authHeader(accessToken),body: jsonEncode({"email": email});
       Map result = jsonDecode(response.body);
       if (result["statusCode"] == 200 || result["statusCode"] == 201) {
-        showSnackBar(context: context, label: result["message"]);
+        if (kDebugMode) showSnackBar(context: context, label: result["message"]);
         setState(() => apiResult = result["data"]);
         //todo: if success
       }else{
