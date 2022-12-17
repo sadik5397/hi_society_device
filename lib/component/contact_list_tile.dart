@@ -18,7 +18,7 @@ Padding contactListTile({required VoidCallback onTap, bool isBN = false, require
               child: Container(
                   padding: primaryPadding,
                   child: Row(children: [
-                    flatAvatar(context: context, label: img, isBN: isBN),
+                    intercomAvatar(context: context, photo: img),
                     Expanded(
                         child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.center, children: [
                       Text(title, style: Theme.of(context).textTheme.displaySmall?.copyWith(fontWeight: FontWeight.w600, color: primaryColor)),
