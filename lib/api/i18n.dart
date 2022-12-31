@@ -57,6 +57,14 @@ String i18n_arrivedAt(bool isBN) => isBN ? 'পৌঁছানো সময়' 
 String i18n_weFound(bool isBN) => isBN ? 'আমরা আপনার পার্সেলটি পেয়েছি / পার্সেলটি পাওয়া গেছে' : 'We’ve found your';
 String i18n_weNoFound(bool isBN) => isBN ? 'দুঃখিত! আপনার পার্সেলটি পাওয়া যাচ্ছে না!!' : 'Sorry!! We did not find your';
 String i18n_parcel(bool isBN) => isBN ? 'পার্সেল' : 'PARCEL';
+String i18n_deliverParcelAtCustomersDoor(bool isBN) => isBN ? 'কাস্টমারের দরজায় দিয়ে আসতে চাই' : 'I want to deliver the parcel at customer\'s door';
+String i18n_customerComeDownHereToReceive(bool isBN) => isBN ? 'কাস্টমারের নিচে এসে নিজে গ্রহণ করুক' : 'I want customer come down here to receive';
+String i18n_dropParcelHere(bool isBN) => isBN ? 'পার্সেলটি এখানে রেখে যেতে চাই (পেইড)' : 'I want to drop the parcel here (PAID)';
+String i18n_product(bool isBN) => isBN ? 'প্রোডাক্ট' : 'Product';
+String i18n_food(bool isBN) => isBN ? 'খাবার' : 'Food';
+String i18n_medicine(bool isBN) => isBN ? 'ঔষুধ' : 'Medicine';
+String i18n_document(bool isBN) => isBN ? 'কাগজপত্র' : 'Document';
+String i18n_others(bool isBN) => isBN ? 'অন্যান্য' : 'Others';
 //endregion
 
 //region ---------- Digital Gate Pass ----------

@@ -53,8 +53,8 @@ dependencies:
   flutter_local_notifications:
   qr_code_scanner:
   flutter_phoenix:
-  flutter_beep: ^1.0.0
-  phone_number: ^1.0.0
+  flutter_beep:
+  phone_number:
 
 dev_dependencies:
   flutter_launcher_icons:

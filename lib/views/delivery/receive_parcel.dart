@@ -25,18 +25,16 @@ class ReceiveParcel extends StatefulWidget {
 class _ReceiveParcelState extends State<ReceiveParcel> {
   //Variables
   String accessToken = "";
+  bool isBN = false;
   dynamic apiResult;
   List<String> flatList = [];
   List<int> flatID = [];
-  List<String> itemTypeList = ["Product", "Food", "Medicine", "Document", "Others"];
   List<String> merchantList = ["Daraz", "Foodpanda", "Chaldal", "Other"];
-  List<String> deliveryMethod = ["I want to deliver the parcel at customer's door", "I want customer come down here to receive", "I want to drop the parcel here (PAID)"];
   List<String> deliveryMethodKeys = ["door_delivery", "hand_receive", "drop_at_guard"];
   String? selectedDeliveryMethod;
   String? selectedFlat;
   String? selectedItemType;
   String? selectedMerchant;
-  bool isBN = false;
 
   //APIs
   Future<void> getFlatList({required String accessToken}) async {
@@ -109,7 +107,7 @@ class _ReceiveParcelState extends State<ReceiveParcel> {
             context: context,
             key: i18n_itemType(isBN),
             title: i18n_whatItem(isBN),
-            options: itemTypeList,
+            options: [i18n_product(isBN), i18n_food(isBN), i18n_medicine(isBN), i18n_document(isBN), i18n_others(isBN)],
             value: selectedItemType,
             onChanged: (value) => setState(() => selectedItemType = value.toString()),
           ),
@@ -124,7 +122,7 @@ class _ReceiveParcelState extends State<ReceiveParcel> {
           primaryDropdown(
             context: context,
             title: i18n_deliverMethod(isBN),
-            options: deliveryMethod,
+            options: [i18n_deliverParcelAtCustomersDoor(isBN), i18n_customerComeDownHereToReceive(isBN), i18n_dropParcelHere(isBN)],
             value: selectedDeliveryMethod,
             onChanged: (value) => setState(() => selectedDeliveryMethod = value.toString()),
           ),
@@ -138,7 +136,7 @@ class _ReceiveParcelState extends State<ReceiveParcel> {
                     selectedFlat == null
                         ? showSnackBar(context: context, label: i18n_selectFlat(isBN))
                         : await createPPL(
-                            deliveryMethod: selectedDeliveryMethod != null ? deliveryMethodKeys[deliveryMethod.indexOf(selectedDeliveryMethod!)] : "",
+                            deliveryMethod: selectedDeliveryMethod != null ? deliveryMethodKeys[[i18n_deliverParcelAtCustomersDoor(isBN), i18n_customerComeDownHereToReceive(isBN), i18n_dropParcelHere(isBN)].indexOf(selectedDeliveryMethod!)] : "",
                             accessToken: accessToken,
                             itemType: selectedItemType ?? "",
                             merchant: selectedMerchant ?? "",
@@ -147,7 +145,7 @@ class _ReceiveParcelState extends State<ReceiveParcel> {
                                 context,
                                 WaitForResidentResponse(
                                     vendor: selectedMerchant ?? "...",
-                                    deliveryMethod: deliveryMethodKeys[deliveryMethod.indexOf(selectedDeliveryMethod!)],
+                                    deliveryMethod: deliveryMethodKeys[[i18n_deliverParcelAtCustomersDoor(isBN), i18n_customerComeDownHereToReceive(isBN), i18n_dropParcelHere(isBN)].indexOf(selectedDeliveryMethod!)],
                                     flat: selectedFlat ?? "...",
                                     item: selectedItemType ?? "...")));
                   }))

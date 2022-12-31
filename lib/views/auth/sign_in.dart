@@ -45,6 +45,7 @@ class _SignInState extends State<SignIn> {
         final pref = await SharedPreferences.getInstance();
         await pref.setString("accessToken", apiResult["accessToken"]);
         await pref.setString("refreshToken", apiResult["refreshToken"]);
+        await pref.setBool("isBN", true);
         setState(() => accessToken = apiResult["accessToken"]);
         home.call();
       } else {

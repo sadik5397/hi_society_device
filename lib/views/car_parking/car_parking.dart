@@ -3,8 +3,6 @@ import 'package:hi_society_device/component/app_bar.dart';
 import 'package:hi_society_device/component/big_option_button.dart';
 import 'package:hi_society_device/views/car_parking/parking_booking.dart';
 import 'package:hi_society_device/views/car_parking/parking_status.dart';
-import 'package:hi_society_device/views/delivery/ppl_code_entry.dart';
-import 'package:hi_society_device/views/delivery/receive_parcel.dart';
 
 class CarParking extends StatelessWidget {
   const CarParking({Key? key}) : super(key: key);
