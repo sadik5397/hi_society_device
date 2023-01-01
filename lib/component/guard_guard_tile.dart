@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:hi_society_device/theme/padding_margin.dart';
 
@@ -10,7 +11,8 @@ Widget guardGridTile({required BuildContext context, required String photo, requ
   return ClipRRect(
       borderRadius: primaryBorderRadius,
       child: Stack(alignment: Alignment.center, children: [
-        Image.memory(base64Decode(photo), fit: BoxFit.cover, height: double.maxFinite, width: double.maxFinite),
+        CachedNetworkImage(imageUrl: photo, fit: BoxFit.cover, height: double.maxFinite, width: double.maxFinite),
+        // Image.memory(base64Decode(photo), fit: BoxFit.cover, height: double.maxFinite, width: double.maxFinite),
         Container(color: trueBlack.withOpacity(.5)),
         Padding(
             padding: primaryPadding,

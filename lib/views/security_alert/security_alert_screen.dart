@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_beep/flutter_beep.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:hi_society_device/api/i18n.dart';
 import 'package:hi_society_device/component/button.dart';
 import 'package:hi_society_device/component/page_navigation.dart';
@@ -77,6 +78,7 @@ class _SecurityAlertScreenState extends State<SecurityAlertScreen> {
                         await Future.delayed(const Duration(seconds: 1));
                         // ignore: use_build_context_synchronously
                         route(context, const Home());
+                        Phoenix.rebirth(context);
                       })),
               SizedBox(height: primaryPaddingValue * 4)
             ])));

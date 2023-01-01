@@ -60,6 +60,8 @@ class _SignInState extends State<SignIn> {
   defaultInit() async {
     final pref = await SharedPreferences.getInstance();
     setState(() => isBN = pref.getBool("isBN") ?? true);
+    setState(() => accessToken = pref.getString("accessToken") ?? "");
+    if(accessToken != "") routeNoBack(context, Home());
   }
 
 //Initiate

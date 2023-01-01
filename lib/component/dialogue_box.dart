@@ -8,6 +8,7 @@ import 'package:hi_society_device/component/button.dart';
 import 'package:hi_society_device/component/guard_guard_tile.dart';
 import 'package:hi_society_device/component/page_navigation.dart';
 import 'package:hi_society_device/component/snack_bar.dart';
+import 'package:hi_society_device/theme/placeholder.dart';
 import 'package:hi_society_device/views/home.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -73,6 +74,8 @@ class _SwitchGuardUserState extends State<SwitchGuardUser> {
                 padding: EdgeInsets.symmetric(vertical: primaryPaddingValue * 2, horizontal: primaryPaddingValue * 2),
                 decoration: BoxDecoration(color: trueWhite, borderRadius: primaryBorderRadius * 2),
                 child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.center, children: [
+                  SelectableText(guardList.toString(), style: TextStyle(color: trueBlack)),
+                  // SelectableText(guardList.length.toString(), style: TextStyle(color: trueBlack)),
                   Padding(
                     padding: EdgeInsets.only(bottom: primaryPaddingValue * 1.5),
                     child: Text(i18n_tapSwitchGuard(isBN), textAlign: TextAlign.center, style: Theme.of(context).textTheme.titleLarge?.copyWith(color: primaryTitleColor, fontWeight: FontWeight.bold)),
@@ -91,13 +94,13 @@ class _SwitchGuardUserState extends State<SwitchGuardUser> {
                               context: context,
                               onTap: () {
                                 // routeBack(context);
-                                selectedGuardsAvatars.contains(guardList[index]["base64photo"])
-                                    ? setState(() => selectedGuardsAvatars.remove(guardList[index]["base64photo"]))
-                                    : setState(() => selectedGuardsAvatars.add(guardList[index]["base64photo"]));
+                                selectedGuardsAvatars.contains(guardList[index]["name"])
+                                    ? setState(() => selectedGuardsAvatars.remove(guardList[index]["name"]))
+                                    : setState(() => selectedGuardsAvatars.add(guardList[index]["name"]));
                               },
-                              enabled: selectedGuardsAvatars.contains(guardList[index]["base64photo"]),
+                              enabled: selectedGuardsAvatars.contains(guardList[index]["name"]),
                               name: guardList[index]["name"],
-                              photo: guardList[index]["base64photo"])),
+                              photo: guardList[index]["base64photo"] != null ? "$base64Url/photos/${guardList[index]["base64photo"]}" : placeholderImage)),
                       duration: const Duration(milliseconds: 400),
                       crossFadeState: guardList.isEmpty ? CrossFadeState.showFirst : CrossFadeState.showSecond),
                   Padding(
