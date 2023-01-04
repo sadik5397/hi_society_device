@@ -11,11 +11,12 @@ String i18n_pleaseContact(bool isBN) => isBN ? "'হাই সোসাইটি
 
 //region ---------- Home ----------
 String i18n_appTitle(bool isBN) => isBN ? 'হাই সোসাইটি' : 'Hi Society';
-String i18n_visitorManagement(bool isBN) => isBN ? 'ভিজিটার ম্যানেজমেন্ট' : 'Visitor Management';
+String i18n_visitorManagement(bool isBN) => isBN ? 'ভিজিটর ম্যানেজমেন্ট' : 'Visitor Management';
 String i18n_deliveryManagement(bool isBN) => isBN ? 'পার্সেল ডেলিভারি' : 'Delivery Management';
 String i18n_digitalGatePass(bool isBN) => isBN ? 'ডিজিটাল গেট পাস' : 'Digital Gate Pass';
+String i18n_securityAlert(bool isBN) => isBN ? 'জরুরী এলার্ট' : 'Security Alert';
 String i18n_intercom(bool isBN) => isBN ? 'ইন্টার-কম' : 'Intercom';
-String i18n_requiredCarParking(bool isBN) => isBN ? 'কার পার্কিং ব্যবস্থাপনা' : 'Required Car Parking';
+String i18n_requiredCarParking(bool isBN) => isBN ? 'কার পার্কিং' : 'Required Car Parking';
 String i18n_overstayAlert(bool isBN) => isBN ? 'অধিক রাত্রিতে ফের' : 'Overstay Requests';
 String i18n_utilityContacts(bool isBN) => isBN ? 'জরুরী কাজের লোক' : 'Utility Contacts';
 String i18n_residents(bool isBN) => isBN ? 'বসবাসকারী' : 'Residents';
@@ -26,7 +27,7 @@ String i18n_switchProfile(bool isBN) => isBN ? 'গার্ড প্রোফ�
 
 //region ---------- Delivery Management ----------
 String i18n_rcvParcel(bool isBN) => isBN ? 'পার্সেল গ্রহণ করতে' : 'Receive Parcel';
-String i18n_dsbParcel(bool isBN) => isBN ? 'পার্সেল বিলি করতে' : 'Disburse Parcel';
+String i18n_dsbParcel(bool isBN) => isBN ? 'পার্সেল বিলি করতে' : 'Parcel Delivery';
 String i18n_flat(bool isBN) => isBN ? 'ফ্লাট' : 'Flat';
 String i18n_whichFlat(bool isBN) => isBN ? 'কোন ফ্লাটে যেতে চাই?' : 'Which Flat to Go?';
 String i18n_itemType(bool isBN) => isBN ? 'আইটেম টাইপ / শ্রেণী নির্বাচন করুন ' : 'Item Type';

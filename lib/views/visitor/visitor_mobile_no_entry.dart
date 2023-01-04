@@ -6,6 +6,7 @@ import 'package:hi_society_device/api/i18n.dart';
 import 'package:hi_society_device/component/dropdown_button.dart';
 import 'package:hi_society_device/component/page_navigation.dart';
 import 'package:hi_society_device/component/text_field.dart';
+import 'package:hi_society_device/theme/colors.dart';
 import 'package:hi_society_device/theme/padding_margin.dart';
 import 'package:hi_society_device/views/visitor/ask_permission_to_enter.dart';
 import 'package:hi_society_device/views/visitor/new_visitor_info.dart';
@@ -15,8 +16,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../api/api.dart';
 import '../../api/phone_number_validator.dart';
 import '../../component/app_bar.dart';
-import '../../component/header_building_image.dart';
+import '../../component/button.dart';
 import '../../component/snack_bar.dart';
+import '../gate_pass/scan_gate_pass_qr.dart';
+import '../gate_pass/verify_gate_pass.dart';
 
 class VisitorMobileNoEntry extends StatefulWidget {
   const VisitorMobileNoEntry({Key? key, required this.buildingImg, required this.buildingName, required this.buildingAddress}) : super(key: key);
@@ -36,6 +39,8 @@ class _VisitorMobileNoEntryState extends State<VisitorMobileNoEntry> {
   List<String> flatList = [];
   bool isBN = false;
   List<int> flatID = [];
+  TextEditingController gatePassCodeController = TextEditingController();
+  bool codeEmpty = true;
 
   //APIs
   Future<void> sendVisitorsPhoneNumber({required String accessToken, required String mobileNumber, required VoidCallback existingVisitor, required VoidCallback newVisitor}) async {
@@ -95,50 +100,96 @@ class _VisitorMobileNoEntryState extends State<VisitorMobileNoEntry> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: primaryAppBar(context: context, title: i18n_visitorManagement(isBN)),
-        body: Column(children: [
-          HeaderBuildingImage(buildingAddress: widget.buildingAddress, buildingImage: widget.buildingImg, buildingName: widget.buildingName),
-          Expanded(
-              child: Container(
-                  decoration: const BoxDecoration(image: DecorationImage(image: AssetImage("assets/smart_background.png"), fit: BoxFit.cover, opacity: .4)),
-                  child: Center(
-                      child: Padding(
-                          padding: EdgeInsets.only(top: primaryPaddingValue),
-                          child: Row(children: [
-                            Expanded(
-                                flex: 3,
-                                child: primaryDropdown(
-                                    paddingRight: 0, context: context, title: i18n_flat(isBN), options: flatList, value: selectedFlat, onChanged: (value) => setState(() => selectedFlat = value.toString()))),
-                            Expanded(
-                                flex: 7,
-                                child: primaryTextField(
-                                    leftPadding: primaryPaddingValue,
-                                    // autoFocus: true,
-                                    hintText: "01XXXXXXXXX",
-                                    keyboardType: TextInputType.number,
-                                    context: context,
-                                    labelText: "${i18n_enterMobile(isBN)}...",
-                                    controller: mobileNumberController,
-                                    textCapitalization: TextCapitalization.characters,
-                                    onFieldSubmitted: (value) async {
-                                      bool valid = true;
-                                      valid = await validatePhoneNumber(mobileNumberController.text);
-                                      !valid
-                                          ? showSnackBar(context: context, label: i18n_invalidPhone(isBN))
-                                          : (selectedFlat != null)
-                                              ? await sendVisitorsPhoneNumber(
-                                                  accessToken: accessToken,
-                                                  mobileNumber: mobileNumberController.text,
-                                                  existingVisitor: () => route(
-                                                      context,
-                                                      AskPermissionToEnter(
-                                                          flatID: flatID[flatList.indexOf(selectedFlat ?? "")],
-                                                          mobileNumber: mobileNumberController.text,
-                                                          visitorName: apiResult["name"],
-                                                          visitorPhoto: apiResult["photo"])),
-                                                  newVisitor: () => route(context, NewVisitorInformation(selectedFlat: selectedFlat.toString(), mobileNumber: mobileNumberController.text)))
-                                              : showSnackBar(context: context, label: i18n_selectFlat(isBN));
-                                    }))
-                          ])))))
-        ]));
+        body: Container(
+            decoration: const BoxDecoration(image: DecorationImage(image: AssetImage("assets/smart_background.png"), fit: BoxFit.cover, opacity: .4)),
+            child: Column(children: [
+              //Visitor
+              Expanded(
+                  child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+                Row(children: [
+                  Expanded(
+                      flex: 3,
+                      child: primaryDropdown(
+                          paddingRight: 0, context: context, title: i18n_flat(isBN), options: flatList, value: selectedFlat, onChanged: (value) => setState(() => selectedFlat = value.toString()))),
+                  Expanded(
+                      flex: 7,
+                      child: primaryTextField(
+                          leftPadding: primaryPaddingValue,
+                          // autoFocus: true,
+                          hintText: "01XXXXXXXXX",
+                          keyboardType: TextInputType.number,
+                          context: context,
+                          labelText: "${i18n_enterMobile(isBN)}...",
+                          controller: mobileNumberController,
+                          textCapitalization: TextCapitalization.characters,
+                          onFieldSubmitted: (value) async {
+                            bool valid = true;
+                            valid = await validatePhoneNumber(mobileNumberController.text);
+                            !valid
+                                ? showSnackBar(context: context, label: i18n_invalidPhone(isBN))
+                                : (selectedFlat != null)
+                                    ? await sendVisitorsPhoneNumber(
+                                        accessToken: accessToken,
+                                        mobileNumber: mobileNumberController.text,
+                                        existingVisitor: () => route(
+                                            context,
+                                            AskPermissionToEnter(
+                                                flatID: flatID[flatList.indexOf(selectedFlat ?? "")],
+                                                mobileNumber: mobileNumberController.text,
+                                                visitorName: apiResult["name"],
+                                                visitorPhoto: apiResult["photo"])),
+                                        newVisitor: () => route(context, NewVisitorInformation(selectedFlat: selectedFlat.toString(), mobileNumber: mobileNumberController.text)))
+                                    : showSnackBar(context: context, label: i18n_selectFlat(isBN));
+                          }))
+                ]),
+                Container(
+                    // margin: EdgeInsets.only(top: primaryPaddingValue * 2),
+                    width: MediaQuery.of(context).size.width / 2,
+                    child: primaryButton(
+                        context: context,
+                        title: i18n_submit(isBN),
+                        onTap: () async {
+                          bool valid = true;
+                          valid = await validatePhoneNumber(mobileNumberController.text);
+                          !valid
+                              ? showSnackBar(context: context, label: i18n_invalidPhone(isBN))
+                              : (selectedFlat != null)
+                                  ? await sendVisitorsPhoneNumber(
+                                      accessToken: accessToken,
+                                      mobileNumber: mobileNumberController.text,
+                                      existingVisitor: () => route(
+                                          context,
+                                          AskPermissionToEnter(
+                                              flatID: flatID[flatList.indexOf(selectedFlat ?? "")], mobileNumber: mobileNumberController.text, visitorName: apiResult["name"], visitorPhoto: apiResult["photo"])),
+                                      newVisitor: () => route(context, NewVisitorInformation(selectedFlat: selectedFlat.toString(), mobileNumber: mobileNumberController.text)))
+                                  : showSnackBar(context: context, label: i18n_selectFlat(isBN));
+                        }))
+              ])),
+              //Divider
+              Divider(color: trueWhite, thickness: 2, height: 4, indent: primaryPaddingValue, endIndent: primaryPaddingValue),
+              Divider(color: trueWhite, thickness: 2, height: 4, indent: primaryPaddingValue, endIndent: primaryPaddingValue),
+              //GatePass
+              Expanded(
+                  child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+                primaryTextField(
+                    // autoFocus: true,
+                    onChanged: (value) => setState(() => codeEmpty = value.isEmpty),
+                    hintText: "XXXXX",
+                    context: context,
+                    labelText: i18n_enterGatePass(isBN),
+                    controller: gatePassCodeController,
+                    hasSubmitButton: true,
+                    textCapitalization: TextCapitalization.characters,
+                    onFieldSubmitted: (value) => (value.isNotEmpty) ? route(context, VerifyGatePass(gatePassCode: value)) : showSnackBar(context: context, label: i18n_gatePassNoEmpty(isBN))),
+                Container(
+                    // margin: EdgeInsets.only(top: primaryPaddingValue * 2),
+                    width: MediaQuery.of(context).size.width / 2,
+                    child: primaryButton(
+                        context: context,
+                        title: (codeEmpty) ? i18n_orScanQr(isBN) : i18n_submit(isBN),
+                        icon: (codeEmpty) ? Icons.qr_code_rounded : null,
+                        onTap: () => (codeEmpty) ? route(context, const ScanGatePassQR()) : route(context, VerifyGatePass(gatePassCode: gatePassCodeController.text))))
+              ]))
+            ])));
   }
 }

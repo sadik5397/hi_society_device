@@ -74,48 +74,46 @@ class _SwitchGuardUserState extends State<SwitchGuardUser> {
                 padding: EdgeInsets.symmetric(vertical: primaryPaddingValue * 2, horizontal: primaryPaddingValue * 2),
                 decoration: BoxDecoration(color: trueWhite, borderRadius: primaryBorderRadius * 2),
                 child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.center, children: [
-                  SelectableText(guardList.toString(), style: TextStyle(color: trueBlack)),
+                  // SelectableText(guardList.toString(), style: TextStyle(color: trueBlack)),
                   // SelectableText(guardList.length.toString(), style: TextStyle(color: trueBlack)),
-                  Padding(
-                    padding: EdgeInsets.only(bottom: primaryPaddingValue * 1.5),
-                    child: Text(i18n_tapSwitchGuard(isBN), textAlign: TextAlign.center, style: Theme.of(context).textTheme.titleLarge?.copyWith(color: primaryTitleColor, fontWeight: FontWeight.bold)),
-                  ),
-                  AnimatedCrossFade(
-                      alignment: Alignment.center,
-                      firstChild: Padding(padding: primaryPadding * 2, child: const CircularProgressIndicator()),
-                      secondChild: GridView.builder(
-                          itemCount: guardList.length,
-                          padding: EdgeInsets.symmetric(horizontal: primaryPaddingValue * 2),
-                          shrinkWrap: true,
-                          primary: false,
-                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: guardList.length < 2 ? 1 : 2, mainAxisSpacing: primaryPaddingValue, crossAxisSpacing: primaryPaddingValue, childAspectRatio: guardList.length < 2 ? 1.25 : 1),
-                          itemBuilder: (context, index) => guardGridTile(
-                              context: context,
-                              onTap: () {
-                                // routeBack(context);
-                                selectedGuardsAvatars.contains(guardList[index]["name"])
-                                    ? setState(() => selectedGuardsAvatars.remove(guardList[index]["name"]))
-                                    : setState(() => selectedGuardsAvatars.add(guardList[index]["name"]));
-                              },
-                              enabled: selectedGuardsAvatars.contains(guardList[index]["name"]),
-                              name: guardList[index]["name"],
-                              photo: guardList[index]["base64photo"] != null ? "$base64Url/photos/${guardList[index]["base64photo"]}" : placeholderImage)),
-                      duration: const Duration(milliseconds: 400),
-                      crossFadeState: guardList.isEmpty ? CrossFadeState.showFirst : CrossFadeState.showSecond),
-                  Padding(
-                      padding: EdgeInsets.fromLTRB(primaryPaddingValue * 2, primaryPaddingValue * 1.5, primaryPaddingValue * 2, primaryPaddingValue),
-                      child: primaryButton(
-                          icon: Icons.refresh_rounded,
-                          primary: false,
-                          context: context,
-                          title: i18n_switchProfile(isBN),
-                          onTap: () async {
-                            final pref = await SharedPreferences.getInstance();
-                            pref.setStringList("selectedGuardsAvatars", selectedGuardsAvatars);
-                            routeNoBack(context, const Home());
-                          })),
-                  Divider(color: primaryColor, indent: primaryPaddingValue * 2, endIndent: primaryPaddingValue * 2),
+                  if (guardList.isNotEmpty)
+                    Padding(
+                      padding: EdgeInsets.only(bottom: primaryPaddingValue * 1.5),
+                      child: Text(i18n_tapSwitchGuard(isBN), textAlign: TextAlign.center, style: Theme.of(context).textTheme.titleLarge?.copyWith(color: primaryTitleColor, fontWeight: FontWeight.bold)),
+                    ),
+                  if (guardList.isNotEmpty)
+                    GridView.builder(
+                        itemCount: guardList.length,
+                        padding: EdgeInsets.symmetric(horizontal: primaryPaddingValue * 2),
+                        shrinkWrap: true,
+                        primary: false,
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: guardList.length < 2 ? 1 : 2, mainAxisSpacing: primaryPaddingValue, crossAxisSpacing: primaryPaddingValue, childAspectRatio: guardList.length < 2 ? 1.25 : 1),
+                        itemBuilder: (context, index) => guardGridTile(
+                            context: context,
+                            onTap: () {
+                              // routeBack(context);
+                              selectedGuardsAvatars.contains(guardList[index]["name"])
+                                  ? setState(() => selectedGuardsAvatars.remove(guardList[index]["name"]))
+                                  : setState(() => selectedGuardsAvatars.add(guardList[index]["name"]));
+                            },
+                            enabled: selectedGuardsAvatars.contains(guardList[index]["name"]),
+                            name: guardList[index]["name"],
+                            photo: guardList[index]["base64photo"] != null ? "$base64Url/photos/${guardList[index]["base64photo"]}" : placeholderImage)),
+                  if (guardList.isNotEmpty)
+                    Padding(
+                        padding: EdgeInsets.fromLTRB(primaryPaddingValue * 2, primaryPaddingValue * 1.5, primaryPaddingValue * 2, primaryPaddingValue),
+                        child: primaryButton(
+                            icon: Icons.refresh_rounded,
+                            primary: false,
+                            context: context,
+                            title: i18n_switchProfile(isBN),
+                            onTap: () async {
+                              final pref = await SharedPreferences.getInstance();
+                              pref.setStringList("selectedGuardsAvatars", selectedGuardsAvatars);
+                              routeNoBack(context, const Home());
+                            })),
+                  if (guardList.isNotEmpty) Divider(color: primaryColor, indent: primaryPaddingValue * 2, endIndent: primaryPaddingValue * 2),
                   Padding(
                       padding: EdgeInsets.fromLTRB(primaryPaddingValue * 2, primaryPaddingValue, primaryPaddingValue * 2, 0),
                       child: (ToggleButtons(
