@@ -12,7 +12,7 @@ Widget menuGridTile({required String title, required String assetImage, Widget? 
       child: Padding(
           padding: const EdgeInsets.all(4),
           child: InkWell(
-              borderRadius: primaryBorderRadius,
+              borderRadius: primaryBorderRadius/2,
               onTap: () => (toPage == null) ? showSnackBar(context: context, label: "Not Implemented Yet") : route(context, toPage),
               child: Container(
                   padding: primaryPadding * 1,
