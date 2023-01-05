@@ -54,7 +54,7 @@ class _ScanPPLQRState extends State<ScanPPLQR> {
       if (result != null) {
         controller.stopCamera();
         controller.dispose();
-        route(context, VerifyPPL(gatePassCode: result!.code.toString()));
+        routeNoBack(context, VerifyPPL(gatePassCode: result!.code.toString()));
       }
     });
   }
@@ -113,9 +113,9 @@ class _ScanPPLQRState extends State<ScanPPLQR> {
                         context: context,
                         title: i18n_submit(isBN),
                         onTap: () async {
-                          route(context, VerifyPPL(gatePassCode: result!.code.toString()));
                           await controller?.pauseCamera();
                           await controller?.stopCamera();
+                          routeNoBack(context, VerifyPPL(gatePassCode: result!.code.toString()));
                         })
                     : Row(
                         children: [

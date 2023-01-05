@@ -54,7 +54,7 @@ class _ScanGatePassQRState extends State<ScanGatePassQR> {
       if (result != null) {
         controller.stopCamera();
         controller.dispose();
-        route(context, VerifyGatePass(gatePassCode: result!.code.toString()));
+        routeNoBack(context, VerifyGatePass(gatePassCode: result!.code.toString()));
       }
     });
   }
@@ -113,7 +113,7 @@ class _ScanGatePassQRState extends State<ScanGatePassQR> {
                         context: context,
                         title: i18n_submit(isBN),
                         onTap: () async {
-                          route(context, VerifyGatePass(gatePassCode: result!.code.toString()));
+                          routeNoBack(context, VerifyGatePass(gatePassCode: result!.code.toString()));
                           await controller?.pauseCamera();
                           await controller?.stopCamera();
                         })
