@@ -109,8 +109,8 @@ class _VerifyPPLState extends State<VerifyPPL> {
                           padding: EdgeInsets.only(top: primaryPaddingValue * 2, bottom: primaryPaddingValue),
                           child: Icon(Icons.cancel_outlined, size: MediaQuery.of(context).size.height * .4),
                         )),
-                        Text(i18n_weNoFound(isBN), style: Theme.of(context).textTheme.displayMedium?.copyWith(color: trueWhite, fontWeight: FontWeight.w300)),
-                        Text(i18n_parcel(isBN), style: Theme.of(context).textTheme.displayLarge?.copyWith(color: trueWhite, fontWeight: FontWeight.w600)),
+                        Text(i18n_weNoFound(isBN), style: Theme.of(context).textTheme.displayMedium?.copyWith(color: trueWhite, fontWeight: FontWeight.w300), textAlign: TextAlign.center),
+                        Text(i18n_parcel(isBN), style: Theme.of(context).textTheme.displayLarge?.copyWith(color: trueWhite, fontWeight: FontWeight.w600), textAlign: TextAlign.center),
                         SizedBox(height: primaryPaddingValue * 3),
                         SizedBox(width: MediaQuery.of(context).size.width * .75, child: primaryButton(context: context, title: i18n_tryAgain(isBN), onTap: () => routeBack(context))),
                         SizedBox(height: primaryPaddingValue),
@@ -128,8 +128,8 @@ class _VerifyPPLState extends State<VerifyPPL> {
                                     borderRadius: primaryBorderRadius * 2,
                                     border: Border.all(width: 2, color: trueWhite),
                                     image: const DecorationImage(fit: BoxFit.cover, image: AssetImage("assets/parcel.png")))),
-                            Text(i18n_weFound(isBN), style: Theme.of(context).textTheme.displayMedium?.copyWith(color: trueWhite, fontWeight: FontWeight.w300)),
-                            Text(i18n_parcel(isBN), style: Theme.of(context).textTheme.displayLarge?.copyWith(color: trueWhite, fontWeight: FontWeight.w600)),
+                            Text(i18n_weFound(isBN), style: Theme.of(context).textTheme.displayMedium?.copyWith(color: trueWhite, fontWeight: FontWeight.w300), textAlign: TextAlign.center),
+                            Text(i18n_parcel(isBN), style: Theme.of(context).textTheme.displayLarge?.copyWith(color: trueWhite, fontWeight: FontWeight.w600), textAlign: TextAlign.center),
                             Padding(
                                 padding: EdgeInsets.symmetric(vertical: primaryPaddingValue * 2),
                                 child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
