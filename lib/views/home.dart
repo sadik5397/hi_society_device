@@ -19,6 +19,7 @@ import 'package:hi_society_device/views/security_alert/security_alert_screen.dar
 import 'package:hi_society_device/views/utility/utility_contacts.dart';
 import 'package:hi_society_device/views/visitor/visitor_mobile_no_entry.dart';
 import 'package:http/http.dart' as http;
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../api/api.dart';
@@ -145,6 +146,8 @@ class _HomeState extends State<Home> {
     }
   }
 
+  Future<void> handlePermissions() async => Permission.camera.request().then((value) async => Permission.microphone.request().then((value) async => print(value.toString())));
+
 //Functions
   defaultInit() async {
     initiateNotificationReceiver();
@@ -159,9 +162,10 @@ class _HomeState extends State<Home> {
     await verifyAccessToken(accessToken: accessToken, refreshToken: refreshToken);
     if (validToken) await readBuildingInfo(accessToken: accessToken);
     if (validToken) await sendFcmToken(accessToken: accessToken);
+    await handlePermissions();
   }
 
-  //todo: SplashScreen e dibo
+//todo: SplashScreen e dibo
   initiateNotificationReceiver() async {
     print("Notification Receiver Activated");
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {

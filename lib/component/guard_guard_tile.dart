@@ -1,9 +1,6 @@
-import 'dart:convert';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:hi_society_device/theme/padding_margin.dart';
-
 import '../theme/border_radius.dart';
 import '../theme/colors.dart';
 

@@ -26,7 +26,8 @@ Container intercomAvatar({required BuildContext context, String? photo, double? 
   return Container(
       margin: EdgeInsets.only(right: primaryPaddingValue),
       alignment: Alignment.center,
-      decoration: BoxDecoration(color: const Color(0xFF3498DB).withOpacity(.3), borderRadius: halfOfPrimaryBorderRadius, image: photo != null ? DecorationImage(image: CachedNetworkImageProvider(photo)) : null),
+      decoration: BoxDecoration(
+          color: const Color(0xFF3498DB).withOpacity(.3), borderRadius: halfOfPrimaryBorderRadius, image: photo != null ? DecorationImage(image: CachedNetworkImageProvider(photo), fit: BoxFit.cover) : null),
       height: size ?? 88,
       width: size ?? 88,
       child: photo == null ? Icon(Icons.construction, color: primaryTitleColor, size: 36) : null);
