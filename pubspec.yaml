@@ -54,6 +54,7 @@ dependencies:
   flutter_ringtone_player: ^3.2.0
   zego_uikit_prebuilt_call: ^1.2.5
   permission_handler: ^10.2.0
+  text_scroll: ^0.1.2
 
 dev_dependencies:
   flutter_launcher_icons:

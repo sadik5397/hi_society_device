@@ -21,6 +21,7 @@ import 'package:hi_society_device/views/visitor/visitor_mobile_no_entry.dart';
 import 'package:http/http.dart' as http;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:text_scroll/text_scroll.dart';
 
 import '../api/api.dart';
 import '../component/app_bar.dart';
@@ -46,6 +47,7 @@ class _HomeState extends State<Home> {
   bool validToken = false;
   bool isBN = false;
   List<String> selectedGuardsAvatars = [];
+  String headline = "";
 
 // APIs
   Future<void> readBuildingInfo({required String accessToken}) async {
@@ -158,6 +160,7 @@ class _HomeState extends State<Home> {
     setState(() => buildingName = pref.getString("buildingName"));
     setState(() => buildingAddress = pref.getString("buildingAddress"));
     setState(() => buildingImg = pref.getString("buildingImg"));
+    setState(() => headline = pref.getString("headline") ?? "Welcome!");
     setState(() => selectedGuardsAvatars = pref.getStringList("selectedGuardsAvatars") ?? []);
     await verifyAccessToken(accessToken: accessToken, refreshToken: refreshToken);
     if (validToken) await readBuildingInfo(accessToken: accessToken);
@@ -168,20 +171,19 @@ class _HomeState extends State<Home> {
 //todo: SplashScreen e dibo
   initiateNotificationReceiver() async {
     print("Notification Receiver Activated");
+    final pref = await SharedPreferences.getInstance();
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       RemoteNotification? notification = message.notification;
       AndroidNotification? android = message.notification?.android;
       if (notification != null && android != null) {
         print("${message.data}-------------------->>");
         if (message.data["topic"] == "security-alert") route(context, SecurityAlertScreen(alert: message.data["alertTypeName"], flat: message.data["flatName"]));
-        // showSnackBar(
-        //     context: context,
-        //     label: message.notification!.title ?? "Got a New Notification",
-        //     seconds: 8,
-        //     action: "VIEW",
-        //     onTap: () {
-        //       if (message.data["topic"] == "security-alert") route(context, SecurityAlertScreen(alert: "Fire"));
-        //     });
+        if (message.data["topic"] == "headline") {
+          showSnackBar(context: context, label: "New Headline: ${notification.body}");
+          setState(() => headline = notification.body.toString());
+          pref.setString("headline", headline);
+          Phoenix.rebirth(context);
+        }
       }
     }
         // );
@@ -245,6 +247,17 @@ class _HomeState extends State<Home> {
                                                 fit: BoxFit.cover))))))),
                 body: Column(children: [
                   HeaderBuildingImage(flex: 1, buildingAddress: buildingAddress ?? "...", buildingImage: buildingImg ?? placeholderImage, buildingName: buildingName ?? "..."),
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: primaryPaddingValue / 2),
+                    child: TextScroll(headline,
+                        mode: TextScrollMode.endless,
+                        velocity: Velocity(pixelsPerSecond: Offset(60, 0)),
+                        delayBefore: Duration(milliseconds: 500),
+                        pauseBetween: Duration(milliseconds: 50),
+                        style: TextStyle(color: trueWhite, fontSize: 22, fontWeight: FontWeight.bold),
+                        textAlign: TextAlign.center,
+                        intervalSpaces: 25),
+                  ),
                   Expanded(
                       flex: 2,
                       child: Padding(
