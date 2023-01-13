@@ -248,14 +248,15 @@ class _HomeState extends State<Home> {
                 body: Column(children: [
                   HeaderBuildingImage(flex: 1, buildingAddress: buildingAddress ?? "...", buildingImage: buildingImg ?? placeholderImage, buildingName: buildingName ?? "..."),
                   Padding(
-                    padding: EdgeInsets.symmetric(vertical: primaryPaddingValue / 2),
+                    padding: EdgeInsets.only(top: primaryPaddingValue / 2),
                     child: TextScroll(headline,
                         mode: TextScrollMode.endless,
-                        velocity: Velocity(pixelsPerSecond: Offset(60, 0)),
+                        velocity: Velocity(pixelsPerSecond: Offset(45, 0)),
                         delayBefore: Duration(milliseconds: 500),
                         pauseBetween: Duration(milliseconds: 50),
                         style: TextStyle(color: trueWhite, fontSize: 22, fontWeight: FontWeight.bold),
                         textAlign: TextAlign.center,
+                        selectable: true,
                         intervalSpaces: 25),
                   ),
                   Expanded(
