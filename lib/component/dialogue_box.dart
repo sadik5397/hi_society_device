@@ -1,6 +1,5 @@
 // ignore_for_file: use_build_context_synchronously
 import 'dart:convert';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hi_society_device/api/i18n.dart';
@@ -12,7 +11,6 @@ import 'package:hi_society_device/theme/placeholder.dart';
 import 'package:hi_society_device/views/home.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../api/api.dart';
 import '../theme/border_radius.dart';
 import '../theme/colors.dart';
@@ -29,17 +27,21 @@ class SwitchGuardUser extends StatefulWidget {
 class _SwitchGuardUserState extends State<SwitchGuardUser> {
   bool isBN = false;
   String accessToken = "";
+  List staffList = [];
   List guardList = [];
   List<String> selectedGuardsAvatars = [];
 
   Future<void> readGuardList({required String accessToken}) async {
     try {
-      var response = await http.post(Uri.parse("$baseUrl/building/info/guard-list"), headers: authHeader(accessToken));
+      var response = await http.post(Uri.parse("$baseUrl/building-staff/list"), headers: authHeader(accessToken));
       Map result = jsonDecode(response.body);
       if (kDebugMode) print(result.toString());
       if (result["statusCode"] == 200 || result["statusCode"] == 201) {
-        if (kDebugMode) if (kDebugMode) showSnackBar(context: context, label: result["message"]);
-        setState(() => guardList = result["data"]);
+        if (kDebugMode) showSnackBar(context: context, label: result["message"]);
+        setState(() => staffList = result["data"]);
+        for (int i = 0; i < staffList.length; i++) {
+          if (staffList[i]["designation"] == "Security Guard") setState(() async => guardList.add(staffList[i]));
+        }
       } else {
         showSnackBar(context: context, label: result["message"][0].toString().length == 1 ? result["message"].toString() : result["message"][0].toString());
       }
@@ -74,8 +76,8 @@ class _SwitchGuardUserState extends State<SwitchGuardUser> {
                 padding: EdgeInsets.symmetric(vertical: primaryPaddingValue * 2, horizontal: primaryPaddingValue * 2),
                 decoration: BoxDecoration(color: trueWhite, borderRadius: primaryBorderRadius * 2),
                 child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.center, children: [
-                  // SelectableText(guardList.toString(), style: TextStyle(color: trueBlack)),
-                  // SelectableText(guardList.length.toString(), style: TextStyle(color: trueBlack)),
+                  SelectableText(guardList.toString(), style: TextStyle(color: trueBlack)),
+                  SelectableText(guardList.length.toString(), style: TextStyle(color: trueBlack)),
                   if (guardList.isNotEmpty)
                     Padding(
                       padding: EdgeInsets.only(bottom: primaryPaddingValue * 1.5),

@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io' show Platform;
-
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +21,6 @@ import 'package:http/http.dart' as http;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:text_scroll/text_scroll.dart';
-
 import '../api/api.dart';
 import '../component/app_bar.dart';
 import '../component/dialogue_box.dart';
@@ -185,19 +183,7 @@ class _HomeState extends State<Home> {
           Phoenix.rebirth(context);
         }
       }
-    }
-        // );
-        // FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-        //   print('A new onMessageOpenedApp event was published!');
-        //   RemoteNotification? notification = message.notification;
-        //   AndroidNotification? android = message.notification?.android;
-        //   if (notification != null && android != null) {
-        //     print(message.data);
-        //     print(notification.body);
-        //     if (message.data["topic"] == "security-alert") route(context, SecurityAlertScreen(alert: message.data["alertTypeName"], flat: message.data["flatName"]));
-        //   }
-        // }
-        );
+    });
   }
 
 //Initiate
@@ -241,10 +227,7 @@ class _HomeState extends State<Home> {
                                         decoration: BoxDecoration(
                                             border: Border.all(color: trueWhite, width: 2),
                                             borderRadius: BorderRadius.circular(100),
-                                            image: DecorationImage(
-                                                image: NetworkImage(placeholderImage),
-                                                // MemoryImage(base64Decode(selectedGuardsAvatars[index])),
-                                                fit: BoxFit.cover))))))),
+                                            image: DecorationImage(image: NetworkImage(placeholderImage), fit: BoxFit.cover))))))),
                 body: Column(children: [
                   HeaderBuildingImage(flex: 1, buildingAddress: buildingAddress ?? "...", buildingImage: buildingImg ?? placeholderImage, buildingName: buildingName ?? "..."),
                   Padding(
