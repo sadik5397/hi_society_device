@@ -40,7 +40,7 @@ class _SwitchGuardUserState extends State<SwitchGuardUser> {
         if (kDebugMode) showSnackBar(context: context, label: result["message"]);
         setState(() => staffList = result["data"]);
         for (int i = 0; i < staffList.length; i++) {
-          if (staffList[i]["designation"] == "Security Guard") setState(() async => guardList.add(staffList[i]));
+          if (staffList[i]["designation"] == "Security Guard") setState(() => guardList.add(staffList[i]));
         }
       } else {
         showSnackBar(context: context, label: result["message"][0].toString().length == 1 ? result["message"].toString() : result["message"][0].toString());
@@ -76,13 +76,12 @@ class _SwitchGuardUserState extends State<SwitchGuardUser> {
                 padding: EdgeInsets.symmetric(vertical: primaryPaddingValue * 2, horizontal: primaryPaddingValue * 2),
                 decoration: BoxDecoration(color: trueWhite, borderRadius: primaryBorderRadius * 2),
                 child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.center, children: [
-                  SelectableText(guardList.toString(), style: TextStyle(color: trueBlack)),
-                  SelectableText(guardList.length.toString(), style: TextStyle(color: trueBlack)),
+                  // SelectableText(guardList.toString(), style: TextStyle(color: trueBlack)),
+                  // SelectableText(guardList.length.toString(), style: TextStyle(color: trueBlack)),
                   if (guardList.isNotEmpty)
                     Padding(
-                      padding: EdgeInsets.only(bottom: primaryPaddingValue * 1.5),
-                      child: Text(i18n_tapSwitchGuard(isBN), textAlign: TextAlign.center, style: Theme.of(context).textTheme.titleLarge?.copyWith(color: primaryTitleColor, fontWeight: FontWeight.bold)),
-                    ),
+                        padding: EdgeInsets.only(bottom: primaryPaddingValue * 1.5),
+                        child: Text(i18n_tapSwitchGuard(isBN), textAlign: TextAlign.center, style: Theme.of(context).textTheme.titleLarge?.copyWith(color: primaryTitleColor, fontWeight: FontWeight.bold))),
                   if (guardList.isNotEmpty)
                     GridView.builder(
                         itemCount: guardList.length,
@@ -94,14 +93,13 @@ class _SwitchGuardUserState extends State<SwitchGuardUser> {
                         itemBuilder: (context, index) => guardGridTile(
                             context: context,
                             onTap: () {
-                              // routeBack(context);
-                              selectedGuardsAvatars.contains(guardList[index]["name"])
-                                  ? setState(() => selectedGuardsAvatars.remove(guardList[index]["name"]))
-                                  : setState(() => selectedGuardsAvatars.add(guardList[index]["name"]));
+                              selectedGuardsAvatars.contains(guardList[index]["buildingStaffId"].toString())
+                                  ? setState(() => selectedGuardsAvatars.remove(guardList[index]["buildingStaffId"].toString()))
+                                  : setState(() => selectedGuardsAvatars.add(guardList[index]["buildingStaffId"].toString()));
                             },
-                            enabled: selectedGuardsAvatars.contains(guardList[index]["name"]),
+                            enabled: selectedGuardsAvatars.contains(guardList[index]["buildingStaffId"].toString()),
                             name: guardList[index]["name"],
-                            photo: guardList[index]["base64photo"] != null ? "$base64Url/photos/${guardList[index]["base64photo"]}" : placeholderImage)),
+                            photo: guardList[index]["photo"] != null ? "$baseUrl/photos/${guardList[index]["photo"]}" : placeholderImage)),
                   if (guardList.isNotEmpty)
                     Padding(
                         padding: EdgeInsets.fromLTRB(primaryPaddingValue * 2, primaryPaddingValue * 1.5, primaryPaddingValue * 2, primaryPaddingValue),

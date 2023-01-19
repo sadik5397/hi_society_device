@@ -55,6 +55,7 @@ dependencies:
   zego_uikit_prebuilt_call: ^1.2.5
   permission_handler: ^10.2.0
   text_scroll: ^0.1.2
+  quickalert:
 
 dev_dependencies:
   flutter_launcher_icons:

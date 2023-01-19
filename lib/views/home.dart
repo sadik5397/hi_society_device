@@ -28,6 +28,8 @@ import '../component/header_building_image.dart';
 import '../component/menu_grid_tile.dart';
 import '../component/page_navigation.dart';
 import '../component/snack_bar.dart';
+import 'intercom/incoming_call.dart';
+import 'security_alert/security_lerts.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -45,6 +47,7 @@ class _HomeState extends State<Home> {
   bool validToken = false;
   bool isBN = false;
   List<String> selectedGuardsAvatars = [];
+  List selectedGuards = [];
   String headline = "";
 
 // APIs
@@ -53,7 +56,7 @@ class _HomeState extends State<Home> {
       var response = await http.get(Uri.parse("$baseUrl/building/info/by-guard"), headers: authHeader(accessToken));
       Map result = jsonDecode(response.body);
       print(result);
-      if (result["code"] == 200) showSnackBar(context: context, label: result["response"]); //success
+      if (result["code"] == 200) if (kDebugMode) showSnackBar(context: context, label: result["response"]); //success
       if (result["code"] != 200) if (kDebugMode) showSnackBar(context: context, label: result["message"]); //error
       setState(() => apiResult = result["data"]);
       setState(() => buildingName = apiResult["buildingName"]);
@@ -146,6 +149,28 @@ class _HomeState extends State<Home> {
     }
   }
 
+  Future<void> readGuardSelectedList({required String accessToken, required List<String> guardList}) async {
+    try {
+      var response = await http.post(Uri.parse("$baseUrl/building-staff/list"), headers: authHeader(accessToken));
+      Map result = jsonDecode(response.body);
+      if (kDebugMode) print(result.toString());
+      if (result["statusCode"] == 200 || result["statusCode"] == 201) {
+        setState(() => selectedGuards = []);
+        if (kDebugMode) showSnackBar(context: context, label: result["message"]);
+        List staffList = result["data"];
+        for (int i = 0; i < selectedGuardsAvatars.length; i++) {
+          for (int j = 0; j < staffList.length; j++) {
+            if (selectedGuardsAvatars[i] == staffList[j]["buildingStaffId"].toString()) setState(() => selectedGuards.add(staffList[j]));
+          }
+        }
+      } else {
+        showSnackBar(context: context, label: result["message"][0].toString().length == 1 ? result["message"].toString() : result["message"][0].toString());
+      }
+    } on Exception catch (e) {
+      showSnackBar(context: context, label: e.toString());
+    }
+  }
+
   Future<void> handlePermissions() async => Permission.camera.request().then((value) async => Permission.microphone.request().then((value) async => print(value.toString())));
 
 //Functions
@@ -163,6 +188,7 @@ class _HomeState extends State<Home> {
     await verifyAccessToken(accessToken: accessToken, refreshToken: refreshToken);
     if (validToken) await readBuildingInfo(accessToken: accessToken);
     if (validToken) await sendFcmToken(accessToken: accessToken);
+    if (validToken) await readGuardSelectedList(accessToken: accessToken, guardList: selectedGuardsAvatars);
     await handlePermissions();
   }
 
@@ -175,12 +201,25 @@ class _HomeState extends State<Home> {
       AndroidNotification? android = message.notification?.android;
       if (notification != null && android != null) {
         print("${message.data}-------------------->>");
+        if (kDebugMode) showSnackBar(context: context, label: "${message.data}");
+        if (message.data["topic"] == "security-alert") route(context, SecurityAlertScreen(alert: message.data["alertTypeName"], flat: message.data["flatName"]));
         if (message.data["topic"] == "security-alert") route(context, SecurityAlertScreen(alert: message.data["alertTypeName"], flat: message.data["flatName"]));
         if (message.data["topic"] == "headline") {
           showSnackBar(context: context, label: "New Headline: ${notification.body}");
           setState(() => headline = notification.body.toString());
           pref.setString("headline", headline);
           Phoenix.rebirth(context);
+        }
+        if (message.data["topic"] == "intercom") {
+          route(
+              context,
+              IncomingCall(
+                  receiverImage: message.data["callerProfilePic"].toString() == "" ? placeholderImage : '$baseUrl/photos/${message.data["callerProfilePic"]}',
+                  receiverName: message.data["callerName"],
+                  callID: message.data["roomId"],
+                  receiverId: int.parse(message.data["callerId"]),
+                  isReceiving: true,
+                  intercomHistoryId: int.parse(message.data["historyId"])));
         }
       }
     });
@@ -214,20 +253,24 @@ class _HomeState extends State<Home> {
                                   await pref.clear();
                                   await doSignOutFromSystem(accessToken: accessToken, refreshToken: refreshToken);
                                 })),
-                        icon: selectedGuardsAvatars.isEmpty
+                        icon: selectedGuards.isEmpty
                             ? Padding(padding: const EdgeInsets.symmetric(horizontal: 8.0), child: Icon(Icons.lock_clock_rounded, color: trueWhite))
                             : Stack(
                                 alignment: Alignment.centerRight,
                                 children: List.generate(
-                                    selectedGuardsAvatars.length,
+                                    selectedGuards.length,
                                     (index) => Container(
                                         margin: EdgeInsets.only(right: primaryPaddingValue * index * 2.5),
                                         height: 40,
                                         width: 40,
+                                        // alignment: Alignment.center,
+                                        // child: Text(selectedGuards[index]["buildingStaffId"].toString(), style: TextStyle(color: trueBlack)),
                                         decoration: BoxDecoration(
                                             border: Border.all(color: trueWhite, width: 2),
                                             borderRadius: BorderRadius.circular(100),
-                                            image: DecorationImage(image: NetworkImage(placeholderImage), fit: BoxFit.cover))))))),
+                                            image: DecorationImage(
+                                                image: NetworkImage(selectedGuards[index]["buildingStaffId"] != null ? "$baseUrl/photos/${selectedGuards[index]['photo']}" : placeholderImage),
+                                                fit: BoxFit.cover))))))),
                 body: Column(children: [
                   HeaderBuildingImage(flex: 1, buildingAddress: buildingAddress ?? "...", buildingImage: buildingImg ?? placeholderImage, buildingName: buildingName ?? "..."),
                   Padding(
@@ -261,7 +304,7 @@ class _HomeState extends State<Home> {
                                 flex: 2,
                                 child: Row(children: [
                                   // menuGridTile(title: i18n_digitalGatePass(isBN), assetImage: "gatePass", context: context, toPage: const VisitorGatePassCodeEntry()),
-                                  menuGridTile(title: i18n_securityAlert(isBN), assetImage: "alert", context: context, toPage: const Home()),
+                                  menuGridTile(title: i18n_securityAlert(isBN), assetImage: "alert", context: context, toPage: const SecurityAlertList()),
                                   menuGridTile(title: i18n_intercom(isBN), assetImage: "intercom", context: context, toPage: const ContactList()),
                                   menuGridTile(title: i18n_requiredCarParking(isBN), assetImage: "parking", context: context, toPage: const AmenityCarParking())
                                 ])),
