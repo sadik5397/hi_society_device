@@ -1,1 +1,1 @@
-String placeholderImage = "https://i.ibb.co/NSDmSZ0/Sqr-hi-Society-Placeholder.png";
+String placeholderImage = "https://hisocietybd.com/_app_assets/placeholder.png";

@@ -19,7 +19,7 @@ Widget menuGridTile({required String title, required String assetImage, Widget? 
                   alignment: Alignment.center,
                   decoration: BoxDecoration(borderRadius: primaryBorderRadius / 2, color: trueWhite.withOpacity(.1), border: Border.all(color: trueWhite, width: 2, strokeAlign: StrokeAlign.center)),
                   child: Column(mainAxisSize: MainAxisSize.min, children: [
-                    CachedNetworkImage(imageUrl: "https://hisociety.katabacha.com/_/hi_society_app_assets/menu/$assetImage.png", height: 72, fit: BoxFit.fitHeight),
+                    CachedNetworkImage(imageUrl: "https://hisocietybd.com/_app_assets/$assetImage.png", height: 72, fit: BoxFit.fitHeight),
                     SizedBox(height: primaryPaddingValue / 2),
                     Text(title, textAlign: TextAlign.center, style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold))
                   ])))));

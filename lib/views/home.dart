@@ -273,8 +273,11 @@ class _HomeState extends State<Home> {
                                                 fit: BoxFit.cover))))))),
                 body: Column(children: [
                   HeaderBuildingImage(flex: 1, buildingAddress: buildingAddress ?? "...", buildingImage: buildingImg ?? placeholderImage, buildingName: buildingName ?? "..."),
-                  Padding(
-                    padding: EdgeInsets.only(top: primaryPaddingValue / 2),
+                  Container(
+                    alignment: Alignment.center,
+                    width: double.maxFinite,
+                    decoration: BoxDecoration(color: Colors.orangeAccent.shade700),
+                    padding: EdgeInsets.symmetric(vertical: primaryPaddingValue / 2),
                     child: TextScroll(headline,
                         mode: TextScrollMode.endless,
                         velocity: Velocity(pixelsPerSecond: Offset(45, 0)),
@@ -298,7 +301,7 @@ class _HomeState extends State<Home> {
                                       assetImage: "visitors",
                                       context: context,
                                       toPage: VisitorMobileNoEntry(buildingAddress: buildingAddress ?? "...", buildingImg: buildingImg ?? placeholderImage, buildingName: buildingName ?? "...")),
-                                  menuGridTile(title: i18n_deliveryManagement(isBN), assetImage: "delivery", context: context, toPage: const ReceiveOrDistribute())
+                                  menuGridTile(title: i18n_deliveryManagement(isBN), assetImage: "parcel_new", context: context, toPage: const ReceiveOrDistribute())
                                 ])),
                             Expanded(
                                 flex: 2,
@@ -306,7 +309,7 @@ class _HomeState extends State<Home> {
                                   // menuGridTile(title: i18n_digitalGatePass(isBN), assetImage: "gatePass", context: context, toPage: const VisitorGatePassCodeEntry()),
                                   menuGridTile(title: i18n_securityAlert(isBN), assetImage: "alert", context: context, toPage: const SecurityAlertList()),
                                   menuGridTile(title: i18n_intercom(isBN), assetImage: "intercom", context: context, toPage: const ContactList()),
-                                  menuGridTile(title: i18n_requiredCarParking(isBN), assetImage: "parking", context: context, toPage: const AmenityCarParking())
+                                  menuGridTile(title: i18n_requiredCarParking(isBN), assetImage: "parking_new", context: context, toPage: const AmenityCarParking())
                                 ])),
                             Expanded(
                                 flex: 2,
