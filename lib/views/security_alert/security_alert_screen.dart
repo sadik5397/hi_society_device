@@ -11,9 +11,9 @@ import 'package:hi_society_device/views/home.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SecurityAlertScreen extends StatefulWidget {
-  const SecurityAlertScreen({Key? key, this.alert = "Other", required this.flat}) : super(key: key);
+  const SecurityAlertScreen({Key? key, this.alert = "Other", this.flat}) : super(key: key);
   final String alert;
-  final String flat;
+  final String? flat;
 
   @override
   State<SecurityAlertScreen> createState() => _SecurityAlertScreenState();
@@ -66,7 +66,7 @@ class _SecurityAlertScreenState extends State<SecurityAlertScreen> {
               Expanded(child: AnimatedScale(duration: const Duration(milliseconds: 250), scale: (step % 3 == 0) ? .8 : 1, child: Image.asset("assets/alert/${widget.alert}.png", color: trueWhite))),
               SizedBox(height: primaryPaddingValue * 2),
               FittedBox(child: Text(widget.alert.toUpperCase(), style: bigOTP)),
-              Text("${i18n_fromFlat(isBN)} ${widget.flat}".toUpperCase(), style: bigOTP, textScaleFactor: .3),
+              if (widget.flat != null) Text("${i18n_fromFlat(isBN)} ${widget.flat}".toUpperCase(), style: bigOTP, textScaleFactor: .3),
               SizedBox(height: primaryPaddingValue * 4),
               Padding(
                   padding: EdgeInsets.symmetric(horizontal: primaryPaddingValue * 6),
