@@ -64,7 +64,7 @@ class _ContactListState extends State<ContactList> {
       print(result);
       if (result["statusCode"] == 200 || result["statusCode"] == 201) {
         if (kDebugMode) showSnackBar(context: context, label: result["message"]);
-        setState(() => manager = [result["data"]["manager"]]);
+        setState(() => manager = result["data"]["manager"]);
         setState(() => committeeHeads = result["data"]["committeeHeads"]);
         setState(() => committeeMembers = result["data"]["committeeMembers"]);
         setState(() => residents = result["data"]["residents"]);
