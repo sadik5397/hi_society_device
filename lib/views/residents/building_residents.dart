@@ -106,7 +106,7 @@ class _BuildingFlatsAndResidentsState extends State<BuildingFlatsAndResidents> {
                   subTitle: (apiResult[index]["residentHead"] != null) ? apiResult[index]["residentHead"]["name"] : null,
                   onTap: () {
                     (apiResult[index]["residentHead"] != null)
-                        ? showSnackBar(context: context, label: '${apiResult[index]["residentHead"]["name"]} ${i18n_isAlreadyAssigned(isBN)}', seconds: 5) //todo: show ERROR
+                        ? showSnackBar(context: context, label: '${i18n_isAlreadyAssigned(isBN)} ${apiResult[index]["residentHead"]["name"]}', seconds: 5)
                         : route(context, AssignFlatResident(flatID: apiResult[index]["flatId"], flatNo: apiResult[index]["flatName"]));
                   }))
         ]));

@@ -118,15 +118,17 @@ class _ScanGatePassQRState extends State<ScanGatePassQR> {
                           await controller?.stopCamera();
                         })
                     : Row(children: [
-                        primaryButton(
-                            context: context,
-                            primary: false,
-                            title: i18n_typeManually(isBN),
-                            onTap: () async {
-                              routeBack(context);
-                              await controller?.pauseCamera();
-                              await controller?.stopCamera();
-                            }),
+                        Expanded(
+                          child: primaryButton(
+                              context: context,
+                              primary: false,
+                              title: i18n_typeManually(isBN),
+                              onTap: () async {
+                                routeBack(context);
+                                await controller?.pauseCamera();
+                                await controller?.stopCamera();
+                              }),
+                        ),
                         SizedBox(width: primaryPaddingValue / 2),
                         SizedBox(width: 64, child: primaryButtonIconOnly(context: context, primary: false, icon: Icons.flip_camera_ios_rounded, onTap: flipCamera))
                       ])
