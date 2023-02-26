@@ -69,6 +69,8 @@ class _ScanGatePassQRState extends State<ScanGatePassQR> {
   defaultInit() async {
     final pref = await SharedPreferences.getInstance();
     setState(() => isBN = pref.getBool("isBN") ?? false);
+    await Future.delayed(Duration(milliseconds: 100));
+    flipCamera();
   }
 
   flipCamera() => controller?.flipCamera();
@@ -76,10 +78,9 @@ class _ScanGatePassQRState extends State<ScanGatePassQR> {
   //Initiate
   @override
   void initState() {
-    defaultInit();
     super.initState();
     controller?.resumeCamera();
-    controller?.flipCamera();
+    defaultInit();
   }
 
   @override

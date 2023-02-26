@@ -87,7 +87,15 @@ String i18n_tapToAssign(bool isBN) => isBN ? 'বসবাসকার নির
 String i18n_isAlreadyAssigned(bool isBN) => isBN ? 'এই ফ্ল্যাটের বসবাসকারী আগেই নির্ধারিত - নাম: ' : 'Resident of this flat is already defined - Name: ';
 String i18n_assigningResident(bool isBN) => isBN ? 'ফ্ল্যাটে বসবাসকারী সংখ্যা দিন' : 'Assigning Resident to Flat';
 String i18n_wait(bool isBN) => isBN ? 'অপেক্ষা করুন' : 'WAIT';
-String i18n_takenBy(bool isBN) => isBN ? 'আগেই ব‍্যবহৃত হয়েছে' : 'Taken By';
+String i18n_takenBy(bool isBN) => isBN ? 'বসবাসকারীর নামঃ' : "Resident's Name:";
+//endregion
+
+//region ---------- Overstay Alert ----------
+String i18n_today(bool isBN) => isBN ? 'আজ' : 'Today';
+String i18n_tomorrow(bool isBN) => isBN ? 'আগামীকাল' : 'Tomorrow';
+String i18n_nextDay(bool isBN) => isBN ? 'পরশু দিন' : 'Next Day of Tomorrow';
+String i18n_residentOf(bool isBN) => isBN ? 'ফ্ল্যাট: ' : 'Resident of: ';
+String i18n_eta(bool isBN) => isBN ? 'পৌঁছানোর সম্ভাব্য সময়: ' : 'Expected Time to Arrival: ';
 //endregion
 
 //region ---------- Security Alerts ----------

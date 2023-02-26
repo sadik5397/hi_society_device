@@ -69,6 +69,8 @@ class _ScanPPLQRState extends State<ScanPPLQR> {
   defaultInit() async {
     final pref = await SharedPreferences.getInstance();
     setState(() => isBN = pref.getBool("isBN") ?? false);
+    await Future.delayed(Duration(milliseconds: 100));
+    flipCamera();
   }
 
   flipCamera() => controller?.flipCamera();
@@ -77,9 +79,8 @@ class _ScanPPLQRState extends State<ScanPPLQR> {
   @override
   void initState() {
     super.initState();
-    defaultInit();
     controller?.resumeCamera();
-    controller?.flipCamera();
+    defaultInit();
   }
 
   @override

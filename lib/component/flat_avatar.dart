@@ -22,9 +22,9 @@ Container flatAvatar({required BuildContext context, required String label, bool
       ));
 }
 
-Container intercomAvatar({required BuildContext context, String? photo, double? size}) {
+Container intercomAvatar({required BuildContext context, String? photo, double? size, double? rightPadding}) {
   return Container(
-      margin: EdgeInsets.only(right: primaryPaddingValue),
+      margin: EdgeInsets.only(right: rightPadding ?? primaryPaddingValue),
       alignment: Alignment.center,
       decoration: BoxDecoration(
           color: const Color(0xFF3498DB).withOpacity(.3), borderRadius: halfOfPrimaryBorderRadius, image: photo != null ? DecorationImage(image: CachedNetworkImageProvider(photo), fit: BoxFit.cover) : null),
