@@ -13,7 +13,7 @@ import 'package:flutter/services.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // SystemChrome.setEnabledSystemUIMode(SystemUiMode.leanBack);
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.leanBack);
   if (kDebugMode) print("---- HI SOCIETY | GUARD DEVICE ----");
 
   //Get Saved JWT AccessToken
@@ -78,22 +78,21 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Hi Society Guard',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-          primarySwatch: Colors.blue,
-          useMaterial3: true,
-          scaffoldBackgroundColor: primaryBackgroundColor,
-          brightness: Brightness.dark,
-          appBarTheme: AppBarTheme(
-            backgroundColor: primaryColor,
-            centerTitle: true,
-            foregroundColor: trueWhite,
-            systemOverlayStyle: const SystemUiOverlayStyle(statusBarColor: Colors.transparent, statusBarIconBrightness: Brightness.light),
-            titleTextStyle: bold22White,
-          )),
-      home: accessToken.isEmpty ? const SignIn() : const Home(),
-      // home: const Call(),
-    );
+        title: 'Hi Society Guard',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+            primarySwatch: Colors.blue,
+            useMaterial3: true,
+            scaffoldBackgroundColor: primaryBackgroundColor,
+            brightness: Brightness.dark,
+            appBarTheme: AppBarTheme(
+                backgroundColor: primaryColor,
+                centerTitle: true,
+                foregroundColor: trueWhite,
+                systemOverlayStyle: const SystemUiOverlayStyle(statusBarColor: Colors.transparent, statusBarIconBrightness: Brightness.light),
+                titleTextStyle: bold22White)),
+        home: accessToken.isEmpty ? const SignIn() : const Home()
+        // home: const Call(),
+        );
   }
 }

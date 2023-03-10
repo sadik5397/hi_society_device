@@ -9,6 +9,7 @@ import 'package:hi_society_device/component/page_navigation.dart';
 import 'package:hi_society_device/component/snack_bar.dart';
 import 'package:hi_society_device/theme/placeholder.dart';
 import 'package:hi_society_device/views/home.dart';
+import 'package:hi_society_device/views/system/system_setting.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../api/api.dart';
@@ -76,8 +77,6 @@ class _SwitchGuardUserState extends State<SwitchGuardUser> {
                 padding: EdgeInsets.symmetric(vertical: primaryPaddingValue * 2, horizontal: primaryPaddingValue * 2),
                 decoration: BoxDecoration(color: trueWhite, borderRadius: primaryBorderRadius * 2),
                 child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.center, children: [
-                  // SelectableText(guardList.toString(), style: TextStyle(color: trueBlack)),
-                  // SelectableText(guardList.length.toString(), style: TextStyle(color: trueBlack)),
                   if (guardList.isNotEmpty)
                     Padding(
                         padding: EdgeInsets.only(bottom: primaryPaddingValue * 1.5),
@@ -143,7 +142,10 @@ class _SwitchGuardUserState extends State<SwitchGuardUser> {
                             Container(alignment: Alignment.center, width: MediaQuery.of(context).size.width / 2 - primaryPaddingValue * 8.4, height: 56, child: const Text("বাংলা", textAlign: TextAlign.center)),
                           ]))),
                   Padding(
-                      padding: EdgeInsets.fromLTRB(primaryPaddingValue * 2, primaryPaddingValue * 1.5, primaryPaddingValue * 2, primaryPaddingValue),
+                      padding: EdgeInsets.fromLTRB(primaryPaddingValue * 2, primaryPaddingValue * 1.5, primaryPaddingValue * 2, 0),
+                      child: primaryButton(icon: Icons.settings, primary: false, context: context, title: i18n_systemSettings(isBN), onTap: () => route(context, SystemSettings(isBN: isBN)))),
+                  Padding(
+                      padding: EdgeInsets.fromLTRB(primaryPaddingValue * 2, primaryPaddingValue, primaryPaddingValue * 2, primaryPaddingValue),
                       child: primaryButton(icon: Icons.lock_clock_rounded, primary: false, context: context, title: i18n_deActiveDevice(isBN), onTap: widget.onSignOut)),
                 ]))));
   }
