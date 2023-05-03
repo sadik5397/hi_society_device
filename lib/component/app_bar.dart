@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:hi_society_device/api/i18n.dart';
 
+import '../api/api.dart';
 import '../theme/text_style.dart';
 
-AppBar primaryAppBar({required BuildContext context, String? title, Widget? prefix, Widget? suffix, bool isBN = false}) =>
-    AppBar(leading: (prefix != null) ? prefix : null, title: Text(title ?? i18n_appTitle(isBN)), actions: (suffix != null) ? [suffix] : null);
+AppBar primaryAppBar({required BuildContext context, String? title, Widget? prefix, Widget? suffix, bool isBN = false}) => AppBar(
+    leading: (prefix != null) ? prefix : null,
+    title: Text(title ??
+        '${i18n_appTitle(isBN)}${baseUrl == "https://dev.hisocietyserver.online" ? " (DEV)" : baseUrl == "https://hisocietyserver.online" ? "" : " (OLD)"}'),
+    actions: (suffix != null) ? [suffix] : null);
 
 // AppBar primaryAppbarWithTabs({required BuildContext context, String? title, required List<String> tabs, TabController? controller, bool isBN = false}) {
 //   return AppBar(
