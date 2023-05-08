@@ -104,7 +104,7 @@ class _OverstayAlertsState extends State<OverstayAlerts> {
                     itemBuilder: (context, index) => overstayRequestListTile(
                           isBN: isBN,
                           context: context,
-                          photo: apiResultToday[index]["user"]["photo"] == null ? placeholderImage : '$baseUrl/photos/${apiResultToday[index]["user"]["photo"]}',
+                          photo: apiResultTomorrow[index]["user"]["photo"] == null ? placeholderImage : '$baseUrl/photos/${apiResultTomorrow[index]["user"]["photo"]}',
                           title: apiResultTomorrow[index]["user"]["name"],
                           eta: primaryTime(apiResultTomorrow[index]["expectedArrival"]),
                           flat: apiResultTomorrow[index]["flat"]["flatName"],
@@ -121,7 +121,7 @@ class _OverstayAlertsState extends State<OverstayAlerts> {
                     itemBuilder: (context, index) => overstayRequestListTile(
                           isBN: isBN,
                           context: context,
-                          photo: apiResultToday[index]["user"]["photo"] == null ? placeholderImage : '$baseUrl/photos/${apiResultToday[index]["user"]["photo"]}',
+                          photo: apiResultNextDayOfTomorrow[index]["user"]["photo"] == null ? placeholderImage : '$baseUrl/photos/${apiResultNextDayOfTomorrow[index]["user"]["photo"]}',
                           title: apiResultNextDayOfTomorrow[index]["user"]["name"],
                           eta: primaryTime(apiResultNextDayOfTomorrow[index]["expectedArrival"]),
                           flat: apiResultNextDayOfTomorrow[index]["flat"]["flatName"],
