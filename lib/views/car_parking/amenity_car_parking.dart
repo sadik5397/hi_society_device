@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hi_society_device/api/i18n.dart';
@@ -7,7 +6,6 @@ import 'package:hi_society_device/theme/date_format.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../../api/api.dart';
 import '../../component/app_bar.dart';
 import '../../component/no_data.dart';

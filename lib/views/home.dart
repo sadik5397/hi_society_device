@@ -30,6 +30,7 @@ import '../component/page_navigation.dart';
 import '../component/snack_bar.dart';
 import 'intercom/incoming_call.dart';
 import 'security_alert/security_lerts.dart';
+import 'package:wakelock/wakelock.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -175,6 +176,7 @@ class _HomeState extends State<Home> {
 
 //Functions
   defaultInit() async {
+    Wakelock.enable();
     initiateNotificationReceiver();
     final pref = await SharedPreferences.getInstance();
     setState(() => isBN = pref.getBool("isBN") ?? true);

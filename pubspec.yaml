@@ -57,6 +57,7 @@ dependencies:
   text_scroll: ^0.1.2
   quickalert:
   app_settings: ^4.2.0
+  wakelock: ^0.6.2
 
 dev_dependencies:
   flutter_launcher_icons:
