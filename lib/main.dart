@@ -13,7 +13,7 @@ import 'package:flutter/services.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setEnabledSystemUIMode(SystemUiMode.leanBack);
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
   if (kDebugMode) print("---- HI SOCIETY | GUARD DEVICE ----");
 
   //Get Saved JWT AccessToken

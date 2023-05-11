@@ -18,6 +18,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../api/api.dart';
 import '../../component/snack_bar.dart';
+import '../visitor/visitor_mobile_no_entry.dart';
 
 class WaitForResidentResponse extends StatefulWidget {
   const WaitForResidentResponse({Key? key, this.isNew = false, required this.vendor, required this.deliveryMethod, required this.flat, required this.item}) : super(key: key);
@@ -38,6 +39,7 @@ class _WaitForResidentResponseState extends State<WaitForResidentResponse> {
   String residentResponse = "";
   String? allowStatus; //should be "false" or "true"
   bool timeOut = false;
+  bool needEntry = false;
   TextEditingController mobileNumberController = TextEditingController();
   int checkStatusIntervalSec = 60;
   int autoRejectAfterHowManyCount = 5;
@@ -96,6 +98,7 @@ class _WaitForResidentResponseState extends State<WaitForResidentResponse> {
           setState(() => allowStatus = "true");
         }
         if (message.data["response"] == "cant receive now") setState(() => allowStatus = "false");
+        if (message.data["response"] == "come to door") setState(() => needEntry = true);
       }
     });
   }
@@ -158,9 +161,13 @@ class _WaitForResidentResponseState extends State<WaitForResidentResponse> {
                 )),
               if (allowStatus == null && !timeOut) Text("${i18n_pleaseWait(isBN)}...", textScaleFactor: .75, style: Theme.of(context).textTheme.displaySmall?.copyWith(color: trueWhite)),
               if (allowStatus == "false") Text(i18n_cantRcv(isBN), textScaleFactor: .75, style: Theme.of(context).textTheme.displaySmall?.copyWith(color: trueWhite)),
-              Padding(
-                  padding: EdgeInsets.only(top: primaryPaddingValue * 4, left: primaryPaddingValue * 8, right: primaryPaddingValue * 8),
-                  child: primaryButton(context: context, title: (allowStatus == null && !timeOut) ? i18n_cancel(isBN) : i18n_goHome(isBN), onTap: () => route(context, const Home())))
+              needEntry
+                  ? Padding(
+                      padding: EdgeInsets.only(top: primaryPaddingValue * 4, left: primaryPaddingValue * 8, right: primaryPaddingValue * 8),
+                      child: primaryButton(context: context, title: i18n_takeInfo(isBN), onTap: () => route(context, VisitorMobileNoEntry())))
+                  : Padding(
+                      padding: EdgeInsets.only(top: primaryPaddingValue * 4, left: primaryPaddingValue * 8, right: primaryPaddingValue * 8),
+                      child: primaryButton(context: context, title: (allowStatus == null && !timeOut) ? i18n_cancel(isBN) : i18n_goHome(isBN), onTap: () => route(context, const Home())))
             ])));
   }
 }

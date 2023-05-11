@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
@@ -14,7 +13,6 @@ import 'package:hi_society_device/views/visitor/ask_permission_to_enter.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../../api/api.dart';
 import '../../component/app_bar.dart';
 import '../../component/snack_bar.dart';
@@ -39,7 +37,7 @@ class _NewVisitorInformationState extends State<NewVisitorInformation> {
   TextEditingController emailController = TextEditingController();
   late TextEditingController mobileNumberController = TextEditingController(text: widget.mobileNumber);
   List<String> flatList = [];
-  List<String> relationList = ["Family Meet", "Official", "Others"];
+  List<String> relationList = ["Family Meet", "Official", "Parcel Delivery", "Others"];
   List<int> flatID = [];
   late String selectedFlat = widget.selectedFlat;
   String? selectedRelation;
@@ -47,6 +45,7 @@ class _NewVisitorInformationState extends State<NewVisitorInformation> {
   String base64img = "";
   final ImagePicker _picker = ImagePicker();
   bool isBN = false;
+  FocusNode inputNode = FocusNode();
 
 //APIs
   Future<void> getFlatList({required String accessToken}) async {
@@ -104,13 +103,15 @@ class _NewVisitorInformationState extends State<NewVisitorInformation> {
     setState(() => accessToken = pref.getString("accessToken").toString());
     setState(() => isBN = pref.getBool("isBN") ?? false);
     await getFlatList(accessToken: accessToken);
+    await Future.delayed(const Duration(seconds: 1));
+    FocusScope.of(context).requestFocus(inputNode);
   }
 
   Future getImage() async {
-    final image = await _picker.pickImage(source: ImageSource.camera);
+    final image = await _picker.pickImage(source: ImageSource.camera, preferredCameraDevice: CameraDevice.front);
     setState(() => _image = File(image!.path));
     var result = await FlutterImageCompress.compressWithFile(_image.absolute.path, minWidth: 512, minHeight: 512, quality: 60, rotate: 0);
-    setState(() => base64img = (base64Encode(List<int>.from(result!)))); //error: The method 'readAsBytesSync' can't be unconditionally invoked because the receiver can be 'null'.
+    setState(() => base64img = (base64Encode(List<int>.from(result!))));
   }
 
 //Initiate
@@ -129,6 +130,7 @@ class _NewVisitorInformationState extends State<NewVisitorInformation> {
           primaryTextField(
             autoFocus: true,
             context: context,
+            focusNode: inputNode,
             labelText: i18n_fullName(isBN),
             controller: nameController,
             textCapitalization: TextCapitalization.words,
@@ -196,26 +198,28 @@ class _NewVisitorInformationState extends State<NewVisitorInformation> {
                               shape: RoundedRectangleBorder(borderRadius: primaryBorderRadius / 2))))),
           SizedBox(height: primaryPaddingValue),
           Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 36),
+              padding: const EdgeInsets.symmetric(horizontal: 36).copyWith(bottom: 36),
               child: primaryButton(
                   context: context,
                   title: i18n_next(isBN),
                   onTap: () async {
                     (selectedRelation == null)
                         ? showSnackBar(context: context, label: i18n_selectPurpose(isBN))
-                        : await createNewVisitorProfile(
-                            accessToken: accessToken,
-                            name: nameController.text,
-                            address: addressController.text,
-                            phone: mobileNumberController.text,
-                            relation: selectedRelation ?? "",
-                            photo: "data:image/png;base64,$base64img",
-                            flatId: flatID[flatList.indexOf(selectedFlat)],
-                            email: emailController.text.isEmpty ? null : emailController.text,
-                            successRoute: () => route(
-                                context,
-                                AskPermissionToEnter(
-                                    visitorName: nameController.text, isNew: true, visitorPhoto: base64img, flatID: flatID[flatList.indexOf(selectedFlat)], mobileNumber: mobileNumberController.text)));
+                        : base64img == ""
+                            ? await getImage()
+                            : await createNewVisitorProfile(
+                                accessToken: accessToken,
+                                name: nameController.text,
+                                address: addressController.text,
+                                phone: mobileNumberController.text,
+                                relation: selectedRelation ?? "",
+                                photo: "data:image/png;base64,$base64img",
+                                flatId: flatID[flatList.indexOf(selectedFlat)],
+                                email: emailController.text.isEmpty ? null : emailController.text,
+                                successRoute: () => route(
+                                    context,
+                                    AskPermissionToEnter(
+                                        visitorName: nameController.text, isNew: true, visitorPhoto: base64img, flatID: flatID[flatList.indexOf(selectedFlat)], mobileNumber: mobileNumberController.text)));
                   }))
         ]));
   }

@@ -67,6 +67,7 @@ String i18n_food(bool isBN) => isBN ? 'খাবার' : 'Food';
 String i18n_medicine(bool isBN) => isBN ? 'ঔষুধ' : 'Medicine';
 String i18n_document(bool isBN) => isBN ? 'কাগজপত্র' : 'Document';
 String i18n_others(bool isBN) => isBN ? 'অন্যান্য' : 'Others';
+String i18n_takeInfo(bool isBN) => isBN ? 'তথ্য সংগ্রহ করুন' : 'Collect Information';
 //endregion
 
 //region ---------- Digital Gate Pass ----------

@@ -58,6 +58,7 @@ dependencies:
   quickalert:
   app_settings: ^4.2.0
   wakelock: ^0.6.2
+  camera: ^0.10.5
 
 dev_dependencies:
   flutter_launcher_icons:

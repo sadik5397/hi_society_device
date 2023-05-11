@@ -22,8 +22,7 @@ import '../gate_pass/scan_gate_pass_qr.dart';
 import '../gate_pass/verify_gate_pass.dart';
 
 class VisitorMobileNoEntry extends StatefulWidget {
-  const VisitorMobileNoEntry({Key? key, required this.buildingImg, required this.buildingName, required this.buildingAddress}) : super(key: key);
-  final String buildingName, buildingAddress, buildingImg;
+  const VisitorMobileNoEntry({Key? key}) : super(key: key);
 
   @override
   State<VisitorMobileNoEntry> createState() => _VisitorMobileNoEntryState();
@@ -37,6 +36,7 @@ class _VisitorMobileNoEntryState extends State<VisitorMobileNoEntry> {
   String? selectedFlat;
   String? selectedRelation;
   List<String> flatList = [];
+  String? buildingName, buildingAddress, buildingImg;
   bool isBN = false;
   List<int> flatID = [];
   TextEditingController gatePassCodeController = TextEditingController();
@@ -86,6 +86,9 @@ class _VisitorMobileNoEntryState extends State<VisitorMobileNoEntry> {
     final pref = await SharedPreferences.getInstance();
     setState(() => accessToken = pref.getString("accessToken").toString());
     setState(() => isBN = pref.getBool("isBN") ?? false);
+    setState(() => buildingName = pref.getString("buildingName"));
+    setState(() => buildingAddress = pref.getString("buildingAddress"));
+    setState(() => buildingImg = pref.getString("buildingImg"));
     getFlatList(accessToken: accessToken);
   }
 
@@ -115,7 +118,7 @@ class _VisitorMobileNoEntryState extends State<VisitorMobileNoEntry> {
                       flex: 7,
                       child: primaryTextField(
                           leftPadding: primaryPaddingValue,
-                          // autoFocus: true,
+                          autoFocus: true,
                           hintText: "01XXXXXXXXX",
                           keyboardType: TextInputType.number,
                           context: context,

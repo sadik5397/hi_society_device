@@ -302,7 +302,7 @@ class _HomeState extends State<Home> {
                                       title: i18n_visitorManagement(isBN),
                                       assetImage: "visitors",
                                       context: context,
-                                      toPage: VisitorMobileNoEntry(buildingAddress: buildingAddress ?? "...", buildingImg: buildingImg ?? placeholderImage, buildingName: buildingName ?? "...")),
+                                      toPage: VisitorMobileNoEntry()),
                                   menuGridTile(title: i18n_deliveryManagement(isBN), assetImage: "parcel_new", context: context, toPage: const ReceiveOrDistribute())
                                 ])),
                             Expanded(
