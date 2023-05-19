@@ -31,7 +31,8 @@ class _ContactListState extends State<ContactList> {
   bool isBN = false;
   List manager = [];
   List committeeHeads = [];
-  List committeeMembers = [];
+  List committeeMembers = [];  List residentHeads = [];
+
   List residents = [];
   List flatOwners = [];
   List allPeople = [];
@@ -67,8 +68,8 @@ class _ContactListState extends State<ContactList> {
         setState(() => manager = result["data"]["manager"]);
         setState(() => committeeHeads = result["data"]["committeeHeads"]);
         setState(() => committeeMembers = result["data"]["committeeMembers"]);
-        setState(() => residents = result["data"]["residents"]);
-        setState(() => flatOwners = result["data"]["flatOwners"]);
+        setState(() => residentHeads = result["data"]["resident_heads"]);
+        setState(() => residents = result["data"]["residents_only"]);        setState(() => flatOwners = result["data"]["flatOwners"]);
         setState(() => allPeople = [manager, committeeHeads, committeeMembers, residents, flatOwners].expand((x) => x).toList());
       } else {
         showSnackBar(context: context, label: result["message"][0].toString().length == 1 ? result["message"].toString() : result["message"][0].toString());
@@ -166,6 +167,21 @@ class _ContactListState extends State<ContactList> {
                                     receiverImg: committeeMembers[index]["member"]["photo"] != null ? '$baseUrl/photos/${committeeMembers[index]["member"]["photo"]}' : placeholderImage);
                               })),
                       ListView.builder(
+                          primary: false,
+                          itemCount: residentHeads.length,
+                          shrinkWrap: true,
+                          itemBuilder: (context, index) => contactListTile(
+                              img: residentHeads[index]["photo"] != null ? '$baseUrl/photos/${residentHeads[index]["photo"]}' : placeholderImage,
+                              title: residentHeads[index]["name"],
+                              subtitle: "Resident Head",
+                              context: context,
+                              onTap: () async {
+                                await createCall(
+                                    accessToken: accessToken,
+                                    receiver: residentHeads[index]["userId"],
+                                    receiverName: residentHeads[index]["name"],
+                                    receiverImg: residentHeads[index]["photo"] != null ? '$baseUrl/photos/${residentHeads[index]["photo"]}' : placeholderImage);
+                              })),                      ListView.builder(
                           primary: false,
                           itemCount: residents.length,
                           shrinkWrap: true,
