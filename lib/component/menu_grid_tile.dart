@@ -17,7 +17,7 @@ Widget menuGridTile({required String title, required String assetImage, Widget? 
               child: Container(
                   padding: primaryPadding * 1,
                   alignment: Alignment.center,
-                  decoration: BoxDecoration(borderRadius: primaryBorderRadius / 2, color: trueWhite.withOpacity(.1), border: Border.all(color: trueWhite, width: 2, strokeAlign: StrokeAlign.center)),
+                  decoration: BoxDecoration(borderRadius: primaryBorderRadius / 2, color: trueWhite.withOpacity(.1), border: Border.all(color: trueWhite, width: 2)),
                   child: Column(mainAxisSize: MainAxisSize.min, children: [
                     CachedNetworkImage(imageUrl: "https://hisocietybd.com/_app_assets/$assetImage.png", height: 72, fit: BoxFit.fitHeight),
                     SizedBox(height: primaryPaddingValue / 2),

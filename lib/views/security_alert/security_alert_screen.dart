@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_beep/flutter_beep.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
+import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:hi_society_device/api/i18n.dart';
 import 'package:hi_society_device/component/button.dart';
 import 'package:hi_society_device/component/page_navigation.dart';
@@ -30,19 +30,26 @@ class _SecurityAlertScreenState extends State<SecurityAlertScreen> {
     if (!madeResponse) {
       setState(() => step++);
       await Future.delayed(const Duration(milliseconds: 250));
-      FlutterBeep.beep();
       await colorShifter();
     }
   }
 
-  //Functions
   defaultInit() async {
     final pref = await SharedPreferences.getInstance();
     setState(() => isBN = pref.getBool("isBN") ?? false);
   }
 
+  fireAlarm()async{
+    await FlutterRingtonePlayer.play(
+      fromAsset: "assets/fire_alarm.wav", // will be the sound on Android
+      ios: IosSounds.horn, // will be the sound on iOS
+      looping: true,
+    );
+  }
+
   @override
   void dispose() {
+    FlutterRingtonePlayer.stop();
     super.dispose();
   }
 
@@ -51,6 +58,7 @@ class _SecurityAlertScreenState extends State<SecurityAlertScreen> {
   void initState() {
     super.initState();
     defaultInit();
+    fireAlarm();
     colorShifter();
   }
 
@@ -76,6 +84,7 @@ class _SecurityAlertScreenState extends State<SecurityAlertScreen> {
                       onTap: () async {
                         setState(() => madeResponse = true);
                         await Future.delayed(const Duration(seconds: 1));
+                        FlutterRingtonePlayer.stop();
                         // ignore: use_build_context_synchronously
                         route(context, const Home());
                         Phoenix.rebirth(context);
