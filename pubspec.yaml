@@ -52,7 +52,7 @@ dependencies:
   flutter_beep:
   phone_number:
   flutter_ringtone_player: ^3.2.0
-  zego_uikit_prebuilt_call: ^1.2.5
+  zego_uikit_prebuilt_call: ^3.2.0
   permission_handler: ^10.2.0
   text_scroll: ^0.1.2
   quickalert:
