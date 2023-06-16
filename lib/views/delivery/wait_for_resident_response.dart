@@ -21,7 +21,8 @@ import '../../component/snack_bar.dart';
 import '../visitor/visitor_mobile_no_entry.dart';
 
 class WaitForResidentResponse extends StatefulWidget {
-  const WaitForResidentResponse({Key? key, this.isNew = false, required this.vendor, required this.deliveryMethod, required this.flat, required this.item}) : super(key: key);
+  const WaitForResidentResponse({Key? key, this.isNew = false, required this.vendor, required this.deliveryMethod, required this.flat, required this.item, required this.flatId}) : super(key: key);
+  final int flatId;
   final String flat;
   final String item;
   final bool isNew;
@@ -56,6 +57,24 @@ class _WaitForResidentResponseState extends State<WaitForResidentResponse> {
         if (kDebugMode) showSnackBar(context: context, label: result["message"]);
         setState(() => apiResult = result["data"]);
         setState(() => requestedVisitorHistoryID = result["data"]["visitorHistoryId"]);
+      } else {
+        showSnackBar(context: context, label: result["message"][0].toString().length == 1 ? result["message"].toString() : result["message"][0].toString());
+      }
+    } on Exception catch (e) {
+      showSnackBar(context: context, label: e.toString());
+    }
+  }
+
+  Future<void> createPPL({required String deliveryMethod, required String accessToken, required String itemType, required String merchant, required int flatId, required VoidCallback successRoute}) async {
+    try {
+      var response = await http.post(Uri.parse("$baseUrl/parcel-delivery/guard/create"),
+          headers: authHeader(accessToken), body: jsonEncode({"flatId": flatId, "vendor": merchant, "deliveryMethod": deliveryMethod, "item": itemType}));
+      Map result = jsonDecode(response.body);
+      print(result);
+      if (result["statusCode"] == 200 || result["statusCode"] == 201) {
+        if (kDebugMode) showSnackBar(context: context, label: result["message"]);
+        print(result);
+        successRoute.call();
       } else {
         showSnackBar(context: context, label: result["message"][0].toString().length == 1 ? result["message"].toString() : result["message"][0].toString());
       }
@@ -167,7 +186,21 @@ class _WaitForResidentResponseState extends State<WaitForResidentResponse> {
                       child: primaryButton(context: context, title: i18n_takeInfo(isBN), onTap: () => route(context, VisitorMobileNoEntry())))
                   : Padding(
                       padding: EdgeInsets.only(top: primaryPaddingValue * 4, left: primaryPaddingValue * 8, right: primaryPaddingValue * 8),
-                      child: primaryButton(context: context, title: (allowStatus == null && !timeOut) ? i18n_cancel(isBN) : i18n_goHome(isBN), onTap: () => route(context, const Home())))
+                      child: primaryButton(context: context, title: (allowStatus == null && !timeOut) ? i18n_cancel(isBN) : i18n_goHome(isBN), onTap: () => route(context, const Home()))),
+              if (allowStatus == "true" && widget.deliveryMethod != "drop_at_guard")
+                Padding(
+                    padding: EdgeInsets.only(top: primaryPaddingValue, left: primaryPaddingValue * 8, right: primaryPaddingValue * 8),
+                    child: primaryButton(
+                        primary: false,
+                        context: context,
+                        title: i18n_receiveNGenerate(isBN),
+                        onTap: () async => await createPPL(
+                            deliveryMethod: "drop_at_guard",
+                            accessToken: accessToken,
+                            itemType: widget.item,
+                            merchant: widget.vendor,
+                            flatId: widget.flatId,
+                            successRoute: () => route(context, WaitForResidentResponse(flatId: widget.flatId, vendor: widget.vendor, deliveryMethod: "drop_at_guard", flat: widget.flat, item: widget.item)))))
             ])));
   }
 }

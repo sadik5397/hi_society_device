@@ -40,7 +40,7 @@ String i18n_next(bool isBN) => isBN ? 'পরবর্তী' : 'Next';
 String i18n_submit(bool isBN) => isBN ? 'জমা' : 'Submit';
 String i18n_cancel(bool isBN) => isBN ? 'বাতিল' : 'Cancel';
 String i18n_tryAgain(bool isBN) => isBN ? 'আবার চেষ্টা করুন' : 'Try Again';
-String i18n_goHome(bool isBN) => isBN ? 'মূল মেনুতে ফেরৎ যেতে' : 'Go to Main Screen';
+String i18n_goHome(bool isBN) => isBN ? 'মূল মেনুতে ফেরৎ যান' : 'Go to Main Screen';
 String i18n_cantRcv(bool isBN) => isBN ? 'পার্সেলটি এখন গ্রহণ করতে পারছি না' : 'Can\'t Receive Parcel Now';
 String i18n_pleaseWait(bool isBN) => isBN ? 'দয়া করে অপেক্ষা করুন' : 'Please Wait';
 String i18n_timeOut(bool isBN) => isBN ? 'সময় শেষ' : 'Time Out';
@@ -68,6 +68,7 @@ String i18n_medicine(bool isBN) => isBN ? 'ঔষুধ' : 'Medicine';
 String i18n_document(bool isBN) => isBN ? 'কাগজপত্র' : 'Document';
 String i18n_others(bool isBN) => isBN ? 'অন্যান্য' : 'Others';
 String i18n_takeInfo(bool isBN) => isBN ? 'তথ্য সংগ্রহ করুন' : 'Collect Information';
+String i18n_receiveNGenerate(bool isBN) => isBN ? 'গ্রহন করে কোড জেনারেট করুন' : 'Receive & Generate QR Code';
 //endregion
 
 //region ---------- Digital Gate Pass ----------

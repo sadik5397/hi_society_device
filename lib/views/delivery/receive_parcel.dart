@@ -147,6 +147,7 @@ class _ReceiveParcelState extends State<ReceiveParcel> {
                                     vendor: selectedMerchant ?? "...",
                                     deliveryMethod: deliveryMethodKeys[[i18n_deliverParcelAtCustomersDoor(isBN), i18n_customerComeDownHereToReceive(isBN), i18n_dropParcelHere(isBN)].indexOf(selectedDeliveryMethod!)],
                                     flat: selectedFlat ?? "...",
+                                    flatId: selectedFlat != null ? flatID[flatList.indexOf(selectedFlat!)] : -1,
                                     item: selectedItemType ?? "...")));
                   }))
         ]));
