@@ -21,7 +21,8 @@ import '../../component/snack_bar.dart';
 import '../visitor/visitor_mobile_no_entry.dart';
 
 class WaitForResidentResponse extends StatefulWidget {
-  const WaitForResidentResponse({Key? key, this.isNew = false, required this.vendor, required this.deliveryMethod, required this.flat, required this.item, required this.flatId, required this.note})
+  const WaitForResidentResponse(
+      {Key? key, this.isNew = false, required this.vendor, required this.deliveryMethod, required this.flat, required this.item, required this.flatId, required this.note, this.codeGenerated = false})
       : super(key: key);
   final int flatId;
   final String flat;
@@ -30,6 +31,7 @@ class WaitForResidentResponse extends StatefulWidget {
   final bool isNew;
   final String deliveryMethod;
   final String vendor;
+  final bool codeGenerated;
 
   @override
   State<WaitForResidentResponse> createState() => _WaitForResidentResponseState();
@@ -188,7 +190,7 @@ class _WaitForResidentResponseState extends State<WaitForResidentResponse> {
                   : Padding(
                       padding: EdgeInsets.only(top: primaryPaddingValue * 4, left: primaryPaddingValue * 8, right: primaryPaddingValue * 8),
                       child: primaryButton(context: context, title: (allowStatus == null && !timeOut) ? i18n_cancel(isBN) : i18n_goHome(isBN), onTap: () => route(context, const Home()))),
-              if (allowStatus == "true" && widget.deliveryMethod != "drop_at_guard")
+              if (allowStatus == "true" && widget.deliveryMethod == "drop_at_guard" && widget.codeGenerated == false)
                 Padding(
                     padding: EdgeInsets.only(top: primaryPaddingValue, left: primaryPaddingValue * 8, right: primaryPaddingValue * 8),
                     child: primaryButton(
@@ -204,7 +206,7 @@ class _WaitForResidentResponseState extends State<WaitForResidentResponse> {
                             successRoute: () => route(
                                 context,
                                 WaitForResidentResponse(
-                                    note: widget.note, flatId: widget.flatId, vendor: widget.vendor, deliveryMethod: "drop_at_guard", flat: widget.flat, item: widget.item)))))
+                                    codeGenerated: true, note: widget.note, flatId: widget.flatId, vendor: widget.vendor, deliveryMethod: "drop_at_guard", flat: widget.flat, item: widget.item)))))
             ])));
   }
 }

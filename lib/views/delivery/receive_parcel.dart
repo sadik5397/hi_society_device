@@ -140,6 +140,9 @@ class _ReceiveParcelState extends State<ReceiveParcel> {
                             successRoute: () => route(
                                 context,
                                 WaitForResidentResponse(
+                                    codeGenerated:
+                                        deliveryMethodKeys[[i18n_deliverParcelAtCustomersDoor(isBN), i18n_customerComeDownHereToReceive(isBN), i18n_dropParcelHere(isBN)].indexOf(selectedDeliveryMethod!)] ==
+                                            "drop_at_guard",
                                     note: noteController.text.toString(),
                                     vendor: selectedMerchant ?? "...",
                                     deliveryMethod:
