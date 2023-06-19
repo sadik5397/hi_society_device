@@ -5,16 +5,23 @@ import 'package:hi_society_device/component/page_navigation.dart';
 import 'package:hi_society_device/theme/padding_margin.dart';
 
 import '../api/api.dart';
+import '../theme/colors.dart';
 import '../theme/text_style.dart';
 import '../views/home.dart';
 
 AppBar primaryAppBar({required BuildContext context, String? title, Widget? prefix, Widget? suffix, bool isBN = false}) => AppBar(
+    iconTheme: IconThemeData(color: trueWhite),
     leading: (prefix != null) ? prefix : null,
     title: Text(title ??
         '${i18n_appTitle(isBN)}${baseUrl == "https://dev.hisocietyserver.online" ? " (DEV)" : baseUrl == "https://hisocietyserver.online" ? "" : " (OLD)"}'),
-    actions:
-        (suffix != null) ? [suffix] : [IconButton(onPressed: () => route(context, const Home()).then((value) => Phoenix.rebirth(context)), icon: Padding(padding: EdgeInsets.symmetric(horizontal: primaryPaddingValue * .6), child: Icon(Icons.home))
-        )]);
+    actions: (suffix != null)
+        ? [suffix]
+        : [
+            IconButton(
+                color: trueWhite,
+                onPressed: () => route(context, const Home()).then((value) => Phoenix.rebirth(context)),
+                icon: Padding(padding: EdgeInsets.symmetric(horizontal: primaryPaddingValue * .6), child: Icon(Icons.home)))
+          ]);
 
 // AppBar primaryAppbarWithTabs({required BuildContext context, String? title, required List<String> tabs, TabController? controller, bool isBN = false}) {
 //   return AppBar(

@@ -21,6 +21,6 @@ Widget menuGridTile({required String title, required String assetImage, Widget? 
                   child: Column(mainAxisSize: MainAxisSize.min, children: [
                     CachedNetworkImage(imageUrl: "https://hisocietybd.com/_app_assets/$assetImage.png", height: 72, fit: BoxFit.fitHeight),
                     SizedBox(height: primaryPaddingValue / 2),
-                    Text(title, textAlign: TextAlign.center, style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold))
+                    Text(title, textAlign: TextAlign.center, style: Theme.of(context).textTheme.titleLarge?.copyWith(color: trueWhite,fontWeight: FontWeight.bold))
                   ])))));
 }

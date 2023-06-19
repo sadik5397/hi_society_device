@@ -108,13 +108,13 @@ class _AskPermissionToEnterState extends State<AskPermissionToEnter> {
 
   initiateRealtimeStatusChecker() async {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      RemoteNotification? notification = message.notification;
-      AndroidNotification? android = message.notification?.android;
-      if (notification != null && android != null) {
-        print("Got a New Notification: ${notification.title}\n${message.data}");
-        if (message.data["topic"] == "visitor" && message.data["visitorId"] == apiResult["visitor"]["visitorId"].toString() && notification.title == "Visitor approved") setState(() => allowStatus = "true");
-        if (message.data["topic"] == "visitor" && message.data["visitorId"] == apiResult["visitor"]["visitorId"].toString() && notification.title == "Visitor denied") setState(() => allowStatus = "false");
-      }
+      // RemoteNotification? notification = message.notification;
+      // AndroidNotification? android = message.notification?.android;
+
+      print("Got a New Notification: ${message.data["title"]}\n${message.data["body"]}");
+
+      if (message.data["topic"] == "visitor" && message.data["visitorId"] == apiResult["visitor"]["visitorId"].toString() && message.data["title"] == "Visitor approved") setState(() => allowStatus = "true");
+      if (message.data["topic"] == "visitor" && message.data["visitorId"] == apiResult["visitor"]["visitorId"].toString() && message.data["title"] == "Visitor denied") setState(() => allowStatus = "false");
     });
   }
 

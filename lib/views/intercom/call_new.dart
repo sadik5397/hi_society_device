@@ -78,10 +78,10 @@ class _CallState extends State<CallNew> {
   //Other Side Response Notification Receiver
   initiateRealtimeStatusChecker() async {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      RemoteNotification? notification = message.notification;
-      AndroidNotification? android = message.notification?.android;
-      if (notification != null && android != null) {
-        print("Got a New Notification: ${notification.title}\n${message.data}");
+      // RemoteNotification? notification = message.notification;
+      // AndroidNotification? android = message.notification?.android;
+
+      print("Got a New Notification: ${message.data["title"]}\n${message.data["body"]}");
         if (message.data["topic"] == "intercom-response" && message.data["response"] == "call_rejected") {
           setState(() => callEnded = true);
           setState(() => callStatus = "Call Rejected");
@@ -93,7 +93,7 @@ class _CallState extends State<CallNew> {
           setState(() => callReceived = true);
           startClock();
         }
-      }
+
     });
   }
 

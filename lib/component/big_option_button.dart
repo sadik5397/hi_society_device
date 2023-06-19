@@ -17,7 +17,7 @@ Padding bigOptionButton({required BuildContext context, required String iconImag
             child: Column(mainAxisSize: MainAxisSize.min, children: [
               Image.asset(iconImage, fit: BoxFit.cover, height: MediaQuery.of(context).size.height / 10),
               SizedBox(height: primaryPaddingValue),
-              Text(label, style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold))
+              Text(label, style: Theme.of(context).textTheme.titleLarge?.copyWith(color: trueWhite,fontWeight: FontWeight.bold))
             ]))),
   );
 }

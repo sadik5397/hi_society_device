@@ -108,17 +108,17 @@ class _WaitForResidentResponseState extends State<WaitForResidentResponse> {
 
   initiateRealtimeStatusChecker() async {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      RemoteNotification? notification = message.notification;
-      AndroidNotification? android = message.notification?.android;
-      if (notification != null && android != null) {
-        print("Got a New Notification: ${notification.title}\n${message.data}");
+      // RemoteNotification? notification = message.notification;
+      // AndroidNotification? android = message.notification?.android;
+
+        print("Got a New Notification: ${message.data["title"]}\n${message.data["body"]}");
         if (message.data["topic"] == "parcel-delivery") setState(() => residentResponse = message.data["response"]);
         if (message.data["response"] == "drop at guard" || message.data["response"] == "come to door" || message.data["response"] == "coming to receive") {
           setState(() => allowStatus = "true");
         }
         if (message.data["response"] == "cant receive now") setState(() => allowStatus = "false");
         if (message.data["response"] == "come to door") setState(() => needEntry = true);
-      }
+
     });
   }
 

@@ -199,30 +199,28 @@ class _HomeState extends State<Home> {
     print("Notification Receiver Activated");
     final pref = await SharedPreferences.getInstance();
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      RemoteNotification? notification = message.notification;
-      AndroidNotification? android = message.notification?.android;
-      if (notification != null && android != null) {
-        print("${message.data}-------------------->>");
-        if (kDebugMode) showSnackBar(context: context, label: "${message.data}");
-        if (message.data["topic"] == "security-alert") route(context, SecurityAlertScreen(alert: message.data["alertTypeName"], flat: message.data["flatName"]));
-        if (message.data["topic"] == "security-alert") route(context, SecurityAlertScreen(alert: message.data["alertTypeName"], flat: message.data["flatName"]));
-        if (message.data["topic"] == "headline") {
-          showSnackBar(context: context, label: "New Headline: ${notification.body}");
-          setState(() => headline = notification.body.toString());
-          pref.setString("headline", headline);
-          Phoenix.rebirth(context);
-        }
-        if (message.data["topic"] == "intercom") {
-          route(
-              context,
-              IncomingCall(
-                  receiverImage: message.data["callerProfilePic"].toString() == "" ? placeholderImage : '$baseUrl/photos/${message.data["callerProfilePic"]}',
-                  receiverName: message.data["callerName"],
-                  callID: message.data["roomId"],
-                  receiverId: int.parse(message.data["callerId"]),
-                  isReceiving: true,
-                  intercomHistoryId: int.parse(message.data["historyId"])));
-        }
+      // RemoteNotification? notification = message.notification;
+      // AndroidNotification? android = message.notification?.android;
+      print("${message.data}-------------------->>");
+      if (kDebugMode) showSnackBar(context: context, label: "${message.data}");
+      if (message.data["topic"] == "security-alert") route(context, SecurityAlertScreen(alert: message.data["alertTypeName"], flat: message.data["flatName"]));
+      if (message.data["topic"] == "security-alert") route(context, SecurityAlertScreen(alert: message.data["alertTypeName"], flat: message.data["flatName"]));
+      if (message.data["topic"] == "headline") {
+        showSnackBar(context: context, label: "New Headline: ${message.data["body"].toString()}");
+        setState(() => headline = message.data["body"].toString());
+        pref.setString("headline", headline);
+        Phoenix.rebirth(context);
+      }
+      if (message.data["topic"] == "intercom") {
+        route(
+            context,
+            IncomingCall(
+                receiverImage: message.data["callerProfilePic"].toString() == "" ? placeholderImage : '$baseUrl/photos/${message.data["callerProfilePic"]}',
+                receiverName: message.data["callerName"],
+                callID: message.data["roomId"],
+                receiverId: int.parse(message.data["callerId"]),
+                isReceiving: true,
+                intercomHistoryId: int.parse(message.data["historyId"])));
       }
     });
   }
@@ -244,7 +242,7 @@ class _HomeState extends State<Home> {
                 appBar: primaryAppBar(
                     isBN: isBN,
                     context: context,
-                    prefix: IconButton(onPressed: () => Phoenix.rebirth(context), icon: const Icon(Icons.settings_backup_restore)),
+                    prefix: IconButton(onPressed: () => Phoenix.rebirth(context), icon: Icon(color: trueWhite, Icons.settings_backup_restore)),
                     suffix: IconButton(
                         onPressed: () => showDialog(
                             barrierDismissible: true,
@@ -298,11 +296,7 @@ class _HomeState extends State<Home> {
                             Expanded(
                                 flex: 2,
                                 child: Row(children: [
-                                  menuGridTile(
-                                      title: i18n_visitorManagement(isBN),
-                                      assetImage: "visitors",
-                                      context: context,
-                                      toPage: VisitorMobileNoEntry()),
+                                  menuGridTile(title: i18n_visitorManagement(isBN), assetImage: "visitors", context: context, toPage: VisitorMobileNoEntry()),
                                   menuGridTile(title: i18n_deliveryManagement(isBN), assetImage: "parcel_new", context: context, toPage: const ReceiveOrDistribute())
                                 ])),
                             Expanded(
