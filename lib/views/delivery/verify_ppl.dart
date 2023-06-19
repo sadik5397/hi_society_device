@@ -128,8 +128,11 @@ class _VerifyPPLState extends State<VerifyPPL> {
                                     borderRadius: primaryBorderRadius * 2,
                                     border: Border.all(width: 2, color: trueWhite),
                                     image: const DecorationImage(fit: BoxFit.cover, image: AssetImage("assets/parcel.png")))),
-                            Text(i18n_weFound(isBN), style: Theme.of(context).textTheme.displayMedium?.copyWith(color: trueWhite, fontWeight: FontWeight.w300), textAlign: TextAlign.center),
-                            Text(i18n_parcel(isBN), style: Theme.of(context).textTheme.displayLarge?.copyWith(color: trueWhite, fontWeight: FontWeight.w600), textAlign: TextAlign.center),
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: primaryPaddingValue * 3),
+                              child: Text(i18n_weFound(isBN), style: Theme.of(context).textTheme.displayMedium?.copyWith(color: trueWhite, fontWeight: FontWeight.w300), textAlign: TextAlign.center),
+                            ),
+                            // Text(i18n_parcel(isBN), style: Theme.of(context).textTheme.displayLarge?.copyWith(color: trueWhite, fontWeight: FontWeight.w600), textAlign: TextAlign.center),
                             Padding(
                                 padding: EdgeInsets.symmetric(vertical: primaryPaddingValue * 2),
                                 child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [

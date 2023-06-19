@@ -14,6 +14,7 @@ import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../api/api.dart';
+import '../../api/static_values.dart';
 import '../../component/app_bar.dart';
 import '../../component/snack_bar.dart';
 import '../../theme/border_radius.dart';
@@ -37,7 +38,7 @@ class _NewVisitorInformationState extends State<NewVisitorInformation> {
   TextEditingController emailController = TextEditingController();
   late TextEditingController mobileNumberController = TextEditingController(text: widget.mobileNumber);
   List<String> flatList = [];
-  List<String> relationList = ["Family Meet", "Official", "Parcel Delivery", "Others"];
+  List<String> relationList = relations;
   List<int> flatID = [];
   late String selectedFlat = widget.selectedFlat;
   String? selectedRelation;

@@ -3,11 +3,13 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hi_society_device/api/i18n.dart';
+import 'package:hi_society_device/component/text_field.dart';
 import 'package:hi_society_device/views/delivery/wait_for_resident_response.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../api/api.dart';
+import '../../api/static_values.dart';
 import '../../component/app_bar.dart';
 import '../../component/button.dart';
 import '../../component/dropdown_button.dart';
@@ -29,12 +31,13 @@ class _ReceiveParcelState extends State<ReceiveParcel> {
   dynamic apiResult;
   List<String> flatList = [];
   List<int> flatID = [];
-  List<String> merchantList = ["Daraz", "Foodpanda", "Chaldal", "Other"];
-  List<String> deliveryMethodKeys = ["door_delivery", "hand_receive", "drop_at_guard"];
+  List<String> merchantList = merchants;
+  List<String> deliveryMethodKeys = deliveryMethods;
   String? selectedDeliveryMethod;
   String? selectedFlat;
   String? selectedItemType;
   String? selectedMerchant;
+  TextEditingController noteController = TextEditingController();
 
   //APIs
   Future<void> getFlatList({required String accessToken}) async {
@@ -95,37 +98,28 @@ class _ReceiveParcelState extends State<ReceiveParcel> {
     return Scaffold(
         appBar: primaryAppBar(context: context, title: i18n_rcvParcel(isBN)),
         body: ListView(padding: EdgeInsets.symmetric(vertical: primaryPaddingValue * 4), children: [
+          primaryDropdown(context: context, key: i18n_flat(isBN), title: i18n_whichFlat(isBN), options: flatList, value: selectedFlat, onChanged: (value) => setState(() => selectedFlat = value.toString())),
           primaryDropdown(
-            context: context,
-            key: i18n_flat(isBN),
-            title: i18n_whichFlat(isBN),
-            options: flatList,
-            value: selectedFlat,
-            onChanged: (value) => setState(() => selectedFlat = value.toString()),
-          ),
+              context: context,
+              key: i18n_itemType(isBN),
+              title: i18n_whatItem(isBN),
+              options: [i18n_product(isBN), i18n_food(isBN), i18n_medicine(isBN), i18n_document(isBN), i18n_others(isBN)],
+              value: selectedItemType,
+              onChanged: (value) => setState(() => selectedItemType = value.toString())),
           primaryDropdown(
-            context: context,
-            key: i18n_itemType(isBN),
-            title: i18n_whatItem(isBN),
-            options: [i18n_product(isBN), i18n_food(isBN), i18n_medicine(isBN), i18n_document(isBN), i18n_others(isBN)],
-            value: selectedItemType,
-            onChanged: (value) => setState(() => selectedItemType = value.toString()),
-          ),
+              context: context,
+              key: i18n_merchant(isBN),
+              title: i18n_whichMerchant(isBN),
+              options: merchantList,
+              value: selectedMerchant,
+              onChanged: (value) => setState(() => selectedMerchant = value.toString())),
           primaryDropdown(
-            context: context,
-            key: i18n_merchant(isBN),
-            title: i18n_whichMerchant(isBN),
-            options: merchantList,
-            value: selectedMerchant,
-            onChanged: (value) => setState(() => selectedMerchant = value.toString()),
-          ),
-          primaryDropdown(
-            context: context,
-            title: i18n_deliverMethod(isBN),
-            options: [i18n_deliverParcelAtCustomersDoor(isBN), i18n_customerComeDownHereToReceive(isBN), i18n_dropParcelHere(isBN)],
-            value: selectedDeliveryMethod,
-            onChanged: (value) => setState(() => selectedDeliveryMethod = value.toString()),
-          ),
+              context: context,
+              title: i18n_deliverMethod(isBN),
+              options: [i18n_deliverParcelAtCustomersDoor(isBN), i18n_customerComeDownHereToReceive(isBN), i18n_dropParcelHere(isBN)],
+              value: selectedDeliveryMethod,
+              onChanged: (value) => setState(() => selectedDeliveryMethod = value.toString())),
+          primaryTextField(context: context, labelText: i18n_deliveryNote(isBN), controller: noteController, textCapitalization: TextCapitalization.words, autoFocus: false),
           SizedBox(height: primaryPaddingValue),
           Padding(
               padding: const EdgeInsets.symmetric(horizontal: 36),
@@ -136,16 +130,20 @@ class _ReceiveParcelState extends State<ReceiveParcel> {
                     selectedFlat == null
                         ? showSnackBar(context: context, label: i18n_selectFlat(isBN))
                         : await createPPL(
-                            deliveryMethod: selectedDeliveryMethod != null ? deliveryMethodKeys[[i18n_deliverParcelAtCustomersDoor(isBN), i18n_customerComeDownHereToReceive(isBN), i18n_dropParcelHere(isBN)].indexOf(selectedDeliveryMethod!)] : "",
+                            deliveryMethod: selectedDeliveryMethod != null
+                                ? deliveryMethodKeys[[i18n_deliverParcelAtCustomersDoor(isBN), i18n_customerComeDownHereToReceive(isBN), i18n_dropParcelHere(isBN)].indexOf(selectedDeliveryMethod!)]
+                                : "",
                             accessToken: accessToken,
-                            itemType: selectedItemType ?? "",
+                            itemType: '${selectedItemType ?? ""} || ${noteController.text}',
                             merchant: selectedMerchant ?? "",
                             flatId: selectedFlat != null ? flatID[flatList.indexOf(selectedFlat!)] : -1,
                             successRoute: () => route(
                                 context,
                                 WaitForResidentResponse(
+                                    note: noteController.text.toString(),
                                     vendor: selectedMerchant ?? "...",
-                                    deliveryMethod: deliveryMethodKeys[[i18n_deliverParcelAtCustomersDoor(isBN), i18n_customerComeDownHereToReceive(isBN), i18n_dropParcelHere(isBN)].indexOf(selectedDeliveryMethod!)],
+                                    deliveryMethod:
+                                        deliveryMethodKeys[[i18n_deliverParcelAtCustomersDoor(isBN), i18n_customerComeDownHereToReceive(isBN), i18n_dropParcelHere(isBN)].indexOf(selectedDeliveryMethod!)],
                                     flat: selectedFlat ?? "...",
                                     flatId: selectedFlat != null ? flatID[flatList.indexOf(selectedFlat!)] : -1,
                                     item: selectedItemType ?? "...")));

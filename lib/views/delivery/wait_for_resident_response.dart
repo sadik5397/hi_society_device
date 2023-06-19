@@ -21,10 +21,12 @@ import '../../component/snack_bar.dart';
 import '../visitor/visitor_mobile_no_entry.dart';
 
 class WaitForResidentResponse extends StatefulWidget {
-  const WaitForResidentResponse({Key? key, this.isNew = false, required this.vendor, required this.deliveryMethod, required this.flat, required this.item, required this.flatId}) : super(key: key);
+  const WaitForResidentResponse({Key? key, this.isNew = false, required this.vendor, required this.deliveryMethod, required this.flat, required this.item, required this.flatId, required this.note})
+      : super(key: key);
   final int flatId;
   final String flat;
   final String item;
+  final String note;
   final bool isNew;
   final String deliveryMethod;
   final String vendor;
@@ -111,14 +113,13 @@ class _WaitForResidentResponseState extends State<WaitForResidentResponse> {
       // RemoteNotification? notification = message.notification;
       // AndroidNotification? android = message.notification?.android;
 
-        print("Got a New Notification: ${message.data["title"]}\n${message.data["body"]}");
-        if (message.data["topic"] == "parcel-delivery") setState(() => residentResponse = message.data["response"]);
-        if (message.data["response"] == "drop at guard" || message.data["response"] == "come to door" || message.data["response"] == "coming to receive") {
-          setState(() => allowStatus = "true");
-        }
-        if (message.data["response"] == "cant receive now") setState(() => allowStatus = "false");
-        if (message.data["response"] == "come to door") setState(() => needEntry = true);
-
+      print("Got a New Notification: ${message.data["title"]}\n${message.data["body"]}");
+      if (message.data["topic"] == "parcel-delivery") setState(() => residentResponse = message.data["response"]);
+      if (message.data["response"] == "drop at guard" || message.data["response"] == "come to door" || message.data["response"] == "coming to receive") {
+        setState(() => allowStatus = "true");
+      }
+      if (message.data["response"] == "cant receive now") setState(() => allowStatus = "false");
+      if (message.data["response"] == "come to door") setState(() => needEntry = true);
     });
   }
 
@@ -197,10 +198,13 @@ class _WaitForResidentResponseState extends State<WaitForResidentResponse> {
                         onTap: () async => await createPPL(
                             deliveryMethod: "drop_at_guard",
                             accessToken: accessToken,
-                            itemType: widget.item,
+                            itemType: '${widget.item} || ${widget.note}',
                             merchant: widget.vendor,
                             flatId: widget.flatId,
-                            successRoute: () => route(context, WaitForResidentResponse(flatId: widget.flatId, vendor: widget.vendor, deliveryMethod: "drop_at_guard", flat: widget.flat, item: widget.item)))))
+                            successRoute: () => route(
+                                context,
+                                WaitForResidentResponse(
+                                    note: widget.note, flatId: widget.flatId, vendor: widget.vendor, deliveryMethod: "drop_at_guard", flat: widget.flat, item: widget.item)))))
             ])));
   }
 }
