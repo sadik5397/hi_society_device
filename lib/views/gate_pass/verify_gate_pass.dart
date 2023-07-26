@@ -31,6 +31,7 @@ class _VerifyGatePassState extends State<VerifyGatePass> {
   String accessToken = "";
   dynamic apiResult;
   String? allowStatus; //should be "false" or "true"
+  String? existStatus; //should be "false" or "true"
   bool isBN = false;
 
   //APIs
@@ -42,10 +43,12 @@ class _VerifyGatePassState extends State<VerifyGatePass> {
       if (result["statusCode"] == 200 || result["statusCode"] == 201) {
         if (kDebugMode) showSnackBar(context: context, label: result["message"]);
         setState(() => apiResult = result["data"]);
-        setState(() => allowStatus = (!result["data"]["expired"]).toString());
-        if (allowStatus == "true") await useDigitalGatePass(accessToken: accessToken, gatePassCode: widget.gatePassCode);
+        setState(() => existStatus = (!result["data"]["expired"]).toString());
+        setState(() => allowStatus = ((DateTime.parse(result["data"]['createdAt'])).isAfter(DateTime.now())) ? "true" : 'false');
+        if (existStatus == "true" && allowStatus == "true") await useDigitalGatePass(accessToken: accessToken, gatePassCode: widget.gatePassCode);
       } else {
         showSnackBar(context: context, label: result["message"][0].toString().length == 1 ? result["message"].toString() : result["message"][0].toString());
+        setState(() => existStatus = "false");
         setState(() => allowStatus = "false");
       }
     } on Exception catch (e) {
@@ -93,16 +96,16 @@ class _VerifyGatePassState extends State<VerifyGatePass> {
             padding: EdgeInsets.symmetric(vertical: primaryPaddingValue * 4),
             alignment: Alignment.center,
             decoration: BoxDecoration(
-              color: allowStatus == "true"
+              color: (existStatus == "true" && allowStatus == "true")
                   ? allowedColor
-                  : allowStatus == "false"
+                  : (existStatus == "false" || allowStatus == "false")
                       ? rejectedColor
                       : Colors.transparent,
               image: const DecorationImage(image: AssetImage("assets/smart_background.png"), fit: BoxFit.cover, opacity: .2),
             ),
             child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
-                children: (allowStatus == "false")
+                children: (existStatus == "false" || allowStatus == "false")
                     ? <Widget>[
                         Expanded(
                             child: Padding(
@@ -117,7 +120,7 @@ class _VerifyGatePassState extends State<VerifyGatePass> {
                         SizedBox(width: MediaQuery.of(context).size.width * .75, child: primaryButton(context: context, title: i18n_goHome(isBN), onTap: () => route(context, const Home()))),
                         SizedBox(height: primaryPaddingValue * 4)
                       ]
-                    : (allowStatus == "true")
+                    : (existStatus == "true" && allowStatus == "true")
                         ? <Widget>[
                             Container(
                                 margin: EdgeInsets.all(primaryPaddingValue * 2),
