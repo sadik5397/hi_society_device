@@ -15,6 +15,7 @@ import '../../component/page_navigation.dart';
 import '../../component/snack_bar.dart';
 import '../../theme/colors.dart';
 import '../../theme/padding_margin.dart';
+import '../../theme/placeholder.dart';
 import '../../theme/text_style.dart';
 import '../home.dart';
 
@@ -34,6 +35,7 @@ class _CallState extends State<CallNew> {
   //variables
   String accessToken = "";
   String userId = "";
+  String buildingImg = "";
   int second = 0;
   int minute = 0;
   bool callEnded = false;
@@ -82,19 +84,24 @@ class _CallState extends State<CallNew> {
       // AndroidNotification? android = message.notification?.android;
 
       print("Got a New Notification: ${message.data["title"]}\n${message.data["body"]}");
-        if (message.data["topic"] == "intercom-response" && message.data["response"] == "call_rejected") {
-          setState(() => callEnded = true);
-          setState(() => callStatus = "Call Rejected");
-        }
-        if (message.data["topic"] == "intercom-response" && message.data["response"] == "call_ended") {
-          setState(() => callEnded = true);
-        }
-        if (message.data["topic"] == "intercom-response" && message.data["response"] == "call_accepted") {
-          setState(() => callReceived = true);
-          startClock();
-        }
-
+      if (message.data["topic"] == "intercom-response" && message.data["response"] == "call_rejected") {
+        setState(() => callEnded = true);
+        setState(() => callStatus = "Call Rejected");
+      }
+      if (message.data["topic"] == "intercom-response" && message.data["response"] == "call_ended") {
+        setState(() => callEnded = true);
+      }
+      if (message.data["topic"] == "intercom-response" && message.data["response"] == "call_accepted") {
+        setState(() => callReceived = true);
+        startClock();
+      }
     });
+  }
+
+  //autoHangUpAfter30SecIfNotConnected
+  Future autoHangUpAfter30SecIfNotConnected() async {
+    await Future.delayed(const Duration(seconds: 30));
+    if (callStatus == "Connecting...") await hangUpCall();
   }
 
   hangUpCall() async {
@@ -103,17 +110,13 @@ class _CallState extends State<CallNew> {
     if (callStatus != "Call Rejected") await sendCallResponse(accessToken: accessToken, intercomHistoryId: intercomHistoryId, callStatus: "call_ended");
   }
 
-  // rejectCall() async {
-  //   routeNoBack(context, const Home());
-  //   if (callStatus == "Connecting...") setState(() => callStatus = "00:00");
-  //   showSuccess(context: context, title: "Call Ended", label: "Duration $callStatus");
-  // }
-
   //Functions
   Future<void> defaultInit() async {
     initiateRealtimeStatusChecker();
+    autoHangUpAfter30SecIfNotConnected();
     final pref = await SharedPreferences.getInstance();
     setState(() => accessToken = pref.getString("accessToken")!);
+    setState(() => buildingImg = pref.getString("buildingImg") ?? placeholderImage);
     setState(() => userId = widget.userId.toString());
     if (!widget.isReceiving) if (kDebugMode) print("---------------Notify other user with API---------------");
     if (!widget.isReceiving) await createCallAndSendCallNotification(accessToken: accessToken, calleeId: widget.receiverId, roomId: widget.callID);
@@ -172,9 +175,15 @@ class _CallState extends State<CallNew> {
                     border: Border.all(color: primaryColor.withOpacity(.5), width: 2),
                     color: trueWhite.withOpacity(.9),
                     shape: BoxShape.circle,
-                    image: DecorationImage(image: CachedNetworkImageProvider(widget.receiverImage), fit: BoxFit.cover)));
+                    image: DecorationImage(
+                        image: CachedNetworkImageProvider(!callReceived
+                            ? widget.receiverImage
+                            : (user?.id == userId)
+                                ? widget.receiverImage
+                                : buildingImg),
+                        fit: BoxFit.cover)));
           }
-          ..layout = ZegoLayout.pictureInPicture(isSmallViewDraggable: false, switchLargeOrSmallViewByClick: false)
+          ..layout = ZegoLayout.pictureInPicture(smallViewSize: Size.zero, isSmallViewDraggable: false, switchLargeOrSmallViewByClick: false)
           ..onOnlySelfInRoom = (context) {
             Navigator.of(context).pop();
           }
@@ -198,20 +207,37 @@ class _CallState extends State<CallNew> {
                                 decoration: BoxDecoration(image: DecorationImage(image: CachedNetworkImageProvider(widget.receiverImage), fit: BoxFit.cover)),
                                 child: BackdropFilter(filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8), child: Container(decoration: const BoxDecoration(color: Colors.transparent)))))),
                   ),
-              foregroundBuilder: (context, size, user, extraInfo) => Column(children: [
-                    Padding(padding: EdgeInsets.only(top: primaryPaddingValue * 4), child: Image.asset('assets/hi_society_call.png', width: 180, fit: BoxFit.contain)),
-                    Expanded(
-                        child: Center(
-                            child: Column(crossAxisAlignment: CrossAxisAlignment.center, mainAxisAlignment: MainAxisAlignment.center, children: [
-                      Padding(
-                          padding: EdgeInsets.symmetric(horizontal: primaryPaddingValue * 2),
-                          child: Text(widget.receiverName, textAlign: TextAlign.center, style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: 36))),
-                      SizedBox(height: MediaQuery.of(context).size.height * .4),
-                      Padding(
-                          padding: EdgeInsets.only(bottom: primaryPaddingValue * 8),
-                          child: Text(callEnded ? "Call Ended" : callStatus, textAlign: TextAlign.center, style: semiBold16White.copyWith(fontSize: 22, fontWeight: FontWeight.normal)))
-                    ])))
-                  ]))
+              foregroundBuilder: (context, size, user, extraInfo) => !callReceived
+                  ? Column(children: [
+                      Padding(padding: EdgeInsets.only(top: primaryPaddingValue * 4), child: Image.asset('assets/hi_society_call.png', width: 180, fit: BoxFit.contain)),
+                      Expanded(
+                          child: Center(
+                              child: Column(crossAxisAlignment: CrossAxisAlignment.center, mainAxisAlignment: MainAxisAlignment.center, children: [
+                        Padding(
+                            padding: EdgeInsets.symmetric(horizontal: primaryPaddingValue * 2),
+                            child: Text(widget.receiverName, textAlign: TextAlign.center, style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: 36))),
+                        SizedBox(height: MediaQuery.of(context).size.height * .4),
+                        Padding(
+                            padding: EdgeInsets.only(bottom: primaryPaddingValue * 8),
+                            child: Text(callEnded ? "Call Ended" : callStatus, textAlign: TextAlign.center, style: semiBold16White.copyWith(fontSize: 42, fontWeight: FontWeight.bold)))
+                      ])))
+                    ])
+                  : user?.id == userId
+                      ? Column(children: [
+                          Padding(padding: EdgeInsets.only(top: primaryPaddingValue * 4), child: Image.asset('assets/hi_society_call.png', width: 180, fit: BoxFit.contain)),
+                          Expanded(
+                              child: Center(
+                                  child: Column(crossAxisAlignment: CrossAxisAlignment.center, mainAxisAlignment: MainAxisAlignment.center, children: [
+                            Padding(
+                                padding: EdgeInsets.symmetric(horizontal: primaryPaddingValue * 2),
+                                child: Text(widget.receiverName, textAlign: TextAlign.center, style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: 36))),
+                            SizedBox(height: MediaQuery.of(context).size.height * .4),
+                            Padding(
+                                padding: EdgeInsets.only(bottom: primaryPaddingValue * 8),
+                                child: Text(callEnded ? "Call Ended" : callStatus, textAlign: TextAlign.center, style: semiBold16White.copyWith(fontSize: 42, fontWeight: FontWeight.bold)))
+                          ])))
+                        ])
+                      : const SizedBox())
           ..bottomMenuBarConfig = ZegoBottomMenuBarConfig(
               style: ZegoMenuBarStyle.light,
               hideAutomatically: false,
@@ -221,12 +247,11 @@ class _CallState extends State<CallNew> {
           // ..onHangUp = () {
           //   if (kDebugMode) print("Tata ByBY");
           // }
+          ..durationConfig = ZegoCallDurationConfig(isVisible: false)
           ..turnOnCameraWhenJoining = false
           ..turnOnMicrophoneWhenJoining = true
           ..useSpeakerWhenJoining = true
-          ..onHangUp = () async {
-            await hangUpCall();
-          },
+          ..onHangUp = () async => await hangUpCall(),
       ),
     );
   }
