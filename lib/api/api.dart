@@ -1,6 +1,6 @@
 
-// String baseUrl = "https://hisocietyserver.online"; //LiveServer
-String baseUrl = "https://dev.hisocietyserver.online"; //DemoServer
+String baseUrl = "https://hisocietyserver.online"; //LiveServer
+// String baseUrl = "https://dev.hisocietyserver.online"; //DemoServer
 
 // String baseUrl = "http://192.168.68.125:3000"; //Localhost
 // String baseUrl = "https://g01.fusionbdtech.com"; //TestServer
