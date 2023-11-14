@@ -59,6 +59,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    namespace 'com.hisocietybd.hi_society_device'
 }
 
 flutter {
@@ -67,4 +68,5 @@ flutter {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'com.github.umair13adil:RxLogs:1.0.18'
 }
