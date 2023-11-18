@@ -42,28 +42,30 @@ dependencies:
   cached_network_image: ^3.2.2
   intl: ^0.18.1
   shared_preferences:
-  qr_flutter:
+  qr_flutter: ^4.0.0
   image_picker:
   firebase_messaging: ^14.0.3
   firebase_core: ^2.1.1
   flutter_image_compress: ^2.1.0
-  qr_code_scanner:
+  qr_code_scanner: ^1.0.1
   flutter_phoenix:
-  flutter_beep:
-  phone_number:
+  flutter_beep: ^1.0.0
+  phone_number: ^2.0.1
   flutter_ringtone_player: ^3.2.0
-  zego_uikit_prebuilt_call: ^3.10.4
-  permission_handler: ^10.2.0
+#  flutter_screenutil: ^5.5.4
+  zego_uikit_prebuilt_call: ^3.2.0
+  zego_uikit: ^2.9.2
+  permission_handler: 11.0.1
   text_scroll: ^0.2.0
-  quickalert:
-  app_settings: ^5.1.1
-  wakelock: ^0.6.2
+  quickalert: ^1.0.0
+  app_settings: ^4.3.1
+  wakelock:
   camera: ^0.10.5
 
 
 dev_dependencies:
   flutter_launcher_icons:
-  flutter_app_name: ^0.1.0
+#  flutter_app_name: ^0.1.0
   flutter_test:
     sdk: flutter
 

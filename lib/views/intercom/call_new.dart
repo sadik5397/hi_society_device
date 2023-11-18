@@ -247,7 +247,7 @@ class _CallState extends State<CallNew> {
           // ..onHangUp = () {
           //   if (kDebugMode) print("Tata ByBY");
           // }
-          ..durationConfig = ZegoCallDurationConfig(isVisible: false)
+          // ..durationConfig = Duration(isVisible: false)
           ..turnOnCameraWhenJoining = false
           ..turnOnMicrophoneWhenJoining = true
           ..useSpeakerWhenJoining = true
