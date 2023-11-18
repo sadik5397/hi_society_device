@@ -160,8 +160,8 @@ class _CallState extends State<CallNew> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async => false,
+    return PopScope(
+      canPop: false,
       child: ZegoUIKitPrebuiltCall(
         appID: 2048479123,
         appSign: "c3de3b988cb6e37cd6f58c3382e12a8f99d7a076dbff74c5b3df3898797850f6",

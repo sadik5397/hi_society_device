@@ -70,7 +70,7 @@ class _AssignFlatResidentState extends State<AssignFlatResident> {
                   child: Center(
                       child: apiResult.isEmpty
                           ? Image.asset("assets/icon/icon_only.png")
-                          : QrImage(data: apiResult["code"]!, version: QrVersions.auto, size: 450, padding: EdgeInsets.all(primaryPaddingValue * 2), backgroundColor: trueWhite)))),
+                          : QrImageView(data: apiResult["code"]!, version: QrVersions.auto, size: 450, padding: EdgeInsets.all(primaryPaddingValue * 2), backgroundColor: trueWhite)))),
           Expanded(
               flex: 1,
               child: Container(

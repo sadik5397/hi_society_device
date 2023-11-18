@@ -13,6 +13,6 @@ Container basic2LineInfoCard({required String key, required String value, requir
       width: MediaQuery.of(context).size.width / (is3 ? 3.5 : 2.5),
       child: Column(mainAxisSize: MainAxisSize.min, children: [
         Text(key, style: Theme.of(context).textTheme.titleMedium),
-        Text(value, overflow: TextOverflow.ellipsis, textScaleFactor: .8, style: Theme.of(context).textTheme.displayMedium?.copyWith(color: trueWhite, fontWeight: FontWeight.w600))
+        Text(value, overflow: TextOverflow.ellipsis, textScaler: TextScaler.linear(.8), style: Theme.of(context).textTheme.displayMedium?.copyWith(color: trueWhite, fontWeight: FontWeight.w600))
       ]));
 }

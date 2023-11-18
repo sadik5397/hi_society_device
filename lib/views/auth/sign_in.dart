@@ -74,13 +74,13 @@ class _SignInState extends State<SignIn> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-        onWillPop: () async => false,
+    return PopScope(
+        canPop: false,
         child: Scaffold(
             appBar: AppBar(
                 backgroundColor: Colors.transparent,
-                leading:
-                    IconButton(visualDensity: VisualDensity.comfortable, icon: Icon(Icons.settings), onPressed: () => route(context, SystemSettings(isBN: isBN)), tooltip: "System Settings", enableFeedback: true)),
+                leading: IconButton(
+                    visualDensity: VisualDensity.comfortable, icon: Icon(Icons.settings), onPressed: () => route(context, SystemSettings(isBN: isBN)), tooltip: "System Settings", enableFeedback: true)),
             body: Center(
                 child: ListView(shrinkWrap: true, children: [
               Image.asset("assets/icon/icon_only.png", height: 200),

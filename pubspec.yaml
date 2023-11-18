@@ -36,29 +36,30 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
-  dropdown_button2:
+  dropdown_button2: ^1.9.4
   http:
   lottie:
   cached_network_image: ^3.2.2
-  intl: ^0.17.0
+  intl: ^0.18.1
   shared_preferences:
   qr_flutter:
   image_picker:
   firebase_messaging: ^14.0.3
   firebase_core: ^2.1.1
-  flutter_image_compress: ^1.1.3
+  flutter_image_compress: ^2.1.0
   qr_code_scanner:
   flutter_phoenix:
   flutter_beep:
   phone_number:
   flutter_ringtone_player: ^3.2.0
-  zego_uikit_prebuilt_call: ^3.2.0
+  zego_uikit_prebuilt_call: ^3.10.4
   permission_handler: ^10.2.0
-  text_scroll: ^0.1.2
+  text_scroll: ^0.2.0
   quickalert:
-  app_settings: ^4.2.0
+  app_settings: ^5.1.1
   wakelock: ^0.6.2
   camera: ^0.10.5
+
 
 dev_dependencies:
   flutter_launcher_icons:

@@ -181,8 +181,8 @@ class _WaitForResidentResponseState extends State<WaitForResidentResponse> {
                   padding: EdgeInsets.only(top: primaryPaddingValue * 2, bottom: primaryPaddingValue),
                   child: Icon(Icons.cancel_outlined, size: MediaQuery.of(context).size.height * .25),
                 )),
-              if (allowStatus == null && !timeOut) Text("${i18n_pleaseWait(isBN)}...", textScaleFactor: .75, style: Theme.of(context).textTheme.displaySmall?.copyWith(color: trueWhite)),
-              if (allowStatus == "false") Text(i18n_cantRcv(isBN), textScaleFactor: .75, style: Theme.of(context).textTheme.displaySmall?.copyWith(color: trueWhite)),
+              if (allowStatus == null && !timeOut) Text("${i18n_pleaseWait(isBN)}...", textScaler: TextScaler.linear(.75), style: Theme.of(context).textTheme.displaySmall?.copyWith(color: trueWhite)),
+              if (allowStatus == "false") Text(i18n_cantRcv(isBN), textScaler: TextScaler.linear(.75), style: Theme.of(context).textTheme.displaySmall?.copyWith(color: trueWhite)),
               needEntry
                   ? Padding(
                       padding: EdgeInsets.only(top: primaryPaddingValue * 4, left: primaryPaddingValue * 8, right: primaryPaddingValue * 8),

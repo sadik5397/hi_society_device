@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+
 import '../theme/border_radius.dart';
 import '../theme/colors.dart';
 import '../theme/padding_margin.dart';
@@ -37,9 +38,7 @@ class _HSListTileWidgetState extends State<HSListTileWidget> {
                             (widget.type == "Visitor") ? BoxDecoration(borderRadius: halfOfPrimaryBorderRadius, image: DecorationImage(image: CachedNetworkImageProvider(widget.img!), fit: BoxFit.cover)) : null,
                         height: 108,
                         child: (widget.type == "Gate Pass" || widget.type == "PickupOTP")
-                            ? ClipRRect(
-                                borderRadius: halfOfPrimaryBorderRadius,
-                                child: const FlutterLogo())
+                            ? ClipRRect(borderRadius: halfOfPrimaryBorderRadius, child: const FlutterLogo())
                             : (widget.type == "Delivery")
                                 ? Container(
                                     decoration: BoxDecoration(borderRadius: halfOfPrimaryBorderRadius, color: trueWhite),
@@ -59,7 +58,7 @@ class _HSListTileWidgetState extends State<HSListTileWidget> {
                             margin: EdgeInsets.only(top: primaryPaddingValue / 2),
                             padding: EdgeInsets.symmetric(vertical: primaryPaddingValue / 4),
                             decoration: BoxDecoration(color: const Color(0xFF3498DB), borderRadius: quarterOfPrimaryBorderRadius),
-                            child: Text(widget.status!.toUpperCase(), textAlign: TextAlign.center, textScaleFactor: .9, style: semiBold12white))
+                            child: Text(widget.status!.toUpperCase(), textAlign: TextAlign.center, textScaler: TextScaler.linear(.9), style: semiBold12white))
                       ]))
                 ]))));
   }

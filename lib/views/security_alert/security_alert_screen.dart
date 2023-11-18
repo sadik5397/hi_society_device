@@ -39,7 +39,7 @@ class _SecurityAlertScreenState extends State<SecurityAlertScreen> {
     setState(() => isBN = pref.getBool("isBN") ?? false);
   }
 
-  fireAlarm()async{
+  fireAlarm() async {
     await FlutterRingtonePlayer.play(
       fromAsset: "assets/fire_alarm.wav", // will be the sound on Android
       ios: IosSounds.horn, // will be the sound on iOS
@@ -74,7 +74,7 @@ class _SecurityAlertScreenState extends State<SecurityAlertScreen> {
               Expanded(child: AnimatedScale(duration: const Duration(milliseconds: 250), scale: (step % 3 == 0) ? .8 : 1, child: Image.asset("assets/alert/${widget.alert}.png", color: trueWhite))),
               SizedBox(height: primaryPaddingValue * 2),
               FittedBox(child: Text(widget.alert.toUpperCase(), style: bigOTP)),
-              if (widget.flat != null) Text("${i18n_fromFlat(isBN)} ${widget.flat}".toUpperCase(), style: bigOTP, textScaleFactor: .3),
+              if (widget.flat != null) Text("${i18n_fromFlat(isBN)} ${widget.flat}".toUpperCase(), style: bigOTP, textScaler: TextScaler.linear(.3)),
               SizedBox(height: primaryPaddingValue * 4),
               Padding(
                   padding: EdgeInsets.symmetric(horizontal: primaryPaddingValue * 6),

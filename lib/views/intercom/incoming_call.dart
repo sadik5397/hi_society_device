@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:ui';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
@@ -8,6 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+
 import '../../api/api.dart';
 import '../../component/page_navigation.dart';
 import '../../component/snack_bar.dart';
@@ -75,9 +77,8 @@ class _IncomingCallState extends State<IncomingCall> {
 
       print("Got a New Notification: ${message.data["title"]}\n${message.data["body"]}");
       if (message.data["topic"] == "intercom-response" && message.data["response"] == "call_ended") {
-          setState(() => intercomResponse = "Call Ended");
-          hangUpCall();
-
+        setState(() => intercomResponse = "Call Ended");
+        hangUpCall();
       }
     });
   }
@@ -135,8 +136,8 @@ class _IncomingCallState extends State<IncomingCall> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-        onWillPop: () async => false,
+    return PopScope(
+        canPop: false,
         child: Scaffold(
             backgroundColor: trueBlack,
             body: Stack(alignment: Alignment.bottomCenter, children: [

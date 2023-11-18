@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io' show Platform;
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -21,6 +22,8 @@ import 'package:http/http.dart' as http;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:text_scroll/text_scroll.dart';
+import 'package:wakelock/wakelock.dart';
+
 import '../api/api.dart';
 import '../component/app_bar.dart';
 import '../component/dialogue_box.dart';
@@ -30,7 +33,6 @@ import '../component/page_navigation.dart';
 import '../component/snack_bar.dart';
 import 'intercom/incoming_call.dart';
 import 'security_alert/security_lerts.dart';
-import 'package:wakelock/wakelock.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -234,8 +236,8 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-        onWillPop: () async => false,
+    return PopScope(
+        canPop: false,
         child: SafeArea(
             top: false,
             child: Scaffold(
