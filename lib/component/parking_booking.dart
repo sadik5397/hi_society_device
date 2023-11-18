@@ -51,11 +51,7 @@ Padding parkBookingListTile(
                         Text(duration, style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold, color: primaryBlack))
                       ]),
                       if (note != null) SizedBox(height: primaryPaddingValue / 3),
-                      if (note != null)
-                        Row(children: [
-                          Text("Note: ", style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.normal, color: primaryBlack)),
-                          Text(note, style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold, color: primaryBlack))
-                        ]),
+                      if (note != null) Row(children: [Expanded(child: Text(note, style: Theme.of(context).textTheme.titleLarge?.copyWith(color: primaryBlack)))]),
                       SizedBox(height: primaryPaddingValue / 2)
                     ]))
                     // IconButton(icon: const Icon(Icons.done_rounded, size: 36), color: primaryTitleColor, onPressed: () {})

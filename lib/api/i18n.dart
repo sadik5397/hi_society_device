@@ -76,6 +76,7 @@ String i18n_receiveNGenerate(bool isBN) => isBN ? 'গ্রহন করে ক
 String i18n_patePassQrLine1(bool isBN) => isBN ? 'আপনার গেটপাসের কিউআর কোড দিন' : 'If you have a Digital Gate Pass coupon with QR code,';
 String i18n_sorry(bool isBN) => isBN ? 'দুঃখিত' : 'Sorry!!';
 String i18n_invalidGatePass(bool isBN) => isBN ? 'গেটপাসটি সঠিক নয়' : 'INVALID GATE PASS';
+String i18n_expiredGatePass(bool isBN) => isBN ? 'গেটপাসটির মেয়াদ শেষ' : 'GATE PASS EXPIRED';
 String i18n_welcomeBack(bool isBN) => isBN ? 'ফিরে আসার জন্য স্বাগতম' : 'Welcome Back';
 String i18n_gatePass(bool isBN) => isBN ? 'গেট পাস' : 'Gate Pass';
 String i18n_enterGatePass(bool isBN) => isBN ? 'ডিজিটাল গেটপাস কোডটি দিন' : 'Enter Digital Gate Pass Code';

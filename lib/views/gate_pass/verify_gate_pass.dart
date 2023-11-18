@@ -33,6 +33,7 @@ class _VerifyGatePassState extends State<VerifyGatePass> {
   String? allowStatus; //should be "false" or "true"
   String? existStatus; //should be "false" or "true"
   bool isBN = false;
+  bool expired = false;
 
   //APIs
   Future<void> verifyDigitalGatePass({required String accessToken, required String gatePassCode}) async {
@@ -47,9 +48,15 @@ class _VerifyGatePassState extends State<VerifyGatePass> {
         setState(() => allowStatus = ((DateTime.parse(result["data"]['createdAt'])).isAfter(DateTime.now())) ? "true" : 'false');
         if (existStatus == "true" && allowStatus == "true") await useDigitalGatePass(accessToken: accessToken, gatePassCode: widget.gatePassCode);
       } else {
-        showSnackBar(context: context, label: result["message"][0].toString().length == 1 ? result["message"].toString() : result["message"][0].toString());
-        setState(() => existStatus = "false");
-        setState(() => allowStatus = "false");
+        if (DateTime.now().isBefore(DateTime.parse(result["data"]["createdAt"]).add(Duration(days: result["data"]["expiresAfter"])))) {
+          showSnackBar(context: context, label: result["message"][0].toString().length == 1 ? result["message"].toString() : result["message"][0].toString());
+          setState(() => existStatus = "false");
+          setState(() => allowStatus = "false");
+        } else {
+          setState(() => expired = true);
+          setState(() => existStatus = "true");
+          setState(() => allowStatus = "false");
+        }
       }
     } on Exception catch (e) {
       showSnackBar(context: context, label: e.toString());
@@ -113,7 +120,7 @@ class _VerifyGatePassState extends State<VerifyGatePass> {
                           child: Icon(Icons.cancel_outlined, size: MediaQuery.of(context).size.height * .4),
                         )),
                         Text(i18n_sorry(isBN), style: Theme.of(context).textTheme.displayMedium?.copyWith(color: trueWhite, fontWeight: FontWeight.w300)),
-                        Text(i18n_invalidGatePass(isBN), style: Theme.of(context).textTheme.displayLarge?.copyWith(color: trueWhite, fontWeight: FontWeight.w600)),
+                        Text(expired ? i18n_expiredGatePass(isBN) : i18n_invalidGatePass(isBN), style: Theme.of(context).textTheme.displayLarge?.copyWith(color: trueWhite, fontWeight: FontWeight.w600)),
                         SizedBox(height: primaryPaddingValue * 3),
                         SizedBox(width: MediaQuery.of(context).size.width * .75, child: primaryButton(context: context, title: i18n_tryAgain(isBN), onTap: () => routeBack(context))),
                         SizedBox(height: primaryPaddingValue),
