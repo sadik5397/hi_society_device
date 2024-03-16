@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hi_society_device/api/i18n.dart';
@@ -134,12 +135,15 @@ class _VerifyGatePassState extends State<VerifyGatePass> {
                                 width: MediaQuery.of(context).size.height * .25,
                                 height: MediaQuery.of(context).size.height * .25,
                                 decoration: BoxDecoration(
-                                    color: trueWhite,
-                                    borderRadius: primaryBorderRadius * 2,
-                                    border: Border.all(width: 2, color: trueWhite),
-                                    image: const DecorationImage(fit: BoxFit.cover, image: AssetImage("assets/visitor_gate_pass.png")))),
-                            Text(i18n_welcomeBack(isBN), style: Theme.of(context).textTheme.displayMedium?.copyWith(color: trueWhite, fontWeight: FontWeight.w300)),
-                            Text(apiResult["visitorName"], style: Theme.of(context).textTheme.displayLarge?.copyWith(color: trueWhite, fontWeight: FontWeight.w600)),
+                                  color: trueWhite,
+                                  borderRadius: primaryBorderRadius * 2,
+                                  border: Border.all(width: 2, color: trueWhite),
+                                  image: apiResult["photo"] == null
+                                      ? DecorationImage(fit: BoxFit.cover, image: AssetImage("assets/visitor_gate_pass.png"))
+                                      : DecorationImage(fit: BoxFit.cover, image: CachedNetworkImageProvider('$baseUrl/photos/${apiResult["photo"]}')),
+                                )),
+                            Text(i18n_welcomeBack(isBN), style: Theme.of(context).textTheme.displayMedium?.copyWith(color: trueWhite, fontWeight: FontWeight.w300), textAlign: TextAlign.center),
+                            Text(apiResult["visitorName"], style: Theme.of(context).textTheme.displayLarge?.copyWith(color: trueWhite, fontWeight: FontWeight.w600), textAlign: TextAlign.center),
                             Padding(
                                 padding: EdgeInsets.symmetric(vertical: primaryPaddingValue * 2),
                                 child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
