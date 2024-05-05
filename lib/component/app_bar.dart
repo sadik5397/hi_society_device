@@ -13,7 +13,7 @@ AppBar primaryAppBar({required BuildContext context, String? title, Widget? pref
     iconTheme: IconThemeData(color: trueWhite),
     leading: (prefix != null) ? prefix : null,
     title: Text(title ??
-        '${i18n_appTitle(isBN)}${baseUrl == "https://dev.hisocietyserver.online" ? " (DEV)" : baseUrl == "https://hisocietyserver.online" ? "" : " (OLD)"}'),
+        '${i18n_appTitle(isBN)}${baseUrl == "https://dev.hisocietyapi.store" ? " (DEV)" : baseUrl == "https://hisocietyapi.store" ? "" : " (OLD)"}'),
     actions: (suffix != null)
         ? [suffix]
         : [
